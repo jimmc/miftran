@@ -1,4 +1,4 @@
-TODO for miftran					25.Apr.94
+TODO for miftran					28.Apr.94
 
 - Recognize variables (e.g. date), do those substitutions.
 - Handle SoftHyphen correctly (i.e. put the word back together).
@@ -7,3 +7,8 @@ TODO for miftran					25.Apr.94
   rather than having to have a separate table for b.
 - Figure out how to know where page breaks are in printed document,
   put horizontal lines and page numbers, headers, and footers there.
+
+Documentation:
+- Upgrade for current version
+- Add "style guide" section discussing what things will cause problems
+  during translation (e.g. inconsistent use of paragraph tags).

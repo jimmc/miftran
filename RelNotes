@@ -1,3 +1,14 @@
+miftran v0.2p1 2.May.1994
+
+	Enhancements
+	------------
+	Added stringsub lines for German Umlauts to miftran.rc
+	(courtesy of Stefan Lohrum).
+
+	Bug Fixes
+	---------
+	Adding missing double quotes for href lines in fixchl.
+
 miftran v0.2  25.Apr.1994
 
 	Enhancements

@@ -6,11 +6,11 @@ toc=TOC.html
 tmpfile=tmp.html
 
 add_chap_anchors() {
-	echo '<p><a href="'$toc'>Table of Contents</a>'
+	echo '<p><a href="'$toc'">Table of Contents</a>'
 	[ -f $prevchap ] && \
-		echo ' * <a href="'$prevchap'>Previous Chapter</a>'
+		echo ' * <a href="'$prevchap'">Previous Chapter</a>'
 	[ -f $nextchap ] && \
-		echo ' * <a href="'$nextchap'>Next Chapter</a>'
+		echo ' * <a href="'$nextchap'">Next Chapter</a>'
 	echo "<p>"
 }
 

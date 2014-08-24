@@ -162,12 +162,21 @@
 <stringsub `\\xd3 ' `\''>	#right quote
 <stringsub `\\xd4 ' `\''>	#single quote
 <stringsub `\\xd5 ' `\''>	#apostrophe
-<stringsub `\\Q' `\`'>	#backquote
+<stringsub `\\Q'    `\`'>	#backquote
 
 #HTML required escape strings
 <stringsub `<' `&lt;'>		#html escapes
 <stringsub `\\>' `&gt;'>	#html escapes
 <stringsub `>' `&gt;'>		#html escapes
 <stringsub `&' `&amp;'>		#html escapes
+
+#German Umlauts
+<stringsub `\\x8a' `&auml;'>
+<stringsub `\\x9a' `&ouml;'>
+<stringsub `\\x9f' `&uuml;'>
+<stringsub `\\x80' `&Auml;'>
+<stringsub `\\x85' `&Ouml;'>
+<stringsub `\\x86' `&Uuml;'>
+<stringsub `\\xa7' `&szlig;'>
 
 #end
