@@ -151,7 +151,7 @@ int altflag;	/* true to use alternate output filename */
 		mti->usealtfp = altflag;
 		return 0;
 	}
-	if (!ofn) return;
+	if (!ofn) return 1;
 	t = MtCloseOutputFile(mti,altflag);
 	if (t) return t;
 

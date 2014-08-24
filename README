@@ -1,5 +1,5 @@
 
-    Miftran v0.2						25.Apr.94
+    Miftran v0.2						12.May.94
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -30,6 +30,7 @@
 	  based on configuration file.
 
 	- String substitution allows converting special characters.
+	  Default template includes German and French characters.
 
 	- Handles anchored frames for inline images (but does not do
 	  image format conversion).
@@ -68,6 +69,9 @@
 	Dec Alpha OSF1
 	Decstation Ultrix 4.2a
 	HP7000 HPUX 9.01
+	NeXT NextStep3.2
+	SCO ODT 3.0
+	SGI IRIX 5.1
 	Sparc Solaris 2.2 with gcc
 	Sparc Solaris 2.3
 	Sparc SunOS 4.1.3

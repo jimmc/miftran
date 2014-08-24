@@ -347,15 +347,18 @@ MtSidTran TextFlowTranTab[] = {
 
 MtSidTran ImportObjectTranTab[] = {
 	{ "ImportObFile", 0, 0, MtProcImportObFile, 0 },
+	{ 0 }
 };
 
 MtSidTran FrameTranTab[] = {
 	{ "ID", 0, 0, MtProcAframeId, 0 },
 	{ "ImportObject", 0, 0, 0, ImportObjectTranTab },
+	{ 0 }
 };
 
 MtSidTran AFramesTranTab[] = {
 	{ "Frame", 0, 0, 0, FrameTranTab },
+	{ 0 }
 };
 
 MtSidTran TopTranTab[] = {

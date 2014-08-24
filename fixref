@@ -11,6 +11,9 @@ tmp1=tmp1.html
 needsplit=0
 err=0
 
+#If no cross-references in index file, no work to do here
+[ ! -s $indexfile ] && echo "No cross-references" && exit 0
+
 munge_one_file(){
 	if [ $needsplit = 1 ]; then
 		cat $file > $tmpfile

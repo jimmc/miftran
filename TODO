@@ -1,5 +1,6 @@
-TODO for miftran					28.Apr.94
+TODO for miftran					12.May.94
 
+- Support spot cross-references (and add doc).
 - Recognize variables (e.g. date), do those substitutions.
 - Handle SoftHyphen correctly (i.e. put the word back together).
 - Figure out how to handle tables.
@@ -7,8 +8,15 @@ TODO for miftran					28.Apr.94
   rather than having to have a separate table for b.
 - Figure out how to know where page breaks are in printed document,
   put horizontal lines and page numbers, headers, and footers there.
+- Ability to do some path manipulation, e.g. to strip path and extension
+  off graphics filename so that it can be put back into doc as "file.gif"
+  and into external file for controlling image conversion.
 
 Documentation:
 - Upgrade for current version
 - Add "style guide" section discussing what things will cause problems
   during translation (e.g. inconsistent use of paragraph tags).
+- Document the paragraph types in the template, in case user wants to change
+  document rather than template.  (e.g. "Chapter" turns into <h1> etc.)
+- Graphics:
+  - Must be included by reference

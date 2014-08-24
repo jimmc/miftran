@@ -25,9 +25,9 @@
 
 #define VERSION 0
 #define REVISION 2
-#define PATCHLEVEL 1
+#define PATCHLEVEL 2
 
-static char vdate[] = "2.May.94";
+static char vdate[] = "12.May.94";
 static char copyright[] = "Copyright 1993,1994 Globetrotter Software";
 
 /* end */

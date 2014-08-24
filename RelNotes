@@ -1,13 +1,31 @@
+miftran v0.2p2 12.May.1994
+
+	Enhancements
+	------------
+	- Added the MiftranIgnore paragraph type to the default miftran.rc
+	  file to ignore headers and footers.
+
+	- Added stringsub lines for French characters to miftran.rc
+	  (courtesy of Fabrice Gaillard).
+
+	Bug Fixes
+	---------
+	- If no cross-refs in fixref, just exit rather than bombing.
+
+	- Added trailing space in German Umlaut character translations.
+
+	- Added missing "{ 0 }" to trantabs for anchored frame stuff.
+
 miftran v0.2p1 2.May.1994
 
 	Enhancements
 	------------
-	Added stringsub lines for German Umlauts to miftran.rc
-	(courtesy of Stefan Lohrum).
+	- Added stringsub lines for German Umlauts to miftran.rc
+	  (courtesy of Stefan Lohrum).
 
 	Bug Fixes
 	---------
-	Adding missing double quotes for href lines in fixchl.
+	- Adding missing double quotes for href lines in fixchl.
 
 miftran v0.2  25.Apr.1994
 

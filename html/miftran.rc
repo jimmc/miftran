@@ -37,6 +37,10 @@
 <tagalias Substep MiftranSubstep>
 <tagalias Substep1 MiftranSubstep1>
 
+#Set up which paragraph types to ignore (headers and footers)
+<tagalias `Header' MiftranIgnore>
+<tagalias `Footer' MiftranIgnore>
+
 #Set up aliases for the actual font tags used in our document
 <tagalias Bold MiftranBold>
 <tagalias Emphasis MiftranItalic>
@@ -45,6 +49,10 @@
 ##########################################
 
 #The stuff after here is realtively generic
+
+#Basic translations for either outputting (default) or ignoring text.
+<typesub string `*' `%s\n'>
+<typesub string MiftranIgnore `'>
 
 <typesub startfile `*' `%+1.1L\
 %3.1A%2.1A%1.1A\
@@ -80,8 +88,6 @@
 <typesub aframe `*' `%11R%13"AFrame#"L%13.11"cat"O%12.13"get"O\
 <img src="%12r">'>
 
-#Generic translations, probably usable as-is for any document
-<typesub string `*' `%s\n'>
 #For markers, output file and marker name to index file to allow external
 #script to do a pass2 on files to update xrefs to point to proper files.
 #Frame marker types:
@@ -171,12 +177,26 @@
 <stringsub `&' `&amp;'>		#html escapes
 
 #German Umlauts
-<stringsub `\\x8a' `&auml;'>
-<stringsub `\\x9a' `&ouml;'>
-<stringsub `\\x9f' `&uuml;'>
-<stringsub `\\x80' `&Auml;'>
-<stringsub `\\x85' `&Ouml;'>
-<stringsub `\\x86' `&Uuml;'>
-<stringsub `\\xa7' `&szlig;'>
+<stringsub `\\x8a ' `&auml;'>
+<stringsub `\\x9a ' `&ouml;'>
+<stringsub `\\x9f ' `&uuml;'>
+<stringsub `\\x80 ' `&Auml;'>
+<stringsub `\\x85 ' `&Ouml;'>
+<stringsub `\\x86 ' `&Uuml;'>
+<stringsub `\\xa7 ' `&szlig;'>
+
+#French characters
+<stringsub `\\x88 ' `&agrave;'>  # small a, grave accent 
+<stringsub `\\x89 ' `&acirc;'>   # small a, circumflex accent 
+<stringsub `\\x8e ' `&eacute;'>  # small e, acute accent 
+<stringsub `\\x90 ' `&ecirc;'>   # small e, circumflex accent 
+<stringsub `\\x8f ' `&egrave;'>  # small e, grave accent
+<stringsub `\\x94 ' `&icirc;'>   # small i, circumflex accent 
+<stringsub `\\x99 ' `&ocirc;'>   # small o, circumflex accent 
+<stringsub `\\x9f ' `&uacute;'>  # small u, acute accent 
+<stringsub `\\x9e ' `&ucirc;'>   # small u, circumflex accent 
+<stringsub `\\x9d ' `&ugrave;'>  # small u, grave accent 
+<stringsub `\\x8d ' `&ccedil;'>  # small c, cedilla 
+<stringsub `\\xcf ' `oe'>        # oe
 
 #end
