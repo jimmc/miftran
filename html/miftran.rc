@@ -44,6 +44,7 @@
 #Set up aliases for the actual font tags used in our document
 <tagalias Bold MiftranBold>
 <tagalias Emphasis MiftranItalic>
+<tagalias Italic MiftranItalic>
 
 # End of normally customized area.
 ##########################################
@@ -53,6 +54,9 @@
 #Basic translations for either outputting (default) or ignoring text.
 <typesub string `*' `%s%n'>
 <typesub string MiftranIgnore `'>
+
+#Ignore hidden conditional text
+<typesub textflowtag `HIDDEN' `%"skip"X'>
 
 <typesub startfile `*' `%+1.1L\
 %3.1A%2.1A%1.1A\
@@ -104,13 +108,17 @@
 #2 index
 #8 is hypertext (handled separately below)
 #9 target of a cross reference
-<typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F<a name="_IX_%+2r">'>
-<typesub markertext `9' `%2.2A%f:%s\n%F<a name="%s">'>
+#Markers can appear in chapter text, so we use %+0F/%F to ensure that the
+#<a> text goes to the file, not to the chapter register.
+<typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F\
+%+0F<a name="_IX_%+2r">%F'>
+<typesub markertext `9' `%2.2A%f:%s\n%F\
+%+0F<a name="%s">%F'>
 <typesub xreftext `*' `<a href="#%s">'>
 <typesub xrefend `*' `</a>'>
 
 #Hypertext stuff: gotolink is like cross-ref text, newlink is like marker9.
-#The %H tells miftran to call back to our "endanchor" when font changes.
+#%H tells miftran to call back to our "hypertext endanchor" when font changes.
 <typesub hypertext gotolink `<a href="#%s">%H'>
 <typesub hypertext openlink `<a href="#%s">%H'>
 <typesub hypertext newlink `%2.2A%f:%s\n%F<a name="%s">%H'>
@@ -122,18 +130,18 @@
 <typesub hardhyphen `*' `-'>
 <typesub tab `*' `\t'>
 
-#Switch to next chapter file, clear chapter name (S3)
-<typesub switchpgf `*.MiftranChapter' `%+1.1F%3L'>
+#Switch to next chapter file, clear chapter name (S3), collect into S3
+<typesub switchpgf `*.MiftranChapter' `%+1.1F%3L%3S'>
 <typesub pgfnumstring MiftranChapter `%2R'>
-#put new part of chapter string into S4, then cat S3+S4 into S3.
-<typesub string MiftranChapter `%4R%3.4"cat"O'>
+#While in MiftranChapter, text is going into S3
+<typesub string MiftranChapter `%s'>
 <typesub tab MiftranChapter `'>
 #When we have the whole chapter name, output to xref file, and output
 #title and header to chapter file.
 <typesub endpgf MiftranChapter `\
-%1.2A<li><a href="%f">%2r %3r</a>\n%F\
+%1.2A<li><a href="%f">%2r %3r</a>\n%+0F\
 <title>%1r: %2r %3r</title>\n\
-<h1>%3r</h1>\n'>
+<h1>%2r %3r</h1>\n'>
 
 <typesub pgfnumstring MiftranSection `%s '>
 <typesub startpgf MiftranSection `<h2>'>
@@ -177,26 +185,30 @@
 <typesub startpgf MiftranSubstep1 `<li>'>
 
 <typesub startfont MiftranItalic `<I>'>
+<typesub startfontangle MiftranItalic `<I>'>
 <typesub endfont MiftranItalic `</I>'>
 <typesub startfont MiftranBold `<B>'>
+<typesub startfontweight MiftranBold `<B>'>
 <typesub endfont MiftranBold `</B>'>
 
 #Specify string substitutions
-<stringsub `\\t' `\t'>	#replace \t with space
-<stringsub `\\\\' `\\'>	#replace \\ with \
-
-#Standard MIF escape strings, we map them to normal ascii chars
-<stringsub `\\xd2 ' `\`'>	#left quote
-<stringsub `\\xd3 ' `\''>	#right quote
-<stringsub `\\xd4 ' `\''>	#single quote
-<stringsub `\\xd5 ' `\''>	#apostrophe
-<stringsub `\\Q'    `\`'>	#backquote
+<stringsub `\\t' `\t'>		#tab
+<stringsub `\\x08 ' `\t'>	#tab
+<stringsub `\\\\' `\\'>		#replace \\ with \
 
 #HTML required escape strings
 <stringsub `<' `&lt;'>		#html escapes
 <stringsub `\\>' `&gt;'>	#html escapes
 <stringsub `>' `&gt;'>		#html escapes
 <stringsub `&' `&amp;'>		#html escapes
+
+#Standard MIF escape strings, we map them to normal ascii chars
+<stringsub `\\xd2 ' `\`'>	#left quote
+<stringsub `\\xd3 ' `\''>	#right quote
+<stringsub `\\xd4 ' `\''>	#single quote
+<stringsub `\\xd5 ' `\''>	#apostrophe
+<stringsub `\\xd7 ' `-'>	#bullet
+<stringsub `\\Q'    `\`'>	#backquote
 
 #German Umlauts
 <stringsub `\\x8a ' `&auml;'>
@@ -215,7 +227,7 @@
 <stringsub `\\x8f ' `&egrave;'>  # small e, grave accent
 <stringsub `\\x94 ' `&icirc;'>   # small i, circumflex accent 
 <stringsub `\\x99 ' `&ocirc;'>   # small o, circumflex accent 
-<stringsub `\\x9f ' `&uacute;'>  # small u, acute accent 
+<stringsub `\\x9c ' `&uacute;'>  # small u, acute accent 
 <stringsub `\\x9e ' `&ucirc;'>   # small u, circumflex accent 
 <stringsub `\\x9d ' `&ugrave;'>  # small u, grave accent 
 <stringsub `\\x8d ' `&ccedil;'>  # small c, cedilla 

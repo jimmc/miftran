@@ -60,12 +60,18 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_ENDPGF, "endpgf" },
 #define MT_O_SWITCHPGF 102
 	{ MT_O_SWITCHPGF, "switchpgf" },
+#define MT_O_TFTAG 103
+	{ MT_O_TFTAG, "textflowtag" },
 #define MT_O_STARTFONT 200
 	{ MT_O_STARTFONT, "startfont" },
 #define MT_O_ENDFONT 201
 	{ MT_O_ENDFONT, "endfont" },
 #define MT_O_STARTPSFONT 202
 	{ MT_O_STARTPSFONT, "startpsfont" },
+#define MT_O_STARTFONTWEIGHT 203
+	{ MT_O_STARTFONTWEIGHT, "startfontweight" },
+#define MT_O_STARTFONTANGLE 204
+	{ MT_O_STARTFONTANGLE, "startfontangle" },
 #define MT_O_STARTFILE 300
 	{ MT_O_STARTFILE, "startfile" },
 #define MT_O_ENDFILE 301
@@ -196,33 +202,52 @@ MtInfo *mti;
 }
 
 void
-MtProcFTag(mti)
+MtProcFontThing(mti,fontthing,conditional)
 MtInfo *mti;
+int fontthing;	/* MT_O_something */
+int conditional;	/* 1 means only use this if no current font set */
 {
 	char *s;
 
+	if (conditional && mti->fonttag!=0)
+		return;	/* ignore it */
 	CheckEndFont(mti);
 	s = mti->args[0].s;
 	if (s && *s) {
 		CheckPgfStart(mti);
 		mti->fonttag = MtStringToSid(s);
-		MtSubSid(mti,MT_O_STARTFONT,mti->fonttag,"");
+		MtSubSid(mti,fontthing,mti->fonttag,"");
 	}
+}
+
+void
+MtProcFTag(mti)
+MtInfo *mti;
+{
+	MtProcFontThing(mti,MT_O_STARTFONT,0);
 }
 
 void
 MtProcFPostScriptName(mti)
 MtInfo *mti;
 {
-	char *s;
+	MtProcFontThing(mti,MT_O_STARTPSFONT,1);
+}
 
-	CheckEndFont(mti);
-	s = mti->args[0].s;
-	if (s && *s) {
-		CheckPgfStart(mti);
-		mti->fonttag = MtStringToSid(s);
-		MtSubSid(mti,MT_O_STARTPSFONT,mti->fonttag,"");
-	}
+
+void
+MtProcFWeight(mti)
+MtInfo *mti;
+{
+	MtProcFontThing(mti,MT_O_STARTFONTWEIGHT,1);
+}
+
+
+void
+MtProcFAngle(mti)
+MtInfo *mti;
+{
+	MtProcFontThing(mti,MT_O_STARTFONTANGLE,1);
 }
 
 void
@@ -290,6 +315,17 @@ MtInfo *mti;
 		mti->pgftag = newpgftag;
 	}
 	mti->needpgfstart = 1;
+}
+
+void
+MtProcTFTag(mti)	/* Text Flow tag */
+MtInfo *mti;
+{
+	char *type;
+	MtSid newpgftag;
+
+	type = mti->args[0].s;	/* the text flow tag */
+	MtSubStr(mti,MT_O_TFTAG,type,"");
 }
 
 void
@@ -387,6 +423,8 @@ MtSidTran XrefTranTab[] = {
 MtSidTran FontTranTab[] = {
 	{ "FTag", 0, MtProcFTag, 0, 0 },
 	{ "FPostScriptName", 0, MtProcFPostScriptName, 0, 0 },
+	{ "FWeight", 0, MtProcFWeight, 0, 0 },
+	{ "FAngle", 0, MtProcFAngle, 0, 0 },
 	{ 0 }
 };
 
@@ -422,6 +460,7 @@ MtSidTran ParaTranTab[] = {
 
 MtSidTran TextFlowTranTab[] = {
 	{ "Para", 0, MtProcParaPre, MtProcParaPost, ParaTranTab },
+	{ "TFTag", 0, MtProcTFTag, 0, 0 },
 	{ 0 }
 };
 

@@ -37,6 +37,37 @@ int MtDoFmt;
 char *MtStringRegisters[NUMREGISTERS] = {0};
 int MtIntRegisters[NUMREGISTERS] = {0};
 
+typedef struct _xcmdinfo {
+	char *name;
+	void (*func)();
+} XCmdInfo;
+
+void MtCmdSkip(mti)
+MtInfo *mti;
+{
+	mti->skip = 1;	/* set skip flag */
+}
+
+XCmdInfo MtXCmdTab[] = {
+	{ "skip", MtCmdSkip },
+	{ 0 },
+};
+
+void
+MtXCmd(mti,cmd)
+MtInfo *mti;
+char *cmd;
+{
+	int i;
+
+	for (i=0; MtXCmdTab[i].name; i++) {
+		if (strcmp(MtXCmdTab[i].name,cmd)==0)
+			(MtXCmdTab[i].func)(mti);
+			return;
+	}
+	return;
+}
+
 void
 MtSubFmt(mti,fmt,data)
 MtInfo *mti;
@@ -140,8 +171,17 @@ char *data;	/* data string */
 			MtSetOutputFile(mti,num,num2,relflag,1);
 			break;
 		case 'F':	/* set main output file */
-			if (p[-1]=='%') relflag=1;
-				/* make %F same as %+0F */
+			if (p[-1]=='%') {
+				int altflag = (mti->prevodest<0);
+				/* %F means switch back to previous file */
+				if (mti->prevodest>0) {
+					mti->odest = mti->prevodest;
+					break;
+				}
+				MtSetOutputFile(mti,0,0,1,altflag);
+					/* like %+0F or %+0A */
+				break;
+			}
 			MtSetOutputFile(mti,num,num2,relflag,0);
 			break;
 		case 'H':
@@ -206,6 +246,15 @@ char *data;	/* data string */
 					MtFree(MtStringRegisters[num]);
 				MtStringRegisters[num] = MtStrSave(data);
 			}
+			break;
+		case 'S':	/* set output stream to point to string reg N */
+			if (num<=0 || num>=NUMREGISTERS)
+				break;	/* ignore if out of range */
+			mti->prevodest = mti->odest;
+			mti->odest = num;
+			break;
+		case 'X':	/* extended command */
+			MtXCmd(mti,str);	/* do the extended command */
 			break;
 		case 'f':	/* print main outfilename */
 			if (p[-1]=='%') relflag=1;

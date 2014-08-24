@@ -47,13 +47,32 @@ char *name;
 	MtAltOutFileNum = 0;
 }
 
-FILE *
+static void
+MtPutRegStr(mti,s)
+MtInfo *mti;
+char *s;
+{
+	extern char *MtStringRegisters[];
+	extern char *MtOpStrCat();
+	char *olds;
+	int r;
+	
+	r = mti->odest;
+	olds = MtStringRegisters[r];
+	if (olds) {
+		MtStringRegisters[r] = MtOpStrCat(olds,s);
+	} else {
+		MtStringRegisters[r] = MtStrSave(s);
+	}
+}
+
+static FILE *
 MtGetOfp(mti)
 MtInfo *mti;
 {
 	FILE *ofp;
 
-	if (mti->usealtfp)
+	if (mti->odest<0)
 		ofp = mti->aofp;
 	else
 		ofp = mti->ofp;
@@ -67,6 +86,13 @@ MtPutc(mti,c)
 MtInfo *mti;
 int c;
 {
+	if (mti->odest>0) {
+		char buf[2];
+		buf[0] = c;
+		buf[1] = 0;
+		MtPutRegStr(mti,buf);
+		return;
+	}
 	fputc(c,MtGetOfp(mti));
 }
 
@@ -75,6 +101,10 @@ MtPuts(mti,s)
 MtInfo *mti;
 char *s;
 {
+	if (mti->odest>0) {
+		MtPutRegStr(mti,s);
+		return;
+	}
 	fputs(s,MtGetOfp(mti));
 }
 
@@ -88,12 +118,18 @@ va_dcl
 	FILE *fp;
 
 	va_start(pvar);
-	fp = MtGetOfp(mti);
-	vfprintf(fp,fmt,pvar);
+	if (mti->odest>0) {
+		char buf[2000];
+		vsprintf(buf,fmt,pvar);
+		MtPutRegStr(mti,buf);
+	} else {
+		fp = MtGetOfp(mti);
+		vfprintf(fp,fmt,pvar);
+	}
 	va_end(pvar);
 }
 
-int
+static int
 MtCloseOutputFile(mti,altflag)
 MtInfo *mti;
 int altflag;	/* 1 to close altfile, 0 to close main */
@@ -148,7 +184,8 @@ int altflag;	/* true to use alternate output filename */
 	if (mode==0) {
 		if (!*fpp)
 			return 1;	/* no file to switch to */
-		mti->usealtfp = altflag;
+		mti->prevodest = mti->odest;
+		mti->odest = altflag?-1:0;
 		return 0;
 	}
 	if (!ofn) return 1;
@@ -170,7 +207,8 @@ int altflag;	/* true to use alternate output filename */
 	}
 	*fpp = fp;
 	*ofnp = MtStrSave(fnbuf);
-	mti->usealtfp = altflag;
+	mti->prevodest = mti->odest;
+	mti->odest = altflag?-1:0;
 	return 0;
 }
 

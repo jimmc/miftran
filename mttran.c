@@ -53,12 +53,19 @@ MtSidTran *trantab;
 
 	mti->tranerror = 0;
 	while (MtGetCmd(mti)) {
-		if (mti->cmd==MT_CMD_END)
+		if (mti->cmd==MT_CMD_END) {
+			mti->skip = 0;
 			return 0;	/* done at this level */
+		}
 		if (mti->cmd!=MT_CMD_BEGIN && mti->cmd!=MT_CMD_COMPLETE) {
 			MtFileWarning(mti,"Bad cmd");
 			mti->tranerror = 1;
+			mti->skip = 0;
 			return 1;	/* Should never get here */
+		}
+		if (mti->skip) {
+			MtSkipCmd(mti);	/* skip this command */
+			continue;	/* skip until end of this level */
 		}
 		sid = mti->ss[mti->sscount-1];
 		for (tran=trantab; tran->sid; tran++)

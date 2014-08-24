@@ -1,5 +1,5 @@
 
-    Miftran v0.3p1						10.Jun.94
+    Miftran v0.4						18.Aug.94
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -17,7 +17,7 @@
 	  which can be customized for each MIF file to be translated.
 	  ALL output text is controlled by contents of RC file.
 
-	- Based on paragraph and font tags.
+	- Based on paragraph and font tags (plus FWeight and FAngle)..
 
 	- Generates Table of Contents (based on chapters, etc.) and Index
 	  (based on Index markers), controlled by configuration file.
@@ -37,6 +37,8 @@
 
 	- Handles simple variables (without <$xxx> stuff).
 
+	- Ignores hidden conditional text (when in text flow tagged HIDDEN).
+
 	- For advanced users, the C source can be relatively easily
 	  customized to recognize additional MIF constructs.
 
@@ -54,14 +56,24 @@
 
 	- Does not handle embedded image files.
 
-	- Does not handle conditional text.
+	- May not handle all conditional text correctly.
 
 	- Does not handle <$xxx> stuff in variables.
 
-	- No special handling of tables.
+	- Does not handle tables.
 
-	- Does not handle paragraph and font formatting based on anything
+	- Does not handle paragraph formatting based on anything
 	  other than tags.
+
+    To unpack miftran:
+    1. gunzip miftran.tgz
+       This will produce miftran.tar.  gzip and gunzip are Gnu compression
+       programs, widely available.  Use archie to find a site near you.
+       If you don't have archie, you can look in ftp://usc.edu/pub/gzip/.
+    2. tar xvf miftran.tar
+       This will create the directory "miftran" containing the kit.
+    3. cd miftran
+       This puts you into the directory, where you can compile and test.
 
     To compile and test miftran:
     1. Do a "make" in this directory.  This will build the miftran program.
@@ -88,13 +100,15 @@
 	Dec Alpha OSF1
 	Decstation Ultrix 4.2a
 	HP7000 HPUX 9.01
-	Linux 1.0.8 with gcc 2.5.8
+	Linux 1.0.8 with gcc 2.5.8 (Intel x86)
 	NeXT NextStep3.2
-	SCO ODT 3.0
+	RS6000 AIX 3.2.5
+	SCO ODT 3.0 (Intel x86)
 	SGI IRIX 5.1
 	Sparc Solaris 2.2 with gcc
 	Sparc Solaris 2.3
 	Sparc SunOS 4.1.3
+	Unixware 1.1.1 (Intel x86)
 
     If you use miftran, please send me email and let me know about it.
     If you are using a machine or OS that is not in the above list,

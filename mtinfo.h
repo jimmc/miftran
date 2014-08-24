@@ -66,13 +66,16 @@ typedef struct _mtinfo {
 	int needpgfstart;
 	int needpgfend;
 	int infontanchor;	/* set by %H */
+	int skip;		/* set by %{skip}X */
 	MtSid pgftag;
 	MtSid fonttag;
 	int markertype;
 	int tranerror;	/* set this to abort translation processing */
 
     /* Output processing */
-	int usealtfp;		/* 0 means use ->ofp; 1 means use ->aofp */
+	int odest;	/* where to output to: >0 means string reg, 0 means
+			 * regular output file, -1 means alt output file */
+	int prevodest;	/* previous value of odest */
 	FILE *ofp;
 	char *ofilename;
 	FILE *aofp;

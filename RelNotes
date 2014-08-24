@@ -1,3 +1,45 @@
+miftran v0.4 18.Aug.1994
+
+	NOTE: this release includes a change to the semantics of a
+	      %F in the miftran.rc file; you should use %+0F to keep
+	      the old semantics.
+
+	Enhancements
+	------------
+	- Added "to unpack" notes to README file.
+
+	- Added %X format control for extended commands.  Added %"skip"X
+	  command to allow skipping all processing until the current
+	  level is ended.
+
+	- The new %S format allows output to be directed into one of the
+	  string registers.  This simplifies rc code that needs to collect
+	  input, such as the MiftranChapter translation.
+
+	- Added support for ignoring hidden conditional text.  This is done
+	  with the new <typesub textflowtag...> command.  Assuming that
+	  the textflow tag is `HIDDEN', the default translation of
+	  `%"skip"X' will skip everything in that text flow.
+
+	- Added translation of <FWeight> tag to "startfontweight" and
+	  translation of <FAngle> tag to "startfontangle" (in the same
+	  manner as FTag currently gets translated to "startfont".
+	  (Suggested by Ralf Hauser)
+
+	Bug Fixes
+	---------
+	- Variables in chapter titles are now handled correctly (by using
+	  the new %S construct).
+
+	- In the French character section of miftran.rc, changed stringsub
+	  for `&uacute;' to 9c from 9f (which is actually uumlaut).
+
+	Changes
+	-------
+	- %F now switches back to the most recent output mode (normal file,
+	  alternate file, or string register), rather than always switching
+	  to the normal output file (you can do that with %+0F).
+
 miftran v0.3p1 10.Jun.1994
 
 	Enhancements
