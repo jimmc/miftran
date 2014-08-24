@@ -1,5 +1,5 @@
 
-    Miftran v0.2						12.May.94
+    Miftran v0.3						1.Jun.94
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -26,7 +26,7 @@
 	  output files (e.g. split by chapters, sections, etc.),
 	  based on configuration file.
 
-	- Converts cross-references to HTML links,
+	- Converts cross-references and hypertext links to HTML links,
 	  based on configuration file.
 
 	- String substitution allows converting special characters.

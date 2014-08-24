@@ -67,7 +67,7 @@ char *s1, *s2;
 
 	s = MtSymGet(s2);
 	if (!s) s="";
-	return s;
+	return MtStrSave(s);
 }
 
 char *
@@ -75,7 +75,7 @@ MtOpStrSet(s1,s2)
 char *s1, *s2;
 {
 	MtSymSet(s2,s1);
-	return s1;
+	return MtStrSave(s1);
 }
 
 char *

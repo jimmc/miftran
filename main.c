@@ -120,7 +120,7 @@ char *filename;
 	}
 	if (f!=stdin)
 		fclose(f);
-	/* TBD - get rid of mti */
+	MtReleaseInfo(mti);	/* done with it */
 }
 
 static

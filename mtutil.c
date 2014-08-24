@@ -163,6 +163,30 @@ MtNewInfo()
 	return mti;
 }
 
+/* free up the memory used by the MtInfo */
+void
+MtReleaseInfo(mti)
+MtInfo *mti;
+{
+	int i;
+
+	for (i=0; i<mti->argalloc; i++) {
+		if (mti->args[i].s)
+			MtFree(mti->args[i].s);
+	}
+	if (mti->args)
+		MtFree(mti->args);
+	if (mti->token.s)
+		MtFree(mti->token.s);
+	if (mti->ss)
+		MtFree(mti->ss);
+	if (mti->ofilename)
+		MtFree(mti->ofilename);
+	if (mti->aofilename)
+		MtFree(mti->aofilename);
+	MtFree(mti);
+}
+
 void
 MtSetInputFile(mti,f,filename)
 MtInfo *mti;

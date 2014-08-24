@@ -144,6 +144,9 @@ char *data;	/* data string */
 				/* make %F same as %+0F */
 			MtSetOutputFile(mti,num,num2,relflag,0);
 			break;
+		case 'H':
+			mti->infontanchor = 1;
+			break;
 		case 'L':	/* store literal data into register */
 			if (num<=0 || num>=NUMREGISTERS)
 				break;	/* ignore if out of range */
@@ -216,6 +219,11 @@ char *data;	/* data string */
 			if (s) s++;
 			else s=MtOutFileName;
 			MtPrintf(mti,s,num);
+			break;
+		case 'n':	/* a hack: insert a newline if the last char
+				 * of the data is a space. */
+			if (data && *data && data[strlen(data)-1]==' ')
+				MtPuts(mti,"\n");
 			break;
 		case 'r':	/* retrieve data from register */
 			if (num<=0 || num>=NUMREGISTERS)

@@ -24,10 +24,10 @@
 /* version.h for miftran */
 
 #define VERSION 0
-#define REVISION 2
-#define PATCHLEVEL 2
+#define REVISION 3
+#define PATCHLEVEL 0
 
-static char vdate[] = "12.May.94";
+static char vdate[] = "1.Jun.94";
 static char copyright[] = "Copyright 1993,1994 Globetrotter Software";
 
 /* end */

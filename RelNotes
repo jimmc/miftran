@@ -1,3 +1,32 @@
+miftran v0.3 1.Jun.1994
+
+	Enhancements
+	------------
+	- Added recognition of hypertext commands.  These are done with
+	  a miftran.rc line such as the following:
+		<typesub hypertext gotolink `link to %s'>
+	  The new format %H sets an internal flag that causes miftran
+	  to look for a 'typesub hypertext endanchor' just before the
+	  next font change.
+
+	- Added recognition for hardspace and hardhyphen (similar to
+	  hardreturn).
+
+	- Added pgf.list and font.list tags to makefile, to make it easy
+	  to get a list of the paragraph and font tags used in the mif file.
+
+	- Added new format %n to add a conditional newline if the last
+	  character of the data is a space.
+
+	- Added purify tag to miftran makefile.
+
+	Bug Fixes
+	---------
+	- Fixed some memory bugs in the string op functions.
+
+	- Changed "\n" in default string translation to "%n".  This prevents
+	  extraneous spaces from being inserted into the output.
+
 miftran v0.2p2 12.May.1994
 
 	Enhancements

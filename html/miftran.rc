@@ -51,7 +51,7 @@
 #The stuff after here is realtively generic
 
 #Basic translations for either outputting (default) or ignoring text.
-<typesub string `*' `%s\n'>
+<typesub string `*' `%s%n'>
 <typesub string MiftranIgnore `'>
 
 <typesub startfile `*' `%+1.1L\
@@ -92,12 +92,24 @@
 #script to do a pass2 on files to update xrefs to point to proper files.
 #Frame marker types:
 #2 index
+#8 is hypertext (handled separately below)
 #9 target of a cross reference
 <typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F<a name="_IX_%+2r">'>
 <typesub markertext `9' `%2.2A%f:%s\n%F<a name="%s">'>
 <typesub xreftext `*' `<a href="#%s">'>
 <typesub xrefend `*' `</a>'>
+
+#Hypertext stuff: gotolink is like cross-ref text, newlink is like marker9.
+#The %H tells miftran to call back to our "endanchor" when font changes.
+<typesub hypertext gotolink `<a href="#%s">%H'>
+<typesub hypertext openlink `<a href="#%s">%H'>
+<typesub hypertext newlink `%2.2A%f:%s\n%F<a name="%s">%H'>
+<typesub hypertext endanchor `</a>'>
+
+#Special character commands
 <typesub hardreturn `*' `\n'>
+<typesub hardspace `*' ` '>	#or &nbsp; if your browser supports it
+<typesub hardhyphen `*' `-'>
 <typesub tab `*' `\t'>
 
 #Switch to next chapter file, clear chapter name (S3)

@@ -26,6 +26,8 @@
 #include "mtutil.h"
 #include "mttran.h"
 
+extern char *strchr();
+
 /* Output substitution keys */
 MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 #define MT_O_STRING 1
@@ -38,6 +40,8 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_XREFTEXT, "xreftext" },
 #define MT_O_XREFEND 21
 	{ MT_O_XREFEND, "xrefend" },
+#define MT_O_HYPERTEXT 22
+	{ MT_O_HYPERTEXT, "hypertext" },
 #define MT_O_CHAR 30
 	{ MT_O_CHAR, "char" },
 #define MT_O_TAB 31
@@ -46,6 +50,10 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_HARDRETURN, "hardreturn" },
 #define MT_O_EMDASH 33
 	{ MT_O_EMDASH, "emdash" },
+#define MT_O_HARDSPACE 34
+	{ MT_O_HARDSPACE, "hardspace" },
+#define MT_O_HARDHYPHEN 35
+	{ MT_O_HARDHYPHEN, "hardhyphen" },
 #define MT_O_STARTPGF 100
 	{ MT_O_STARTPGF, "startpgf" },
 #define MT_O_ENDPGF 101
@@ -92,6 +100,10 @@ void
 CheckEndFont(mti)
 MtInfo *mti;
 {
+	if (mti->infontanchor) {
+		MtSubStr(mti,MT_O_HYPERTEXT,"endanchor","");
+		mti->infontanchor = 0;
+	}
 	if (mti->fonttag) {
 		MtSubSid(mti,MT_O_ENDFONT,mti->fonttag,"");
 		mti->fonttag = 0;
@@ -121,6 +133,23 @@ MtInfo *mti;
 }
 
 void
+MtProcHypertext(mti)
+MtInfo *mti;
+{
+	char *s, *sp;
+
+	s = mti->args[0].s;
+	sp = strchr(s,' ');
+	if (sp)
+		*sp++ = 0;	/* null terminate cmd word, point to data */
+	else
+		sp = "";	/* no data word */
+	/* s is command word, such as "newlink",
+	 * sp is data word (the rest of the string) */
+	MtSubStr(mti,MT_O_HYPERTEXT,s,sp);
+}
+
+void
 MtProcMarkerType(mti)
 MtInfo *mti;
 {
@@ -134,6 +163,10 @@ MtInfo *mti;
 	char *s;
 	char mnumstr[10];
 
+	if (mti->markertype==8) {	/* marker type 8 is hypertext */
+		MtProcHypertext(mti);
+		return;
+	}
 	s = mti->args[0].s;
 	sprintf(mnumstr,"%d",mti->markertype);
 	MtSubStr(mti,MT_O_MARKERTEXT,mnumstr,s);
@@ -198,6 +231,10 @@ MtInfo *mti;
 		MtSubSid(mti,MT_O_TAB,mti->pgftag,"");
 	else if (strcmp(s,"hardreturn")==0)
 		MtSubSid(mti,MT_O_HARDRETURN,mti->pgftag,"");
+	else if (strcmp(s,"hardspace")==0)
+		MtSubSid(mti,MT_O_HARDSPACE,mti->pgftag,"");
+	else if (strcmp(s,"hardhyphen")==0)
+		MtSubSid(mti,MT_O_HARDHYPHEN,mti->pgftag,"");
 	else if (strcmp(s,"emdash")==0)
 		MtSubSid(mti,MT_O_EMDASH,mti->pgftag,"");
 	else

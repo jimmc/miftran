@@ -65,6 +65,7 @@ typedef struct _mtinfo {
     /* Translation processing */
 	int needpgfstart;
 	int needpgfend;
+	int infontanchor;	/* set by %H */
 	MtSid pgftag;
 	MtSid fonttag;
 	int markertype;

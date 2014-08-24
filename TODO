@@ -1,4 +1,4 @@
-TODO for miftran					12.May.94
+TODO for miftran					24.May.94
 
 - Support spot cross-references (and add doc).
 - Recognize variables (e.g. date), do those substitutions.
@@ -11,6 +11,7 @@ TODO for miftran					12.May.94
 - Ability to do some path manipulation, e.g. to strip path and extension
   off graphics filename so that it can be put back into doc as "file.gif"
   and into external file for controlling image conversion.
+- Handle (at least to be able to ignore) included images (such as EPS).
 
 Documentation:
 - Upgrade for current version

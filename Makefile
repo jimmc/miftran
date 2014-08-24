@@ -13,6 +13,9 @@ CCOPTS = -g
 
 CFLAGS = $(INCLUDES) $(CDEFINES) $(CCOPTS)
 
+LINKER = $(CC)
+LINKFLAGS = $(CFLAGS)
+
 LIBS =
 
 KITFILES = README RelNotes Makefile TODO $(SRCS) *.h miftran.mif $(SCRIPTS) \
@@ -53,7 +56,9 @@ all:	prog
 prog: $(PROGRAM)
 
 $(PROGRAM): $(OBJS)
-	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
+	$(LINKER) $(LINKFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
+
+purify:;	make prog LINKER='purify $(LINKER)'
 
 depend:;	makedepend $(SRCS)
 
