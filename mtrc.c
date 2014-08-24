@@ -1,5 +1,5 @@
 /*
- * Copyright 1993,1994 Globetrotter Software, Inc.
+ * Copyright 1993-1995 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -28,10 +28,15 @@
  * same as the syntax of MIF files.
  */
 
+#include <unistd.h>	/* to get R_OK */
 #include "mtutil.h"
 #include "mttran.h"
 
 extern char *MtFindMTagAlias();
+
+char **MtIncludeDirs=0;
+int MtIncludeDirsCount=0;
+int MtIncludeDirsAlloc=0;
 
 MtInfo *RcMti;
 
@@ -144,6 +149,19 @@ MtInfo *mti;
 }
 
 void
+MtProcTypeStringSub(mti)
+MtInfo *mti;
+{
+	int t;
+
+	if (!MtOkArgTypes(mti,"SSS","typestringsub")) {
+		return;		/* ignore it and continue */
+	}
+	t = MtAddTypeStringSub(mti,
+		mti->args[0].s,mti->args[1].s,mti->args[2].s);
+}
+
+void
 MtProcInFileName(mti)
 MtInfo *mti;
 {
@@ -173,6 +191,26 @@ MtInfo *mti;
 	MtSetAltOutFileName(mti->args[0].s);
 }
 
+void
+MtProcInclude(mti)
+MtInfo *mti;
+{
+	if (!MtOkArgTypes(mti,"S","include")) {
+		return;		/* ignore it and continue */
+	}
+	MtIncludeRcFile(mti,mti->args[0].s);
+}
+
+void
+MtProcIncludeDir(mti)
+MtInfo *mti;
+{
+	if (!MtOkArgTypes(mti,"S","includedir")) {
+		return;		/* ignore it and continue */
+	}
+	MtAddIncludeDir(mti->args[0].s);
+}
+
 MtSidTran RcTranTab[] = {
 	{ "init", 0, MtProcInit, 0, 0 },
 	{ "tagalias", 0, MtProcTagAlias, 0, 0 },
@@ -180,11 +218,90 @@ MtSidTran RcTranTab[] = {
 	{ "eprint", 0, MtProcEPrint, 0, 0 },
 	{ "typesub", 0, MtProcTypeSub, 0, 0 },
 	{ "stringsub", 0, MtProcStringSub, 0, 0 },
+	{ "typestringsub", 0, MtProcTypeStringSub, 0, 0 },
 	{ "infilename", 0, MtProcInFileName, 0, 0 },
 	{ "outfilename", 0, MtProcOutFileName, 0, 0 },
 	{ "altoutfilename", 0, MtProcAltOutFileName, 0, 0 },
+	{ "include", 0, MtProcInclude, 0, 0 },
+	{ "includedir", 0, MtProcIncludeDir, 0, 0 },
 	{ 0 }
 };
+
+MtAddIncludeDir(dir)
+char *dir;
+{
+	if (MtIncludeDirsAlloc==0) {
+		MtIncludeDirsAlloc = 10;
+		MtIncludeDirs = (char **)MtMalloc(
+			MtIncludeDirsAlloc * sizeof(char *));
+	}
+	if (MtIncludeDirsCount>=MtIncludeDirsAlloc) {
+		MtIncludeDirsAlloc *= 2;
+		MtIncludeDirs = (char **)MtRealloc((void *)MtIncludeDirs,
+			MtIncludeDirsAlloc * sizeof(char *));
+	}
+	MtIncludeDirs[MtIncludeDirsCount++] = MtStrSave(dir);
+}
+
+char *		/* returns path of first readable include file found */
+MtFindIncludeFile(filename)
+char *filename;
+{
+	static char *buf=0;
+	static int bufalloc=0;
+	int lf, l;
+	int i;
+	char *d;
+
+	if (!filename || !*filename)
+		return (char *)0;
+	/* Look here (or for absolute) first */
+	if (access(filename,R_OK)==0)
+		return filename;
+	if (filename[0]=='/') {
+		/* absolute path, can't prepend directory names */
+		return (char *)0;	/* can't read it */
+	}
+	if (!buf) {
+		bufalloc = 1024;
+		buf = MtMalloc(bufalloc);
+	}
+	lf = strlen(filename);
+	for (i=0; i<MtIncludeDirsCount; i++) {
+		d = MtIncludeDirs[i];
+		l = strlen(d)+lf+2;
+		if (l>bufalloc) {
+			buf = MtRealloc(buf,l);
+			bufalloc = l;
+		}
+		sprintf(buf,"%s/%s",d,filename);
+		if (access(buf,R_OK)==0)
+			return buf;
+	}
+	return (char *)0;	/* can't find one */
+}
+
+MtIncludeRcFile(mti,filename)
+MtInfo *mti;
+char *filename;
+{
+	char *fn;
+	FILE *f;
+	int t;
+	
+	fn = MtFindIncludeFile(filename);
+	if (!fn) {
+		MtWarning(mti,"Can't find include file %s",filename);
+		return 1;
+	}
+	f = fopen(fn,"r");
+	if (!f) {
+		MtWarning(mti,"Can't open RC include file %s",fn);
+		return 1;
+	}
+	t = MtPushInputFile(RcMti,f,fn);
+	return t;	/* continue processing */
+}
 
 int
 MtReadRcFile(filename)

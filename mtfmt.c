@@ -1,5 +1,5 @@
 /*
- * Copyright 1993,1994 Globetrotter Software, Inc.
+ * Copyright 1993-1995 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -26,7 +26,8 @@
 #include <ctype.h>
 #include "mtutil.h"
 
-extern char *strrchr ARGS((char *s1, char c));
+extern char *getenv ARGS((const char *s1));
+extern char *strrchr ARGS((const char *s1, const char c));
 
 extern char *MtOutFileName;
 extern int MtOutFileNum;
@@ -171,6 +172,23 @@ char *data;	/* data string */
 				/* make %A same as %+0A */
 			MtSetOutputFile(mti,num,num2,relflag,1);
 			break;
+		case 'E':	/* store env val into register */
+			if (num<=0 || num>=NUMREGISTERS)
+				break;	/* ignore if out of range */
+			str = getenv(str);
+			if (!str) str="";
+			if (posflag) {
+				if (*str)
+					n = atoi(str);
+				else
+					n = 0;
+				MtIntRegisters[num] = n;
+			} else {
+				if (MtStringRegisters[num])
+					MtFree(MtStringRegisters[num]);
+				MtStringRegisters[num] = MtStrSave(str);
+			}
+			break;
 		case 'F':	/* set main output file */
 			if (p[-1]=='%') {
 				int altflag = (mti->prevodest<0);
@@ -235,10 +253,10 @@ char *data;	/* data string */
 						i = i*10 + *s-'0';
 						s++;
 					}
-					if (num==0) {
+					if (num2==0) {
 						MtIntRegisters[num] = i;
 					}
-					if (--num<0)
+					if (--num2<0)
 						break;
 				}
 				break;

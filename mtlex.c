@@ -26,6 +26,16 @@
 #include "mtutil.h"
 #include "mtlex.h"
 
+void
+MtUngetChar(mti,c)
+MtInfo *mti;
+int c;
+{
+	mti->ifi->pushedchar = c;
+	mti->ifi->this_char = mti->ifi->prev_char;
+	mti->ifi->prev_char = 0;
+}
+
 /* reads the next character from the input and returns it */
 int		/* next char, or EOF */
 MtGetChar(mti)
@@ -34,20 +44,34 @@ MtInfo *mti;
 	int c;
 	FILE *f;
 
-	if (mti->pushedchar) {
-		c = mti->pushedchar;
-		mti->pushedchar = 0;
+tryAgain:
+	if (mti->ifi->pushedchar) {
+		c = mti->ifi->pushedchar;
+		mti->ifi->pushedchar = 0;
+		mti->ifi->prev_char = mti->ifi->this_char;
+		mti->ifi->this_char = c;
 		return c;
 	}
-	if (mti->eof) return EOF;
-	f = mti->ifp;
+	if (mti->ifi->eof)
+		goto atEof;
+	f = mti->ifi->ifp;
 	if (feof(f) || (c=fgetc(f))==EOF) {
-		mti->eof = 1;
-		return EOF;
+		mti->ifi->eof = 1;
+		goto atEof;
 	}
 	if (c=='\n')
-		mti->lineno++;
+		mti->ifi->lineno++;
+	mti->ifi->prev_char = mti->ifi->this_char;
+	mti->ifi->this_char = c;
 	return c;
+atEof:
+	if (mti->ifi!=mti->ifa) {
+		MtPopInputFile(mti);
+		goto tryAgain;
+	}
+	mti->ifi->prev_char = mti->ifi->this_char;
+	mti->ifi->this_char = 0;
+	return EOF;
 }
 
 static
@@ -95,7 +119,7 @@ MtInfo *mti;
 	 * we eat the double quote or %, and let the pt through
 	 * as a separate word */
 	if (c!='"' && c!='%') {
-		mti->pushedchar = c;
+		MtUngetChar(mti,c);
 	}
 	if (negflag) {
 		n = -n;
@@ -152,12 +176,12 @@ MtInfo *mti;
 		mti->token.s = MtMalloc(mti->token.alloc);
 	}
 	p = mti->token.s;
-	while (!mti->eof) {
+	while (!mti->ifi->eof) {
 		c = MtGetChar(mti);
 		if (c==EOF)
 			break;	/* end of file */
 		if (t && !(isalnum(c)||c=='_')) {
-			mti->pushedchar = c;
+			MtUngetChar(mti,c);
 			break;	/* end of word */
 		}
 		if (c=='\\') {
@@ -245,7 +269,7 @@ MtInfo *mti;
 		return 1;
 	}
 	c = MtGetChar(mti);
-	while (!mti->eof) {
+	while (!mti->ifi->eof) {
 		switch (c) {
 		case EOF:
 			mti->token.type = EOF;
@@ -256,8 +280,14 @@ MtInfo *mti;
 		case '>':
 			mti->token.type = MT_RBRACKET;
 			return 1;
+		case '&': case '=': /* these are Inset markers in MIF files */
+			if (mti->ifi->prev_char!='\n')
+				break;	/* not at beg-of-line, process below */
+			/* This char appears at the beginning of the line,
+			 * so we treat the line as a comment */
+			/* FALLTHROUGH */
 		case '#':
-			while (!mti->eof && c!='\n')
+			while (!mti->ifi->eof && c!='\n')
 				c = MtGetChar(mti);	/* eat comment */
 			continue;	/* with next char already in c */
 		case '`':
@@ -273,13 +303,13 @@ MtInfo *mti;
 			continue;	/* with next char already in c */
 		}
 		if (isdigit(c) || c=='-') {
-			mti->pushedchar = c;
+			MtUngetChar(mti,c);
 			MtGetNumber(mti);
 			return 1;
 		}
 		if (isalpha(c)||c=='_') {
 			mti->token.type = MT_WORD;
-			mti->pushedchar = c;
+			MtUngetChar(mti,c);
 			MtGetString(mti);
 			return 1;
 		}

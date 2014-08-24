@@ -1,0 +1,24 @@
+#Specify string substitutions
+<stringsub `\\t' `\t'>		#tab
+<stringsub `\\x08 ' `\t'>	#tab
+<stringsub `\\\\' `\\'>		#replace \\ with \
+
+#HTML required escape strings
+<stringsub `<' `&lt;'>		#html escapes
+<stringsub `\\>' `&gt;'>	#html escapes
+<stringsub `>' `&gt;'>		#html escapes
+<stringsub `&' `&amp;'>		#html escapes
+
+#Standard MIF escape strings, we map them to normal ascii chars
+<stringsub `\\xd2 ' `\`'>	#left quote
+<stringsub `\\xd3 ' `\''>	#right quote
+<stringsub `\\xd4 ' `\''>	#single quote
+<stringsub `\\xd5 ' `\''>	#apostrophe
+<stringsub `\\xd7 ' `-'>	#bullet
+<stringsub `\\q'    `\''>	#apostrophe or quote
+<stringsub `\\Q'    `\`'>	#backquote
+
+#Random commercial symbols
+<stringsub `\\xa9 ' `(c)'>    #copyright
+<stringsub `\\xaa ' `[TM]'>   #trademark
+<stringsub `\\xa8 ' `[R]'>    #registered

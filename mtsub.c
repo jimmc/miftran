@@ -1,5 +1,5 @@
 /*
- * Copyright 1993,1994 Globetrotter Software, Inc.
+ * Copyright 1993-1995 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -52,12 +52,14 @@ typedef struct _mtstringsubinfo {
 	char *tostr;	/* what we replace it with */
 	int tolen;
 	int delta;	/* tolen-fromlen = change in string size */
+	MtSid pgftag;	/* if set, subsitute only when in this type pgf */
 	struct _mtstringsubinfo *next;
 } MtStringSubInfo;
 
 int MtDoSub;
 MtTypeSubInfo *MtTypeSubInfoList;
 MtStringSubInfo *MtStringSubInfoList;
+MtStringSubInfo *MtTypeStringSubInfoList;
 MtTagAlias *MtTagAliasList;
 
 void
@@ -190,12 +192,14 @@ char *to;
 }
 
 void
-MtAddStringSub(mti,from,to)
+MtAddTypeStringSub(mti,pgftype,from,to)
 MtInfo *mti;		/* for error messages */
+char *pgftype;
 char *from;
 char *to;
 {
 	MtStringSubInfo *si;
+	MtStringSubInfo **lp;
 
 	si = MtMalloc(sizeof(si[0]));
 	si->fromstr = MtStrSave(from);
@@ -203,8 +207,24 @@ char *to;
 	si->fromlen = strlen(from);
 	si->tolen = strlen(to);
 	si->delta = si->tolen - si->fromlen;
-	si->next = MtStringSubInfoList;
-	MtStringSubInfoList = si;
+	if (pgftype) {
+		si->pgftag = MtStringToSid(pgftype);
+		lp = &MtTypeStringSubInfoList;
+	} else {
+		si->pgftag = (MtSid)0;	/* any pgf type */
+		lp = &MtStringSubInfoList;
+	}
+	si->next = *lp;
+	*lp = si;
+}
+
+void
+MtAddStringSub(mti,from,to)
+MtInfo *mti;		/* for error messages */
+char *from;
+char *to;
+{
+	MtAddTypeStringSub(mti,(char *)0,from,to);
 }
 
 /* We could improve this by making it something other than a linear list. */
@@ -224,16 +244,25 @@ MtSid from;	/* e.g. pgf tag */
 }
 
 MtStringSubInfo *	/* return data structure representing substitution */
-MtFindFirstStringSub(p,pq)
+MtFindFirstStringSub(mti,p,pq)
+MtInfo *mti;
 char *p;		/* where to start searching */
 char **pq;		/* RETURN pointer to where substituion is to occur */
 {
-	MtStringSubInfo *si, *firstsi;
+	MtStringSubInfo *si, *si0, *firstsi;
+	int i;
 	char *q, *firstq;
+	MtSid pgftag, pgfaliastag;
 
+	pgftag = mti->pgftag;
+	pgfaliastag = MtFindSidTagAlias(pgftag);
 	firstq = 0;
 	firstsi = 0;
-	for (si=MtStringSubInfoList; si; si=si->next) {
+	for (i=0; i<2; i++) {
+	  if (i==0) si0=MtTypeStringSubInfoList;
+	  else      si0=MtStringSubInfoList;
+	  for (si=si0; si; si=si->next) {
+	    if (!si->pgftag || si->pgftag==pgftag || si->pgftag==pgfaliastag) {
 		q = strstr(p,si->fromstr);
 		if (q) {
 			if (!firstq || q<firstq ||
@@ -243,6 +272,9 @@ char **pq;		/* RETURN pointer to where substituion is to occur */
 				firstsi = si;
 			}
 		}
+	    }
+	  }
+	  if (firstq) break;
 	}
 	if (firstq && pq)
 		*pq = firstq;
@@ -265,7 +297,7 @@ char *data;
 	slack = 0;		/* we have this many chars to expand into */
 	p = data;
 	while (*p) {
-		si = MtFindFirstStringSub(p,&q);
+		si = MtFindFirstStringSub(mti,p,&q);
 		if (!si)
 			return data;	/* done with subs */
 		if (si->delta>slack) {

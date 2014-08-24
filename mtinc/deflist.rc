@@ -1,0 +1,6 @@
+#A definition list
+<typesub switchpgf `*.MiftranDefList' `<dl>'>
+<typesub switchpgf `MiftranDefList.*' `</dl>'>
+<typesub startpgf `MiftranDefList' `<dt>'>
+<typesub tab `MiftranDefList' `<dd>'>
+<typesub emdash `MiftranDefList' ` - '>

@@ -1,0 +1,29 @@
+#Generate TOC file with Chapter and H2 lines in it.
+
+#Switch to next chapter file, clear chapter name (S3), collect into S3
+<typesub switchpgf `*.MiftranChapter' `%+1.1F%3L%3S'>
+<typesub pgfnumstring MiftranChapter `%2R'>
+#While in MiftranChapter, text is going into S3
+<typesub string MiftranChapter `%s'>
+<typesub tab MiftranChapter `'>
+#When we have the whole chapter name, output to xref file, and output
+#title and header to chapter file.
+<typesub endpgf MiftranChapter `\
+%1.2A%6r<li><a href="%f">%2r %3r</a>\n%+0F\
+<title>%1r: %2r %3r</title>\n\
+<h1>%2r %3r</h1>\n\
+%6L%5"<ul>\n"L'>
+
+#Include section headers in TOC, but don't switch output file
+<typesub switchpgf `*.MiftranH2' `%3L%3S'>
+<typesub pgfnumstring MiftranH2 `%2R'>
+#While in MiftranH2, text is going into S3
+<typesub string MiftranH2 `%s'>
+<typesub tab MiftranH2 `'>
+#When we have the whole section name, output to xref file, and output
+#title and header to regular file.
+<typesub endpgf MiftranH2 `\
+%1.2A%5r<li><a href="%f#%2r">%2r %3r</a>\n%+0F\
+<a name="%2r">\
+<h2>%2r %3r</h2>\n\
+%5L%6"</ul>\n"L'>

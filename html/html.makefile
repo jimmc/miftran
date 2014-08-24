@@ -4,10 +4,11 @@ MIF_SOURCE      = ../miftran.mif
 MIFTRAN_RC      = miftran.rc
 MIFTRAN_DIR     = ..
 MIFTRAN         = $(MIFTRAN_DIR)/miftran
-MIFTRAN_ARGS    = -rc $(MIFTRAN_RC) $(MIF_SOURCE)
+MIFTRAN_ARGS    = -I $(MIFTRAN_DIR)/mtinc -rc $(MIFTRAN_RC) $(MIF_SOURCE)
 FIXCHL          = $(MIFTRAN_DIR)/fixchl
 FIXREF          = $(MIFTRAN_DIR)/fixref
 FIXINDEX        = $(MIFTRAN_DIR)/fixindex
+SHELL           = /bin/sh
 
 default:	chap1.html
 

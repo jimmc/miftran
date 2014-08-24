@@ -1,24 +1,15 @@
-#Miftran rc file
-#Uses MIF syntax (well, why not?)
-
-##########################################
-#Set up data for use by the rest of the rc file.
-#This stuff normally gets customized for a new document.
+#Miftran rc file for Miftran Users Guide
 
 #Set up default document title
 <init `%1"Miftran Users Guide"L'>
-
-#Specify default input file
-#<infilename `../miftran.mif'>
-#If not specified (as here, commented out) use filename from command line
 
 #Specify output files
 <outfilename `chap%d.html'>
 <altoutfilename `d%d.txt'>
 
-#Set up aliases for the actual paragraph tags used in our document
-#Left side is what appears in your document, right side is what
-#appears later in this rc file.
+#Set up aliases for the actual paragraph tags used in our document.
+#Left side is what appears in the MIF document, right side is what
+#appears in the standard <include> files.
 <tagalias Chapter MiftranChapter>
 <tagalias Section MiftranH2>
 <tagalias Subsection MiftranH3>
@@ -47,203 +38,8 @@
 <tagalias Bold MiftranBold>
 <tagalias Emphasis MiftranItalic>
 <tagalias Italic MiftranItalic>
+<tagalias Computer MiftranFixed>
 
-# End of normally customized area.
-##########################################
-
-#The stuff after here is realtively generic
-
-#Basic translations for either outputting (default) or ignoring text.
-<typesub string `*' `%s%n'>
-<typesub string MiftranIgnore `'>
-
-#Ignore hidden conditional text
-<typesub textflowtag `HIDDEN' `%"skip"X'>
-
-<typesub startfile `*' `%+1.1L\
-%3.1A%2.1A%1.1A\
-<title>%1r</title>\n\
-<h1>%1r</h1>\n\<ul>\n\
-%0.1F'>	#Open output files for write, put in title
-
-<typesub endfile `*' `%1.2A</ul>\n<a href="IX.html">Index</a>\n'>
-
-#We use the string registers as follows:
-#S1 document title
-#S2 current chapter numstring
-#S3 current chapter name
-#S4 temp used during building of chapter name
-#S11 AFrame ID
-#S12, S13 temps used when working with AFrames
-#S14 Variable name
-#S15, S16 temps used when working with Variables
-
-#We use the int registers as follows:
-#I1 contains the number 1
-#I2 counter for index markers
-
-#We use the following alternate output files:
-#d1.txt - Table of Contents
-#d2.txt - list of cross reference targets for use by fixref
-#d3.txt - list of index markers
-
-#Handle anchored frame stuff
-<typesub aframeid `*' `%11R'>		#store AFrame ID in S11
-#When we get a filename, create symbol AFrame#%s where %s is ID of frame,
-#set value of that symbol to the filename for the AFrame.
-<typesub aframefile `*' `%12R%13"AFrame#"L%13.11"cat"O%12.13"set"O'>
-#When we get aframe ref, get symbol from symbol table and insert into output
-<typesub aframe `*' `%11R%13"AFrame#"L%13.11"cat"O%12.13"get"O\
-<img src="%12r">'>
-
-#Handle simple variables
-<typesub varname `*' `%14R'>	#store var name in S14
-#When we get a definition, create symbol Var#%s where %s is name of var.
-#set value of that symbol to the definition of the variable.
-<typesub vardef `*' `%15R%16"Var#"L%16.14"cat"O%15.16"set"O'>
-#When we get variable ref, get symbol from symbol table and insert into output
-<typesub varref `*' `%14R%16"Var#"L%16.14"cat"O%15.16"get"O%15r'>
-
-#For markers, output file and marker name to index file to allow external
-#script to do a pass2 on files to update xrefs to point to proper files.
-#Frame marker types:
-#2 index
-#8 is hypertext (handled separately below)
-#9 target of a cross reference
-#Markers can appear in chapter text, so we use %+0F/%F to ensure that the
-#<a> text goes to the file, not to the chapter register.
-<typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F\
-%+0F<a name="_IX_%+2r">%F'>
-<typesub markertext `9' `%2.2A%f:%s\n%F\
-%+0F<a name="%s">%F'>
-<typesub xreftext `*' `<a href="#%s">'>
-<typesub xrefend `*' `</a>'>
-
-#Hypertext stuff: gotolink is like cross-ref text, newlink is like marker9.
-#%H tells miftran to call back to our "hypertext endanchor" when font changes.
-<typesub hypertext gotolink `<a href="#%s">%H'>
-<typesub hypertext openlink `<a href="#%s">%H'>
-<typesub hypertext newlink `%2.2A%f:%s\n%F<a name="%s">%H'>
-<typesub hypertext endanchor `</a>'>
-
-#Special character commands
-<typesub hardreturn `*' `\n'>
-<typesub hardspace `*' ` '>	#or `&nbsp;' if your browser supports it
-<typesub hardhyphen `*' `-'>
-<typesub tab `*' `\t'>
-
-#Switch to next chapter file, clear chapter name (S3), collect into S3
-<typesub switchpgf `*.MiftranChapter' `%+1.1F%3L%3S'>
-<typesub pgfnumstring MiftranChapter `%2R'>
-#While in MiftranChapter, text is going into S3
-<typesub string MiftranChapter `%s'>
-<typesub tab MiftranChapter `'>
-#When we have the whole chapter name, output to xref file, and output
-#title and header to chapter file.
-<typesub endpgf MiftranChapter `\
-%1.2A<li><a href="%f">%2r %3r</a>\n%+0F\
-<title>%1r: %2r %3r</title>\n\
-<h1>%2r %3r</h1>\n'>
-
-<typesub pgfnumstring MiftranH2 `%s '>
-<typesub startpgf MiftranH2 `<h2>'>
-<typesub endpgf MiftranH2 `</h2>\n'>
-
-<typesub pgfnumstring MiftranH3 `%s '>
-<typesub startpgf MiftranH3 `<h3>'>
-<typesub endpgf MiftranH3 `</h3>\n'>
-
-<typesub startpgf MiftranH4 `<h4>'>
-<typesub endpgf MiftranH4 `</h4>\n'>
-
-<typesub startpgf MiftranH5 `<h5>'>
-<typesub endpgf MiftranH5 `</h5>\n'>
-
-<typesub startpgf MiftranH6 `<h6>'>
-<typesub endpgf MiftranH6 `</h6>\n'>
-
-<typesub startpgf MiftranBody `<p>\n'>
-<typesub endpgf MiftranBody `<p>\n'>
-
-<typesub startpgf MiftranCode `<pre>'>
-<typesub endpgf MiftranCode `</pre>\n'>
-<typesub string MiftranCode `%s'>
-
-<typesub switchpgf `*.MiftranBullet' `<ul>'>
-<typesub switchpgf `MiftranBullet.*' `</ul>'>
-<typesub startpgf MiftranBullet `<li>'>
-<typesub startpgf MiftranContbullet `<p>'>
-
-<typesub switchpgf `*.MiftranStep1' `<ol>'>
-<typesub switchpgf `MiftranStep.*' `</ol>\n'>
-<typesub switchpgf `MiftranStep.MiftranContstep' `'>
-<typesub switchpgf `MiftranContstep.MiftranBody' `</ol>\n'>
-<typesub startpgf MiftranStep `<li>'>
-<typesub startpgf `MiftranStep1' `<li>'>
-
-<typesub switchpgf `MiftranStep.MiftranSubstep1' `<ol>'>
-<typesub switchpgf `MiftranStep.MiftranContbullet' `<p>'>
-<typesub switchpgf `MiftranStep.MiftranCode' `'>
-<typesub switchpgf `MiftranCode.MiftranBody' `</ol></ul>'>
-	#A hack: we want to terminate lists that have code,
-	#but we don't know when they should terminate.
-	#We presume that the extra /ul will be ignore by html parser.
-<typesub switchpgf `MiftranSubstep.*' `</ol>\n'>
-<typesub startpgf MiftranSubstep `<li>'>
-<typesub startpgf MiftranSubstep1 `<li>'>
-
-<typesub startfont MiftranItalic `<I>'>
-<typesub startfontangle MiftranItalic `<I>'>
-<typesub endfont MiftranItalic `</I>'>
-<typesub startfont MiftranBold `<B>'>
-<typesub startfontweight MiftranBold `<B>'>
-<typesub endfont MiftranBold `</B>'>
-
-#Specify string substitutions
-<stringsub `\\t' `\t'>		#tab
-<stringsub `\\x08 ' `\t'>	#tab
-<stringsub `\\\\' `\\'>		#replace \\ with \
-
-#HTML required escape strings
-<stringsub `<' `&lt;'>		#html escapes
-<stringsub `\\>' `&gt;'>	#html escapes
-<stringsub `>' `&gt;'>		#html escapes
-<stringsub `&' `&amp;'>		#html escapes
-
-#Standard MIF escape strings, we map them to normal ascii chars
-<stringsub `\\xd2 ' `\`'>	#left quote
-<stringsub `\\xd3 ' `\''>	#right quote
-<stringsub `\\xd4 ' `\''>	#single quote
-<stringsub `\\xd5 ' `\''>	#apostrophe
-<stringsub `\\xd7 ' `-'>	#bullet
-<stringsub `\\Q'    `\`'>	#backquote
-
-#Random commercial symbols
-<stringsub `\\xa9 ' `(c)'>    #copyright
-<stringsub `\\xaa ' `[TM]'>   #trademark
-<stringsub `\\xa8 ' `[R]'>    #registered
-
-#German Umlauts
-<stringsub `\\x8a ' `&auml;'>
-<stringsub `\\x9a ' `&ouml;'>
-<stringsub `\\x9f ' `&uuml;'>
-<stringsub `\\x80 ' `&Auml;'>
-<stringsub `\\x85 ' `&Ouml;'>
-<stringsub `\\x86 ' `&Uuml;'>
-<stringsub `\\xa7 ' `&szlig;'>
-
-#French characters
-<stringsub `\\x88 ' `&agrave;'>  # small a, grave accent 
-<stringsub `\\x89 ' `&acirc;'>   # small a, circumflex accent 
-<stringsub `\\x8e ' `&eacute;'>  # small e, acute accent 
-<stringsub `\\x90 ' `&ecirc;'>   # small e, circumflex accent 
-<stringsub `\\x8f ' `&egrave;'>  # small e, grave accent
-<stringsub `\\x94 ' `&icirc;'>   # small i, circumflex accent 
-<stringsub `\\x99 ' `&ocirc;'>   # small o, circumflex accent 
-<stringsub `\\x9c ' `&uacute;'>  # small u, acute accent 
-<stringsub `\\x9e ' `&ucirc;'>   # small u, circumflex accent 
-<stringsub `\\x9d ' `&ugrave;'>  # small u, grave accent 
-<stringsub `\\x8d ' `&ccedil;'>  # small c, cedilla 
-<stringsub `\\xcf ' `oe'>        # oe
+<include `std.rc'>	#pick up standard stuff from library of include files
 
 #end

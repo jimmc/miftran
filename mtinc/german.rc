@@ -1,0 +1,8 @@
+#German Umlauts
+<stringsub `\\x8a ' `&auml;'>
+<stringsub `\\x9a ' `&ouml;'>
+<stringsub `\\x9f ' `&uuml;'>
+<stringsub `\\x80 ' `&Auml;'>
+<stringsub `\\x85 ' `&Ouml;'>
+<stringsub `\\x86 ' `&Uuml;'>
+<stringsub `\\xa7 ' `&szlig;'>

@@ -1,5 +1,7 @@
+#ifndef MTINFO_H
+#define MTINFO_H
 /*
- * Copyright 1993,1994 Globetrotter Software, Inc.
+ * Copyright 1993-1995 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -40,15 +42,26 @@ typedef struct _mttoken {
  * having to reallocte.
  */
 
-/* The MtInfo structure gets passed around to just about everything
- * dealing with parsing the MIF file.  */
-typedef struct _mtinfo {
+/* MtInFile is used to keep info about one input file, to allow us
+ * to include one file from another.
+ */
+typedef struct _mtinfile {
     /* Character processing */
 	int eof;		/* true when reached eof on input */
 	FILE *ifp;		/* input stream pointer */
 	char *ifilename;
 	int lineno;
 	int pushedchar;		/* up to one pushed-back character */
+	int this_char;
+	int prev_char;
+} MtInFile;
+
+/* The MtInfo structure gets passed around to just about everything
+ * dealing with parsing the MIF file.  */
+typedef struct _mtinfo {
+#define MAX_INCLUDE_DEPTH 10
+	MtInFile ifa[MAX_INCLUDE_DEPTH];
+	MtInFile *ifi;	/* current file, points into ifa */
 
     /* Token processing */
 	MtToken token;		/* the current token being returned */
@@ -101,4 +114,5 @@ typedef struct _mttypesubnametran {
 #define MT_CMD_COMPLETE 102
 #define MT_CMD_END 103
 
+#endif /* MTINFO_H */
 /* end */

@@ -27,9 +27,11 @@
 #include <varargs.h>
 #include <ctype.h>
 #include "mtinfo.h"
+#include "mtutil.h"
 
 static MtToken zapToken = {0};
 static MtInfo zapMti = {0};
+static MtInFile zapInFile = {0};
 
 extern void *malloc(), *realloc();
 
@@ -58,7 +60,7 @@ va_dcl
 
 	va_start(pvar);
 	fprintf(stderr,"Warning: line %d, file %s: ",
-			mti->lineno,mti->ifilename);
+			mti->ifi->lineno,mti->ifi->ifilename);
 	vfprintf(stderr,fmt,pvar);
 	fputs("\n",stderr);
 	va_end(pvar);
@@ -160,6 +162,7 @@ MtNewInfo()
 
 	mti = MtMalloc(sizeof(MtInfo));
 	*mti = zapMti;
+	mti->ifi = mti->ifa;
 	return mti;
 }
 
@@ -193,9 +196,46 @@ MtInfo *mti;
 FILE *f;
 char *filename;
 {
-	mti->ifp = f;
-	mti->ifilename = filename;
-	mti->lineno = 1;
+	mti->ifi->ifp = f;
+	mti->ifi->ifilename = filename;
+	mti->ifi->lineno = 1;
+}
+
+int
+MtPushInputFile(mti,f,filename)
+MtInfo *mti;
+FILE *f;
+char *filename;
+{
+	int n;
+
+	n = mti->ifi - mti->ifa;
+	if (n>=MAX_INCLUDE_DEPTH) {
+		MtWarning(mti,
+			"Too many levels of <include> nesting (max %d)\n",
+			MAX_INCLUDE_DEPTH);
+			/* TBD - print filename */
+		fclose(f);
+		return 1;
+	}
+	mti->ifi++;	/* point to next one */
+	mti->ifi[0] = zapInFile;
+	MtSetInputFile(mti,f,MtStrSave(filename));
+	return 0;
+}
+
+int
+MtPopInputFile(mti)
+MtInfo *mti;
+{
+	if (mti->ifi==mti->ifa) {
+		MtWarning(mti,"Attempt to pop too many <include> files");
+		return 1;
+	}
+	fclose(mti->ifi->ifp);
+	MtFree(mti->ifi->ifilename);
+	mti->ifi--;	/* back up to previous file */
+	return 0;
 }
 
 /* The StringToSid stuff implements a simple symbol table to allow converting
@@ -244,7 +284,7 @@ char *s;
 	return d;
 }
 
-char *
+void
 MtMakeLower(s)
 char *s;
 {

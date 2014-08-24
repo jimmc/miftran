@@ -1,3 +1,39 @@
+miftran v0.5 19.Jun.1995
+
+	Enhancements
+	------------
+	- Added <include> and <includedir> commands to allow nested includes
+	  of rc files.  Added -I command to specify include directories.
+
+	- Added <typestringsub pgftype from to> to do string substitutions
+	  only in specific paragraph types.
+
+	- Added %E format, stores value of specified env var into register.
+
+	- Added support for <Char EnDash> (similar to emdash).
+
+	- <typesub switchpgf `A.A' `...'> now works, and will be substituted
+	  when PgfTag A is followed by another PgfTag A.
+	  <typesub switchpgf `A.*' `...'> (and *.A) will not take effect
+	  when PgfTag A is followed by another PgfTag A.
+
+	- Insets in MIF files are now ignored (all lines with first character
+	  '=' or '&' are treated as comments).
+
+	- Updated the manual to reflect this version.  Chapter 5 (examples)
+	  was removed, since there were no examples.
+
+	Bug Fixes
+	---------
+	- Fxied bug in %+m.nR. (Thanks to Steve Tynor.)
+
+	- Added <typesub varref MiftranIgnore `'> to prevent varref junk
+	  in headers and footers from appearing in output. (Steve Tynor)
+
+	- Char (e.g. <Char Tab>) now properly occurs inside startpgf/endpgf.
+
+	- Emdash in MiftranIgnore paragraphs no longer prints.
+
 miftran v0.4p1 31.Oct.1994
 
 	Enhancements

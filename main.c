@@ -1,5 +1,5 @@
 /*
- * Copyright 1993,1994 Globetrotter Software, Inc.
+ * Copyright 1993-1995 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -128,14 +128,16 @@ void
 usage(f)
 FILE *f;
 {
-fprintf(f,"usage: miftran [-cmd] [-fmt] [-help] [-lex] [-sub] [-tran] [-version] [infiles]\n");
+fprintf(f,"usage: miftran [options] [infiles]\n");
 fprintf(f,"-cmd    Stop after command level parse (for debugging)\n");
 fprintf(f,"-fmt    Stop after final output formatting (default)\n");
 fprintf(f,"-help   Print out this help text.\n");
 fprintf(f,"-lex    Stop after lexical level tokenization (for debugging)\n");
+fprintf(f,"-rc file  Specify rc filename to use\n");
 fprintf(f,"-sub    Stop after substition, before formatting (for debugging)\n");
 fprintf(f,"-tran   Stop after translation level parse (for debugging)\n");
 fprintf(f,"-version  Print current version info\n");
+fprintf(f,"-I dir  Add directory to scan for <include> files\n");
 fprintf(f,"Processing order: lex, cmd, tran, sub, fmt.\n");
 fprintf(f,"Switches and input files are effectively immediately,\n");
 fprintf(f,"so you can use e.g. '-lex file1 -tran file2'\n");
@@ -169,6 +171,13 @@ char *argv[];
 			procmode=PROC_CMD;  /* do command level parse */
 		else if (strcmp(cmd,"-fmt")==0)
 			procmode=PROC_FMT;  /* do formatting */
+		else if (strcmp(cmd,"-I")==0) {
+			if (++i >= argc) {
+				fprintf(stderr,"No value for -I\n");
+				exit(2);
+			}
+			MtAddIncludeDir(argv[i]);
+		}
 		else if (strcmp(cmd,"-lex")==0)
 			procmode=PROC_LEX;  /* do lexical level parse */
 		else if (strcmp(cmd,"-rc")==0) {

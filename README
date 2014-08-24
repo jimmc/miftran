@@ -1,5 +1,5 @@
 
-    Miftran v0.4p1						31.Oct.94
+    Miftran v0.5						19.Jun.95
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -46,11 +46,16 @@
 	  You can even put it into a commercial product and sell it if
 	  you want, as long as you preserve and acknowledge our copyright.
 
+	- Library of preconfigured translation files to simplify customization.
+
     Miftran has the following limitations:
 
-	- Only handles single MIF files.  If you have multiple MIF files,
-	  you will have to process them one at a time.  You can probably
-	  make this work by munging the html/Makefile and the sh scripts.
+	- Only handles single MIF files.  If your document is in multiple
+	  MIF files, you can try concatenating them all into a single file,
+	  and it might work for you (I have successfully done this).
+	  Otherwise, you will have to process them one at a time.  You can
+	  probably make this work by munging the html/Makefile and the sh
+	  scripts.
 
 	- Does not do format conversions of images in anchored frames.
 
@@ -99,7 +104,7 @@
     Miftran has been compiled and run on the following machines:
 	Dec Alpha OSF1
 	Decstation Ultrix 4.2a
-	HP700 HPUX 9.01
+	HP700 HPUX 9.01 & 9.03
 	HP700 NextStep 3.3
 	Linux 1.0.8 with gcc 2.5.8 (Intel x86)
 	NeXT NextStep 3.2

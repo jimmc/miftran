@@ -1,5 +1,5 @@
 /*
- * Copyright 1993,1994 Globetrotter Software, Inc.
+ * Copyright 1993-1995 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -50,9 +50,11 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_HARDRETURN, "hardreturn" },
 #define MT_O_EMDASH 33
 	{ MT_O_EMDASH, "emdash" },
-#define MT_O_HARDSPACE 34
+#define MT_O_ENDASH 34
+	{ MT_O_ENDASH, "endash" },
+#define MT_O_HARDSPACE 35
 	{ MT_O_HARDSPACE, "hardspace" },
-#define MT_O_HARDHYPHEN 35
+#define MT_O_HARDHYPHEN 36
 	{ MT_O_HARDHYPHEN, "hardhyphen" },
 #define MT_O_STARTPGF 100
 	{ MT_O_STARTPGF, "startpgf" },
@@ -256,6 +258,7 @@ MtInfo *mti;
 {
 	char *s;
 
+	CheckPgfStart(mti);
 	s = mti->args[0].s;
 	MtMakeLower(s);
 	if (strcmp(s,"tab")==0)
@@ -268,6 +271,8 @@ MtInfo *mti;
 		MtSubSid(mti,MT_O_HARDHYPHEN,mti->pgftag,"");
 	else if (strcmp(s,"emdash")==0)
 		MtSubSid(mti,MT_O_EMDASH,mti->pgftag,"");
+	else if (strcmp(s,"endash")==0)
+		MtSubSid(mti,MT_O_ENDASH,mti->pgftag,"");
 	else
 		MtSubSid(mti,MT_O_CHAR,mti->pgftag,s);
 }
@@ -293,7 +298,7 @@ MtSid from, to;
 	tostr = MtSidToString(to);
 	sprintf(pbuf,"%s.%s",fromstr,tostr);
 	t = MtSubStr(mti,MT_O_SWITCHPGF,pbuf,"");
-	if (!t) {
+	if (!t && from!=to) {
 		sprintf(pbuf,"%s.*",fromstr);
 		MtSubStr(mti,MT_O_SWITCHPGF,pbuf,"");
 		sprintf(pbuf,"*.%s",tostr);
@@ -310,10 +315,8 @@ MtInfo *mti;
 
 	type = mti->args[0].s;
 	newpgftag = MtStringToSid(type);
-	if (newpgftag != mti->pgftag) {
-		SwitchPgf(mti,mti->pgftag,newpgftag);
-		mti->pgftag = newpgftag;
-	}
+	SwitchPgf(mti,mti->pgftag,newpgftag);
+	mti->pgftag = newpgftag;
 	mti->needpgfstart = 1;
 }
 
@@ -505,14 +508,14 @@ MtInfo *mti;
 	int t;
 
 	MtPrepareTranTab(TopTranTab);
-	MtSubSid(mti,MT_O_STARTFILE,(MtSid)0,mti->ifilename);
+	MtSubSid(mti,MT_O_STARTFILE,(MtSid)0,mti->ifi->ifilename);
 	t =  MtTran(mti,TopTranTab);
 	if (t) return t;
 	if (mti->pgftag) {
 		SwitchPgf(mti,mti->pgftag,0);
 		mti->pgftag = 0;
 	}
-	MtSubSid(mti,MT_O_ENDFILE,(MtSid)0,mti->ifilename);
+	MtSubSid(mti,MT_O_ENDFILE,(MtSid)0,mti->ifi->ifilename);
 	return 0;
 }
 

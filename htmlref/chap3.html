@@ -5,87 +5,132 @@
 <a name="32917: Chapter: 3 The RC File"><title>Miftran Users Guide: 3	 The RC File</title>
 <h1>3	 The RC File</h1>
 <a name="_IX_7"><p>
-The rc file controls the translation of your mif file. The syntax of the rc file is identical to 
-the syntax of a MIF file (the same parser is used internally), but the command keywords 
-are different.<p>
+The rc file controls the translation of your MIF file. The syntax of the rc file is identical 
+to the syntax of a MIF file (the same parser is used internally), but the command keywords are different.<p>
 <p>
 Commands in a MIF file (and thus in an rc file) are surrounded by angle brackets (&lt;&gt;), 
 and strings are surrounded by back- and forward-quotes (`'). Words which contain only 
 alphabetic characters do not need to be quoted. Within the angle brackets, the command 
-consists of a command keyword followed by the data (arguements) for that command, 
-which are either integers, floats, or strings. For example, the infilename command in the rc 
-file looks like this:<p>
+consists of a command keyword followed by the data (arguments) for that command, 
+which are either integers, floats, or strings. For example, the infilename command in the 
+rc file looks like this:<p>
 <pre>&lt;infilename `foo.mif'&gt;</pre>
 </ol></ul><p>
 Commands in a real MIF file are similar, except that they may contain nested arguments. 
 Commands in an rc fie do not contain nested arguments.<p>
-<h2>3.1	 Commands</h2>
+<a name="3.1	"><h2>3.1	 Comments</h2>
+<p>
+You can include comments in your rc file by starting a line with the # character.<p>
+<p>
+A comment, starting with the # character, can also be placed on the same line as a command. The remainder of the line is treated as a comment.<p>
+<p>
+In a MIF file, lines starting with &amp; or = (only at the beginning of a line) are treated as 
+comment lines. These lines are used to indicate an Inset in MIF (such as an embedded 
+postscript file), which miftran does not handle.<p>
+<a name="3.2	"><h2>3.2	 Commands</h2>
 <p>
 This section describes the commands that you can put into your rc file.<p>
-<h3>3.1.1	 altoutfilename</h3>
+<h3>3.2.1	 altoutfilename</h3>
 <p>
 Specifies a filename pattern for an alternate set of output files. These files are typically 
-used for generating auxilliary data such as indexes. For example, you might specify<p>
+used for generating auxiliary data such as indexes. For example, you might specify<p>
 <pre>&lt;altoutfile `d%d.txt'&gt;</pre>
 </ol></ul><p>
 Then in a substitution string you could use<p>
 <pre>`%1.1A'</pre>
 </ol></ul><p>
 to switch to the output file d.txt.<p>
-<h3>3.1.2	 eprintf</h3>
+<h3>3.2.2	 eprint</h3>
 <p>
 Prints the specified message to stderr. For example<p>
-<pre>&lt;eprintf `Using RC file foo.rc'&gt;</pre>
-<h3>3.1.3	 infilename</h3>
+<pre>&lt;eprint `Using RC file foo.rc'&gt;</pre>
+<h3>3.2.3	 include</h3>
+<p>
+Includes the contents of the specified file as if it were part of the current file. Include 
+statements can be nested. For example,<p>
+<pre>&lt;include `std.rc'&gt;</pre>
+</ol></ul><p>
+will include the standard rc file.<p>
+<p>
+Note that if you mistakenly use the C preprocessor syntax (#include), the line will be 
+treated as a comment, which makes the mistake much less obvious.<p>
+<h3>3.2.4	 includedir</h3>
+<p>
+Specifies a directory in which to search for files specified with the &lt;include&gt; command. 
+Multiple directories may be specified. The -I command line option can also be used to 
+specify these directories.<p>
+<h3>3.2.5	 infilename</h3>
 <p>
 Specifies the name of the input MIF file. If this command is not specified, the input filename can be specified on the command line.<p>
 <pre>&lt;infilename `miftran.mif'&gt;</pre>
-<h3>3.1.4	 outfilename</h3>
+<h3>3.2.6	 init</h3>
+<p>
+Process the specified control string immediately. The tag and data strings will be blank. 
+This is useful for doing initialization steps such as pre-loading registers or setting up 
+output files.<p>
+<h3>3.2.7	 outfilename</h3>
 <p>
 Specifies a filename pattern for the output files. If there is a single output file, the given 
-name is that filename. If there are multiple output files, the pattern should include %d in it 
-somewhere. For example,<p>
+name is that filename. If there are multiple output files, the pattern should include %d in 
+it somewhere. For example,<p>
 <pre>&lt;outfilename `chap%d.html'&gt;</pre>
 </ol></ul><p>
 Then you would switch to a new output file with a translation string such as<p>
 <pre>`%+1.1F'</pre>
-<h3>3.1.5	 print</h3>
+<h3>3.2.8	 print</h3>
 <p>
 Prints the specified message to stdout. For example<p>
-<pre>&lt;printf `Using RC file foo.rc'&gt;</pre>
-<h3>3.1.6	 stringsub</h3>
+<pre>&lt;print `Using RC file foo.rc'&gt;</pre>
+<h3>3.2.9	 stringsub</h3>
 <p>
 Specifies a string translation. This command allows you to translate special characters or 
-strings in the MIF file into other special strings in the output file. The first argument is the 
-string to look for in the input, the second argument is what to replace it with in the output. 
-For example, the &lt; character must be escaped in HTML files. This is accomplished with 
-the command<p>
+strings in the MIF file into other special strings in the output file. The first argument is 
+the string to look for in the input, the second argument is what to replace it with in the 
+output. For example, the &lt; character must be escaped in HTML files. This is accomplished with the command<p>
 <pre>&lt;stringsub `&lt;' `&amp;lt;'&gt;</pre>
 </ol></ul><p>
 String substitution is part of the substitution stage of the translation process (see 
 <a href="chap1.html#17541: Heading1: 1.1 The Translation Process">Section 
-1.1, `The Translation Process' on page 2</a>). It occurs after type substitution and before formatting. String substitution is applied to the data string from the MI files before they are 
-used in the formatting step.<p>
-<h3>3.1.7	 <a name="40489: Subsection: 3.1.7 typesub">typesub</h3>
+1.1, `The Translation Process' on page 2</a>). It occurs after type substitution and before 
+formatting. String substitution is applied to the data string from the MI files before they 
+are used in the formatting step.<p>
+<h3>3.2.10	 tagalias</h3>
+<p>
+Specifies that the first tag name is to be treated the same as if it were the second tag 
+name. This makes it much easier to set up your rc file for your document, since it means 
+that you can specify in a single line how miftran should handle each of your paragraph 
+tags (assuming miftran has a standard set of commands for dealing with that paragraph 
+type). For example, the line<p>
+<pre>&lt;typesub chapter MiftranChapter&gt;</pre>
+</ol></ul><p>
+tells miftran that your chapter paragraphs are tagged `chapter', and that it should handle 
+those using its standard MiftranChapter definition.<p>
+<h3>3.2.11	 typestringsub</h3>
+<p>
+Specifies a string substitution, to be executed only when in a paragraph of the specified 
+type. This command allows you to translate special character or strings only when they 
+appear in a specified paragraph type. For example, you could use the following command to turn tabs into spaces only in the `chapter' paragraph type:<p>
+<pre>&lt;typestringsub chapter `\\x11 ' ` '&gt;</pre>
+<h3>3.2.12	 <a name="40489: Subsection: 3.1.7 typesub">typesub</h3>
 <p>
 Specifies a type substitution. This command allows you to specify what gets output for 
-specific paragraph and font tags. This is the primary way in which you can customize your 
-rc file for your document.<p>
+specific paragraph and font tags. This is the primary way in which you can customize 
+your rc file for your document.<p>
 <p>
-The results of the translation step of the entire translation process is a series of commands 
-indicating a state transition, a tag string (such as a paragraph tag), and a data string. You 
-can see this data stream by using the -tran command line option, which tells miftran to 
-stop processing immediately after the translation step and output those results. A sample 
-of this output looks like this:<p>
+The results of the translation step of the entire translation process is a series of commands indicating a state transition, a tag string (such as a paragraph tag), and a data 
+string. You can see this data stream by using the -tran command line option, which tells 
+miftran to stop processing immediately after the translation step and output those results. 
+A sample of this output looks like this:<p>
 <pre>startpgf Chapter
 string Chapter Overview
 endpgf Chapter
 switchpgf Chapter.Body</pre>
 </ol></ul><p>
-In each line, the first item is the state transition name, the second is th tag, and the third is 
-the data string. In the typesub command, you specify the same three pieces of data in the 
-same order. The difference is that, in the typesub command, the third piece of data is typically a format string that determines what gets output. For example, you might include the 
-command<p>
+In each line, the first item is the state transition name, the second is the tag, and the third 
+is the data string. In the typesub command, you specify the same three pieces of data in 
+the same order. The difference is that, in the typesub command, the third piece of data is 
+typically a format string that determines what gets output. For example, you might 
+include the command<p>
 <pre>&lt;typesub startpgf Chapter `&lt;h1&gt;%s&lt;/h1&gt;'&gt;</pre>
 </ol></ul><p>
 which would result in the output string<p>
@@ -93,99 +138,168 @@ which would result in the output string<p>
 </ol></ul><p>
 in your output file, given the above example as input.<p>
 <p>
-You can use a `*' in place of th tag to specify that that typesub should match on alltag 
+You can use a `*' in place of the tag to specify that that typesub should match on all tag 
 types (sorry, no partial patterns are allowed).<p>
 <p>
-The switchpgf state uses a dual paragraph tag of the form fromtag.totag, such as is used in 
-the above example. In this case, you can specify a `*' in place of one or the other tags to 
-indicate that that typesub should match on all paragraph tags for that part of the transition. 
-For example, you could specify<p>
+The switchpgf state uses a dual paragraph tag of the form fromtag.totag, such as is used 
+in the above example. In this case, you can specify a `*' in place of one or the other tags 
+to indicate that that typesub should match on all paragraph tags for that part of the transition. For example, you could specify<p>
 <pre>&lt;typesub switchpgf `*.Bullet' `&lt;ul&gt;'&gt;</pre>
 </ol></ul><p>
 which would output &lt;ul&gt; whenever a paragraph of type Bullet followed a paragraph of 
 any other type.<p>
 <p>
 For a list of all of the state names that can be specified in a typesub command, see 
-<a href="chap3.html#41291: Section: 3.2 State Names">Section 
-3.2, `State Names' on page 8</a>. For more information about the formatting string (third arg 
-to typesub), see 
-<a href="chap3.html#28642: Section: 3.3 Format Strings">Section 3.3, `Format Strings' on page 9</a>.<p>
-<h2>3.2	 <a name="41291: Section: 3.2 State Names">State Names</h2>
+<a href="chap3.html#41291: Section: 3.2 State Names">Section 3.2, `State Names' on page 8</a>. For more information about the formatting string 
+(third arg to typesub), see 
+<a href="chap3.html#28642: Section: 3.3 Format Strings">Section 3.3, `Format Strings' on page 10</a>.<p>
+<a name="41291: Section: 3.2 State Names"><a name="3.3	"><h2>3.3	 State Names</h2>
 <p>
 The first argument to the typesub command is a state name as output by the tran stage of 
-the translation process. The set of state names is defined in C code. An advanced user can 
-expand the set of state names by editing the C source (see 
-<a href="chap4.html#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced Customization' on page 9</a>). The currently defined state names are described in this section.<p>
+the translation process. The set of state names is defined in C code. An advanced user 
+can expand the set of state names by editing the C source (see 
+<a href="chap4.html#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced 
+Customization' on page 13</a>). The currently defined state names are described in this section.<p>
 <p>
 In the following descriptions, MIF commands in the input file are referred to with angle 
 brackets around them, such as &lt;Char&gt; and &lt;PgfTag&gt;.<p>
 <p>
-These commands are specified in a transition table in miftran. The table is hierarchical. In 
-the description of the state transitions given below, only the last (leaf) command is mentioned, although the complete command hierarchy must appear in the input file. For example, the &lt;XRefSrcText&gt; command metioned below is actually nested. To be more precise, 
-it should be noted as &lt;Para&gt;/&lt;ParaLine&gt;&lt;XRef&gt;/&lt;XRefSrcText&gt;. In practice, it is not 
-necessary to know this, since it is how the MIF files are generated anyway. For the 
-advanced user who is examining the C source code, the structure is apparent from the hierarchical definition tables.<p>
+These commands are specified in a transition table in miftran. The table is hierarchical. 
+In the description of the state transitions given below, only the last (leaf) command is 
+mentioned, although the complete command hierarchy must appear in the input file. For 
+example, the &lt;XRefSrcText&gt; command mentioned below is actually nested. To be more 
+precise, it should be noted as &lt;Para&gt;/&lt;ParaLine&gt;/&lt;XRef&gt;/&lt;XRefSrcText&gt;. In practice, 
+it is not necessary to know this, since it is how the MIF files are generated anyway. For 
+the advanced user who is examining the C source code, the structure is apparent from 
+the hierarchical definition tables.<p>
 <p>
 Unless otherwise specified, the tag argument is the current paragraph tag, as set by the 
 most recent &lt;PgfTag&gt; command in the input.<p>
-<h3>3.2.1	 char</h3>
+<h3>3.3.1	 aframe</h3>
 <p>
-Generated in response to the &lt;Char&gt; command in the MIF input. The data string is the single argument to the &lt;Char&gt; command. Note that someof the more common &lt;Char&gt; commands are translated differently, such as &lt;Char Tab&gt; and &lt;Char HardReturn&gt;.<p>
-<h3>3.2.2	 endfile</h3>
+Generated in response to the &lt;AFrame&gt; command in a text flow. The data string is the 
+aframe id number.<p>
+<h3>3.3.2	 aframefile</h3>
+<p>
+Generated in response to the &lt;ImportObjFile&gt; command during AFrame definition. The 
+data string is the filename given in the command.<p>
+<h3>3.3.3	 aframeid</h3>
+<p>
+Generated in response to the &lt;ID&gt; command during AFrame definition. The data string 
+is the aframe id number.<p>
+<h3>3.3.4	 char</h3>
+<p>
+Generated in response to the &lt;Char&gt; command in the MIF input. The data string is the 
+single argument to the &lt;Char&gt; command. Note that some of the more common &lt;Char&gt; 
+commands are translated differently, such as &lt;Char Tab&gt; and &lt;Char HardReturn&gt;.<p>
+<h3>3.3.5	 emdash</h3>
+<p>
+Generated in response to a &lt;Char Emdash&gt; command. The data string is blank.<p>
+<h3>3.3.6	 endash</h3>
+<p>
+Generated in response to a &lt;Char Endash&gt; command. The data string is blank.<p>
+<h3>3.3.7	 endfile</h3>
 <p>
 Generated at the end of the input file. The tag is blank, and the data string is the name of 
 the input file.<p>
-<h3>3.2.3	 endfont</h3>
+<h3>3.3.8	 endfont</h3>
 <p>
 Generated when switching out of a font. The tag is the font tag. The data string is blank.<p>
-<h3>3.2.4	 endpgf</h3>
+<h3>3.3.9	 endpgf</h3>
 <p>
 Generated when finishing a paragraph. The tag is for the paragraph being finished. The 
 data string is blank.<p>
-<h3>3.2.5	 hardreturn</h3>
+<h3>3.3.10	 hardhyphen</h3>
+<p>
+Generated in response to a &lt;Char HardHyphen&gt; command. The data string is blank.<p>
+<h3>3.3.11	 hardreturn</h3>
 <p>
 Generated in response to a &lt;Char HardReturn&gt; command. The data string is blank.<p>
-<h3>3.2.6	 markertext</h3>
+<h3>3.3.12	 hardspace</h3>
+<p>
+Generated in response to a &lt;Char HardSpace&gt; command. The data string is blank.<p>
+<h3>3.3.13	 hypertext</h3>
+<p>
+Generated in response to a &lt;hypertext&gt; command. A typical hypertext command in a 
+MIF file looks like this:<p>
+<pre>&lt;hypertext `gotolink target_label'&gt;</pre>
+</ol></ul><p>
+The tag is the hypertext command word (such as `gotolink' or `openlink'); the data 
+string is the remainder of the hypertext command.<p>
+<h3>3.3.14	 markertext</h3>
 <p>
 Generated in response to a &lt;MText&gt; command. The tag is a string version of the marker 
-type from the previous &lt;MType&gt; command. The data string is the text from the &lt;MText&gt; 
-command.<p>
-<h3>3.2.7	 pgfnumstring</h3>
+type from the previous &lt;MType&gt; command. The data string is the text from the 
+&lt;MText&gt; command.<p>
+<h3>3.3.15	 pgfnumstring</h3>
 <p>
-Generated in response to a &lt;PgfNumString&gt; command. The data string is the string given 
-in that command.<p>
-<h3>3.2.8	 startfile</h3>
+Generated in response to a &lt;PgfNumString&gt; command. The data string is the string 
+given in that command.<p>
+<h3>3.3.16	 startfile</h3>
 <p>
 Generated at the start of reading the input file. The tag is blank, and the data string is the 
 name of the input file.<p>
-<h3>3.2.9	 startfont</h3>
+<h3>3.3.17	 startfont</h3>
 <p>
 Generated when switching into a font. The tag is the font tag. The data string is blank.<p>
-<h3>3.2.10	 startpgf</h3>
+<h3>3.3.18	 startfontangle</h3>
 <p>
-Generated when starting a paragraph. The tag is for the paragraph being started. The data 
-string is blank.<p>
-<h3>3.2.11	 string</h3>
+Generated in response to a &lt;FAngle&gt; command. The tag is the font angle name. The 
+data string is blank.<p>
+<h3>3.3.19	 startfontweight</h3>
+<p>
+Generated in response to a &lt;FWeight&gt; command. The tag is the font weight name. The 
+data string is blank.<p>
+<h3>3.3.20	 startpgf</h3>
+<p>
+Generated when starting a paragraph. The tag is for the paragraph being started. The 
+data string is blank.<p>
+<h3>3.3.21	 startpsfont</h3>
+<p>
+Generated in response to a &lt;FPostScriptName&gt; command. The tag is the postscript font 
+name. The data string is blank.<p>
+<h3>3.3.22	 string</h3>
 <p>
 Generated in response to a &lt;String&gt; command. The data string is the string given in that 
 command.<p>
-<h3>3.2.12	 switchpgf</h3>
+<h3>3.3.23	 switchpgf</h3>
 <p>
 Generated when switching from one paragraph type to another. The tag is a dual paragraph tag of the form fromtag.totag, for example<p>
 <pre>Chapter.Body</pre>
 </ol></ul><p>
 The data string is blank.<p>
-<h3>3.2.13	 tab</h3>
+<p>
+You can use an asterisk as a wildcard to specify that this substitution is valid for any 
+paragraph type. For example,<p>
+<pre>Chapter.*</pre>
+</ol></ul><p>
+specifies a transition from a paragraph of type Chapter to any other paragraph type.<p>
+<h3>3.3.24	 tab</h3>
 <p>
 Generated in response to a &lt;Char Tab&gt; command. The data string is blank.<p>
-<h3>3.2.14	 xrefend</h3>
+<h3>3.3.25	 textflowtag</h3>
+<p>
+Generated in response to a &lt;TFTag&gt; command. The tag is the specified text flow name. 
+The data string is blank.<p>
+<h3>3.3.26	 vardef</h3>
+<p>
+Generated in response to a &lt;VariableDef&gt; command. The data string is the variable definition.<p>
+<h3>3.3.27	 varname</h3>
+<p>
+Generated in response to a &lt;VariableName&gt; command. The data string is the variable 
+name.<p>
+<h3>3.3.28	 varref</h3>
+<p>
+Generated in response to the &lt;VariableName&gt; command referencing a variable in a text 
+flow. The data string is the variable name.<p>
+<h3>3.3.29	 xrefend</h3>
 <p>
 Generated in response to a &lt;XrefEnd&gt; command. The tag and data string are both blank.<p>
-<h3>3.2.15	 xreftext</h3>
+<h3>3.3.30	 xreftext</h3>
 <p>
-Generated in response to a &lt;XRefSrcText&gt; command. The tag is blank. The data string is 
-the string given in the &lt;XRefSrcText&gt; command.<p>
-<h2>3.3	 <a name="28642: Section: 3.3 Format Strings">Format Strings</h2>
+Generated in response to a &lt;XRefSrcText&gt; command. The tag is blank. The data string 
+is the string given in the &lt;XRefSrcText&gt; command.<p>
+<a name="28642: Section: 3.3 Format Strings"><a name="3.4	"><h2>3.4	 Format Strings</h2>
 <p>
 The third argument to the typesub command (see 
 <a href="chap3.html#40489: Subsection: 3.1.7 typesub">Subsection 3.1.7, `typesub' on page 7</a>) 
@@ -198,101 +312,172 @@ sent on to the output file, and % formatting is processed, which may or may not 
 additional data being sent to the output file.<p>
 <p>
 The different parts of the format string are discussed in the following sections.<p>
-<h2>3.4	 Backslash Sequences</h2>
+<a name="3.5	"><h2>3.5	 Backslash Sequences</h2>
 <p>
-A string can be continued on the next line of input by placing a backslash as the last character on the line. The backslash and following newline are not part of the resulting string.<p>
+A string can be continued on the next line of input by placing a backslash as the last 
+character on the line. The backslash and following newline are not part of the resulting 
+string.<p>
 <p>
 The valid characters which can appear after a backslash (\) are:<p>
 <ul><li><I>newline</I> - line continuation<li>n - output a newline<li>t - output a tab<li>' - output a single quote<li>\ - output a backslash</ul><p>
-The results of putting any other character following abackslash is officialy undefined, 
+The results of putting any other character following a backslash is officially undefined, 
 although the current implementation will output that character.<p>
-<h2>3.5	 Percent Sequences</h2>
+<a name="3.6	"><h2>3.6	 Percent Sequences</h2>
 <p>
-The % formatting control characters are divided into two classes: those with side-effects, 
-and those without. The formatting controls without side effects only output data to the current output file, whereas the ones with side-effects can do all sorts of things. Control characters which have side effects are all upper case, such as %A and %F. Control characters 
-without side effects are all lower case, such as %s and %f.<p>
+The % formatting control characters are divided into two classes: those with side-effects, and those without. The formatting controls without side effects only output data 
+to the current output file, whereas the ones with side-effects can do all sorts of things. 
+Control characters which have side effects are all upper case, such as %A and %F. Control characters without side effects are all lower case, such as %s and %f.<p>
 <p>
-The actual % format is similar to printf, but with an extension to allow a literal string to be 
-specified. It contains the following parts:<p>
-<ol><li>The initial % character.<li>An optional + or - character.<li>An optional integer. This number is referred to as N1.<li>An optional dot and integer. This number is referred to as N2.<li>An optional double-quote character, followed by a string, followed by a closing double quote character. A double quote character can be included in the string by preceding it with a backslash. This string is referred to as S.<li>The format control character.</ol>
+The actual % format is similar to printf, but with an extension to allow a literal string to 
+be specified. It contains the following parts:<p>
+<ol><li>The initial % character.<li>An optional + or - character.<li>An optional integer. This number is referred to as N1.<li>An optional dot and integer. This number is referred to as N2.<li>An optional double-quote character, followed by a string, followed by a closing double quote character. A double quote character can be included in the string by preceding it with a backslash. A backslash can be included in the string by using a 
+double-backslash. This string is referred to as S.<li>The format control character.</ol>
 <p>
 There are two banks of registers that are accessed by some of the commands, one set for 
 integer data, and one set for string data. There are 99 registers, numbered from 1 to 99. 
-References to illegal register numbers are quietly ignored. You can change the number of 
-registers by recompiling miftran. See 
-<a href="chap4.html#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced Customization' on page 13</a>.<p>
-<h2>3.6	 Format Control Characters</h2>
+References to illegal register numbers are quietly ignored. You can change the number 
+of registers by recompiling miftran. See 
+<a href="chap4.html#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced Customization' on page 
+13</a>.<p>
+<a name="3.7	"><h2>3.7	 Format Control Characters</h2>
 <p>
 The format control characters are described in the following paragraphs.<p>
-<h3>3.6.1	 %%</h3>
+<h3>3.7.1	 %%</h3>
 <p>
 The % format control characters causes a single % character to be written to the output.<p>
-<h3>3.6.2	 %A</h3>
+<h3>3.7.2	 %A</h3>
 <p>
 The A format control character directs output to one of the 
-<a name="_IX_8">alternate output files. N1 is the 
-value to plug into a %d in the output filename, as specified by the altoutfilename command in the rc file. If a + or - is specified, then N1 is added to the current alternate file 
-number, and the result is used as the new current alternate file number. N2 is the mode: 0 
-means switch to an already open file; 1 means open with mode w; 2 means open with 
-mode a. By definition, the string %A is equivalent to %+0A.<p>
-<h3>3.6.3	 %F</h3>
+<a name="_IX_8">alternate output files. N1 is 
+the value to plug into a %d in the output filename, as specified by the altoutfilename 
+command in the rc file. If a + or - is specified, then N1 is added to the current alternate 
+file number, and the result is used as the new current alternate file number. N2 is the 
+mode: 0 means switch to an already open file; 1 means open with mode w; 2 means open 
+with mode a. By definition, the string %A is equivalent to %+0A.<p>
+<h3>3.7.3	 %E</h3>
+<p>
+The E format control character stores the value of the environment variable specified by 
+S into string register N1. For example, the command<p>
+<pre>&lt;init `%1"DOC_TITLE"E'&gt;</pre>
+</ol></ul><p>
+gets the value of the environment variable DOC_TITLE and places it into string register 
+1 during initialization.<p>
+<p>
+If the + character is specified, then the value of the environment variable is passed to atoi 
+(which converts the string into an integer), and the return value of atoi is stored in integer register N1. If the string is blank (such as if the environment variable is unset), then 
+0 is stored into integer register N1. If the string is not a valid integer, the results are 
+undefined.<p>
+<h3>3.7.4	 %F</h3>
 <p>
 The F format control character directs output to one of the 
 <a name="_IX_9">primary output files. N1 is the 
 value to plug into a %d in the output filename, as specified by the outfilename command 
 in the rc file. If a + or - is specified, then N1 is added to the current primary file number, 
 and the result is used as the new current primary file number. N2 is the mode: 0 means 
-switch to an already open file; 1 means open with mode w; 2 means open with mode a. By 
-definition, the string %F is equivalent to %+0F.<p>
-<h3>3.6.4	 %L</h3>
+switch to an already open file; 1 means open with mode w; 2 means open with mode a. 
+By definition, the string %F is equivalent to %+0F.<p>
+<h3>3.7.5	 %H</h3>
+<p>
+The H format control character causes miftran to do a callback to the typesub for 
+`hypertext endanchor' on the next font change. This allows simple rc definitions to handle the hyperlink commands in the MIF file. The standard include file std.rc has definitions to handle these commands. Look for the word `hypertext' in that file to see the 
+definitions.<p>
+<h3>3.7.6	 %L</h3>
 <p>
 The L format control character loads literal data into an internal register. N1 specifies the 
-register number. If the + character is specified, then N2 is loaded into integer N1. If no + 
-character is specified, then S is loaded into string register N1.<p>
-<h3>3.6.5	 %O</h3>
+register number. If the + character is specified, then N2 is loaded into integer register 
+N1. If no + character is specified, then S is loaded into string register N1.<p>
+<h3>3.7.7	 %O</h3>
 <p>
 The O format control character performs an 
 <a name="_IX_10">operation on two registers. If the + character 
 is specified then the operation is performed on the integer registers, else the operation is 
-performed on the string registers. N1 and N2 specify the two registers to use and S specifies the name of the operation to perform. The results are placed into register N1. The list 
-of operations names is given in 
-<a href="chap3.html#24978: Section: 3.7 Register Operations">Section 3.7, `Register Operations' on page 12</a>.<p>
-<h3>3.6.6	 %R</h3>
+performed on the string registers. N1 and N2 specify the two registers to use and S specifies the name of the operation to perform. The results are placed into register N1. The 
+list of operations names is given in 
+<a href="chap3.html#24978: Section: 3.7 Register Operations">Section 3.7, `Register Operations For Integers' on 
+page 12</a>.<p>
+<h3>3.7.8	 %R</h3>
 <p>
 The R format control character loads data into an internal register. N1 specifies the register number. If the + character is specified, then integer data is extracted from the data 
 string and stored into the specified register. N2 is used to determine which integer to 
-extract, and is 0 based. For example, if N2 is 1 and the data string is `a12b25c30', then the 
-number 25 is stored into the specified integer register.<p>
+extract, and is 0 based. For example, if N2 is 1 and the data string is `a12b25c30', then 
+the number 25 is stored into the specified integer register.<p>
 <p>
 If no + character is specified, the current data string is stored into the specified register.<p>
 <p>
- The data string used as the source for this command is the current string data for the translation being formatted. If N1 is not in the legal range, it is silently ignored. Note that %R 
-is equivalent to %0R and will thus be ignored.<p>
-<h3>3.6.7	 %f</h3>
+The data string used as the source for this command is the current string data for the 
+translation being formatted. If N1 is not in the legal range, it is silently ignored. Note 
+that %R is equivalent to %0R and will thus be ignored.<p>
+<h3>3.7.9	 %S</h3>
+<p>
+The S format control character directs the output stream to string register N1. All output 
+goes into that register until redirected by another %S or %A command. This is used, for 
+example, to implement part headings in the standard include file part.rc.<p>
+<h3>3.7.10	 %X</h3>
+<p>
+The X format control character executes an extended command. The name of the command is given by S. The list of extended commands is given in 
+<a href="chap3.html#60755: Section: 3.9 Extended Commands">Section 3.9, `Extended 
+Commands' on page 13</a>.<p>
+<h3>3.7.11	 %f</h3>
 <p>
 The f format control character prints the primary output filename to the output. N1 is the 
-value to plug into a %d in the output filename, and is calculated in the same way as for the 
-%F format.<p>
-<h3>3.6.8	 %r</h3>
+value to plug into a %d in the output filename, and is calculated in the same way as for 
+the %F format.<p>
+<h3>3.7.12	 %n</h3>
 <p>
-The r format control character prints out the contents of the register specified by N1. If this 
-register has never been set, or if N1 is not a valid register number, then nothing is output. 
-Note that %r is equivalent to %0r, and does nothing.<p>
-<h3>3.6.9	 %s</h3>
+The n format control character outputs a newline if the last character of the associated 
+data is a space. This hack provides a way to output a newline at a safe place in the output 
+file. If the data does not end in a space, it may be in the middle of a word, so it is not safe 
+to output a newline.<p>
+<h3>3.7.13	 %r</h3>
+<p>
+The r format control character prints out the contents of the register specified by N1. If 
+this register has never been set, or if N1 is not a valid register number, then nothing is 
+output. Note that %r is equivalent to %0r, and does nothing.<p>
+<h3>3.7.14	 %s</h3>
 <p>
 The s format control character prints out the entire data string.<p>
-<h2>3.7	 <a name="24978: Section: 3.7 Register Operations">Register Operations For Integers</h2>
+<a name="24978: Section: 3.7 Register Operations"><a name="3.8	"><h2>3.8	 Register Operations For Integers</h2>
 <p>
-This section describes the register operations that can be specified for integer registers in a 
-%O control sequence.<p>
+This section describes the register operations that can be specified for integer registers in 
+a %O control sequence.<p>
+<h3>3.8.1	 add</h3>
 <p>
-[This section not yet done]<p>
-<h2>3.8	 Register Operations For Strings</h2>
+The integer add (or +) command adds the value in integer register N2 to the value in 
+integer register N1 and places the result in integer register N1.<p>
+<h3>3.8.2	 subtract</h3>
 <p>
-This section describes the register operations that can be specified for string registers in a 
-%O sequence.<p>
+The integer subtract (or -) command subtracts the value in integer register N2 from the 
+value in integer register N1 and places the result in integer register N1.<p>
+<h3>3.8.3	 copy</h3>
 <p>
-[not yet done]<p>
+The integer copy command sets integer register N1 to the value in integer register N2.<p>
+<a name="3.9	"><h2>3.9	 Register Operations For Strings</h2>
+<p>
+This section describes the register operations that can be specified for string registers in 
+a %O sequence.<p>
+<h3>3.9.1	 cat</h3>
+<p>
+The string cat command places the concatenation of string register N1 followed by 
+string register N2 into string register N1.<p>
+<h3>3.9.2	 copy</h3>
+<p>
+The string copy command makes a copy of string register N2 and places it into string 
+register N1.<p>
+<h3>3.9.3	 get</h3>
+<p>
+The string get command gets the value of the symbol named by string register N2 and 
+places it into string register N1.<p>
+<h3>3.9.4	 set</h3>
+<p>
+The string set command sets the symbol named by string register N2 to the value in 
+string register N1.<p>
+<a name="60755: Section: 3.9 Extended Commands"><a name="3.10	"><h2>3.10	 Extended Commands</h2>
+<p>
+This section describes the extended commands available by using a %X sequence.<p>
+<h3>3.10.1	 skip</h3>
+<p>
+The skip command skips through the MIF input file until the end of the current level is 
+reached. This is useful for skipping disabled conditional text.<p>
 <p><a href="TOC.html">Table of Contents</a>
  * <a href="chap2.html">Previous Chapter</a>
  * <a href="chap4.html">Next Chapter</a>

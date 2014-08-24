@@ -6,64 +6,76 @@
 <h1>2	 Usage</h1>
 <p>
 This chapter describes how to run miftran.<p>
-<h2>2.1	 <a name="27401: Section: 2.1 Requirements">Requirements</h2>
+<a name="27401: Section: 2.1 Requirements"><a name="2.1	"><h2>2.1	 Requirements</h2>
 <p>
 In order to run miftran, you will need two things (other than miftran itself):<p>
 <ol><li>A MIF file to use as input. This is normally specified in the rc file, but can also be 
-given on the command line<li>An rc file to control the translation. The default is `miftran.rc' in the current directory, 
-or you can use the MIFTRANRC environment variable, or the -rc command line 
-option. See 
-<a href="chap3.html#32917: Chapter: 3 The RC File">Chapter 3, `The RC File' on page 5</a>.</ol>
+given on the command line<li>An rc file to control the translation. The default is `miftran.rc' in the current directory, or you can use the MIFTRANRC environment variable, or the -rc command 
+line option. See 
+<a href="chap3.html#32917: Chapter: 3 The RC File">Chapter 3, `The RC File' on page 6</a>.</ol>
 <p>
-You makeyour MIF file from Frame using the Save As command. You create your rc file 
-using your favorite text editor.<p>
+You make your MIF file from Frame using the Save As command. You create your rc 
+file using your favorite text editor.<p>
 <p>
-Miftran is designed to accept a single MIF file as input, but it can produce multiple output 
-files. Thus you can create a separate output file for each chapter of your document (or each 
-section, or whatever else you select). This is appropriate for hypertext browsers, where 
-each chunk is typically considerably smaller than what goes into a MIF file (such as this 
-entire document).<p>
+Miftran is designed to accept a single MIF file as input, but it can produce multiple output files. Thus you can create a separate output file for each chapter of your document 
+(or each section, or whatever else you select). This is appropriate for hypertext browsers, 
+where each chunk is typically considerably smaller than what goes into a MIF file (such 
+as this entire document).<p>
+<p>
+If your document is saved in multiple MIF files, you can concatenate them all together 
+into one bug MIF file and run that through miftran. This may or may not work, depending on your MIF files. You'll just have to try it to find out.<p>
 <p>
 The simplest way to use miftran is to create a directory in which to produce the output 
 files, and to place your rc file into that directory. You can put a simple makefile into the 
 directory so that you don't have to remember how to run miftran; then you can simply cd 
 into that directory and type `make' in order to update your HTML files.<p>
-<h2>2.2	 Command Line Options</h2>
+<a name="2.2	"><h2>2.2	 Command Line Options</h2>
 <p>
 Miftran includes only a few 
 <a name="_IX_3">command line options, mainly for debugging. The 
-<a name="_IX_4">debugging 
-command line options (-cmd, -fmt, -lex, -sub, -tran) allow you to control which phases of 
-the translation are performed by miftran (see 
-<a href="chap1.html#17541: Heading1: 1.1 The Translation Process">Section 1.1, `The Translation Process' on 
-page 2</a>). Other options are:<p>
+<a name="_IX_4">debugging command line options (-cmd, -fmt, -lex, -sub, -tran) allow you to control which 
+phases of the translation are performed by miftran (see 
+<a href="chap1.html#17541: Heading1: 1.1 The Translation Process">Section 1.1, `The Translation 
+Process' on page 2</a>). Other options are:<p>
 <ul><li>-version - 
 <a name="_IX_5">print the version of miftran and exit.<li>-rc 
-<I>filename</I> - specify the name of the rc file to use.</ul><p>
-An additional argument not starting with `-' is assumed to bean input filename. A single 
-`-' specifies that input is to come from stdin. Input will also be taken from stdin if no 
+<I>filename</I> - specify the name of the rc file to use.<li>-I 
+<I>directory</I> - specify a directory in which to search for &lt;include&gt; files.</ul><p>
+An additional argument not starting with `-' is assumed to be an input filename. A single `-' specifies that input is to come from stdin. Input will also be taken from stdin if no 
 input file is specified (either on the command line or in the rc file).<p>
 <p>
-There are no command line options to specify output files. The output file or files are normally specified in the rc file (see 
-<a href="chap3.html#32917: Chapter: 3 The RC File">Chapter 3, `The RC File' on page 6</a>), and are processed 
-during the fmt stage of the translation (see 
-<a href="chap1.html#17541: Heading1: 1.1 The Translation Process">Section 1.1, `The Translation Process' on page 
-2</a>). Thus if you use one of the debugging command line options to get early output, it will 
-always come to stdout.<p>
-<h2>2.3	 Environment</h2>
+There are no command line options to specify output files. The output file or files are 
+normally specified in the rc file (see 
+<a href="chap3.html#32917: Chapter: 3 The RC File">Chapter 3, `The RC File' on page 6</a>), and are processed during the fmt stage of the translation (see 
+<a href="chap1.html#17541: Heading1: 1.1 The Translation Process">Section 1.1, `The Translation Process' 
+on page 2</a>). Thus if you use one of the debugging command line options to get early output, it will always come to stdout.<p>
+<a name="2.3	"><h2>2.3	 Environment</h2>
 <p>
 Miftran uses the following 
 <a name="_IX_6">environment variables:<p>
 <ul><li>MIFTRANRC - if set and no rc file was specified on the command line, uses the value 
-as the name of the rc file to use.</ul><h2>2.4	 Postprocessing</h2>
+as the name of the rc file to use.</ul><a name="2.4	"><h2>2.4	 Postprocessing</h2>
 <p>
-Miftran makes a single pass through the document and produces one or more output files. 
-In order to properly handle forward cross references, a second pass of some sort needs to 
-be made. This is handled by an external script, called fixref, which uses a data file produced by miftran in order to update the cross references in the HTML files. Control over 
-production of the data file is contained in the miftran rc file.<p>
+Miftran makes a single pass through the document and produces one or more output 
+files. In order to properly handle forward cross references, a second pass of some sort 
+needs to be made. This is handled by an external script, called fixref, which uses a data 
+file produced by miftran in order to update the cross references in the HTML files. Control over production of the data file is contained in the miftran rc file.<p>
 <p>
 The fixref script is normally included as part of the make procedure as defined in the 
 Makefile for the HTML documents.<p>
+<a name="2.5	"><h2>2.5	 The Include Directory</h2>
+<p>
+Miftran comes with a set of rc files that can be included by reference in your rc file. This 
+makes it simpler to create your customized rc file, and makes it easier to incorporate bug 
+fixes and enhancements to the rc files when a new version of miftran is released.<p>
+<p>
+The standard miftran include directory is 
+<I>miftran</I><TT>/mtinc</TT>, where 
+<I>miftran 
+</I>is the directory in which the miftran kit has been installed. You can reference this directory in the 
+miftran command line by using the -I command line option. Then you can use the 
+&lt;include&gt; command in your rc file to reference any of the standard rc files from the 
+include directory.<p>
 <p><a href="TOC.html">Table of Contents</a>
  * <a href="chap1.html">Previous Chapter</a>
  * <a href="chap3.html">Next Chapter</a>

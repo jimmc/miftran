@@ -22,7 +22,8 @@ LINKFLAGS = $(CFLAGS)
 LIBS =
 
 KITFILES = README RelNotes Makefile TODO $(SRCS) *.h miftran.mif $(SCRIPTS) \
-	html/Makefile html/html.makefile html/miftran.rc htmlref/*.html
+	html/Makefile html/html.makefile html/miftran.rc htmlref/*.html \
+	mtinc/*.rc
 
 SCRIPTS  = fixchl fixindex fixref
 

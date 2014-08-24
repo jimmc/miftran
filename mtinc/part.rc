@@ -1,0 +1,5 @@
+#MiftranPart outputs something to the TOC only
+<typesub switchpgf `*.MiftranPart' `%3L%3S'>	#store in S3
+<typesub string MiftranPart `%s'>
+<typesub endpgf MiftranPart `%1.2A\
+%6r%6L</ul><h2>%3r</h2>\n<ul>%+0F'>	#output to TOC

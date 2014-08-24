@@ -1,6 +1,5 @@
-TODO for miftran					9.Jun.94
+TODO for miftran					19.Jun.95
 
-- Implement <include ...> in rc, -I to miftran; make "library" of rc pieces.
 - Support spot cross-references (and add doc).
 - Recognize <$xxx> in variables (e.g. date), do those substitutions.
 - Handle SoftHyphen correctly (i.e. put the word back together).
@@ -12,7 +11,10 @@ TODO for miftran					9.Jun.94
 - Ability to do some path manipulation, e.g. to strip path and extension
   off graphics filename so that it can be put back into doc as "file.gif"
   and into external file for controlling image conversion.
-- Handle (at least to be able to ignore) included images (such as EPS).
+- Fix fixchl so that <title> does not come after links.
+- Add <head> and <body> to output.
+- Add <DOCTYPE> line, e.g.:
+	<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN//2.0">
 
 Documentation:
 - Upgrade for current version
