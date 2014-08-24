@@ -1,3 +1,20 @@
+miftran v0.5p1 21.Sep.1995
+
+	Enhancements
+	------------
+	- The new file mtinc/spanish.rc contains stringsub commands for
+	  Spanish characters (courtesy of Pedro Antonio Acebes Bayon).
+
+	Changes
+	-------
+	- The file mtinc/std.rc has been split up into many smaller files.
+	  This makes it simpler to pick and choose if you don't want all of
+	  std.rc.
+
+	Bug Fixes
+	---------
+	- Added missing </a> after <a name=...>.
+
 miftran v0.5 19.Jun.1995
 
 	Enhancements

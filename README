@@ -1,5 +1,5 @@
 
-    Miftran v0.5						19.Jun.95
+    Miftran v0.5p1						25.Sep.95
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -7,7 +7,7 @@
     translations.
 
     The latest version of miftran is most likely to be found in
-       ftp://ftp.alumni.caltech.edu/pub/mcbeath/web/miftran/
+       <URL:ftp://ftp.alumni.caltech.edu/pub/mcbeath/web/miftran/>
 
     Miftran has the following features:
 
@@ -123,10 +123,22 @@
 
     For information about other MIF to HTML converters see:
     - The Frame FAQ, posted to the frame newsgroup and available at
-	ftp://rtfm.mit.edu/pub/usenet-by-group/news.answers/frame
+	<URL:ftp://rtfm.mit.edu/pub/usenet-by-group/news.answers/frame>
     - CERN's html converter page
-	http://info.cern.ch/hypertext/WWW/Tools/Word_proc_filters.html
+	<URL:http://info.cern.ch/hypertext/WWW/Tools/Word_proc_filters.html>
 
-    Author: Jim McBeath
+    ADVERTISEMENT: Now that you've converted all of your documents to
+    HTML and are ready to send them out to your customers, do you need
+    an HTML browser that you can send along with the files?
+    GLOBEtrotter Software sells GLOBEhelp, a commercial X/Motif HTML file
+    browser.  For one low price which is less than other companies
+    charge for single-binary redistribution rights, you get source and
+    multi-platform royalty-free redistribution rights.
+    For more information:
+	<URL:http://www.globetrotter.com/>
+	info@globes.com
+	(408)370-2800  FAX:(408)370-2884
+
+    Author: Jim McBeath (also author of GLOBEhelp HTML browser)
     jimmc@globes.com  jimmc@eskimo.com  jimmc@alumni.caltech.edu
-    http://alumni.caltech.edu/~jimmc
+    <URL:http://alumni.caltech.edu/~jimmc/>

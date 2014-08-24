@@ -5,24 +5,7 @@
 #to specify tagalias commands to map your paragraph and font tags to
 #the tags used in this file.
 
-#Specify output files
-<outfilename `chap%d.html'>
-<altoutfilename `d%d.txt'>
-
-#Basic translations for either outputting (default) or ignoring text.
-<typesub string `*' `%s%n'>
-<typesub string MiftranIgnore `'>
-
-#Ignore hidden conditional text
-<typesub textflowtag `HIDDEN' `%"skip"X'>
-
-<typesub startfile `*' `%+1.1L\
-%3.1A%2.1A%1.1A\
-<title>%1r</title>\n\
-<h1>%1r</h1>\n\<ul>\n\
-%0.1F'>	#Open output files for write, put in title
-
-<typesub endfile `*' `%1.2A</ul>\n<a href="IX.html">Index</a>\n'>
+<include `stdhead.rc'>
 
 #We use the string registers as follows:
 #S1 document title
@@ -45,114 +28,26 @@
 #d2.txt - list of cross reference targets for use by fixref
 #d3.txt - list of index markers
 
-#Handle anchored frame stuff
-<typesub aframeid `*' `%11R'>		#store AFrame ID in S11
-#When we get a filename, create symbol AFrame#%s where %s is ID of frame,
-#set value of that symbol to the filename for the AFrame.
-<typesub aframefile `*' `%12R%13"AFrame#"L%13.11"cat"O%12.13"set"O'>
-#When we get aframe ref, get symbol from symbol table and insert into output
-<typesub aframe `*' `%11R%13"AFrame#"L%13.11"cat"O%12.13"get"O\
-<img src="%12r">'>
+<include `anchfram.rc'>
+<include `vars.rc'>
+<include `markers.rc'>
+<include `hypertxt.rc'>
+<include `chars.rc'>
 
-#Handle simple variables
-<typesub varname `*' `%14R'>	#store var name in S14
-#When we get a definition, create symbol Var#%s where %s is name of var.
-#set value of that symbol to the definition of the variable.
-<typesub vardef `*' `%15R%16"Var#"L%16.14"cat"O%15.16"set"O'>
-#When we get variable ref, get symbol from symbol table and insert into output
-<typesub varref `*' `%14R%16"Var#"L%16.14"cat"O%15.16"get"O%15r'>
-<typesub varref MiftranIgnore `'>
-
-#For markers, output file and marker name to index file to allow external
-#script to do a pass2 on files to update xrefs to point to proper files.
-#Frame marker types:
-#2 index
-#8 is hypertext (handled separately below)
-#9 target of a cross reference
-#Markers can appear in chapter text, so we use %+0F/%F to ensure that the
-#<a> text goes to the file, not to the chapter register.
-<typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F\
-%+0F<a name="_IX_%+2r">%F'>
-<typesub markertext `9' `%2.2A%f:%s\n%F\
-%+0F<a name="%s">%F'>
-<typesub xreftext `*' `<a href="#%s">'>
-<typesub xrefend `*' `</a>'>
-
-#Hypertext stuff: gotolink is like cross-ref text, newlink is like marker9.
-#%H tells miftran to call back to our "hypertext endanchor" when font changes.
-<typesub hypertext gotolink `<a href="#%s">%H'>
-<typesub hypertext openlink `<a href="#%s">%H'>
-<typesub hypertext newlink `%2.2A%f:%s\n%F<a name="%s">%H'>
-<typesub hypertext endanchor `</a>'>
-
-#Special character commands
-<typesub hardreturn `*' `\n'>
-<typesub hardspace `*' ` '>	#or &nbsp; if your browser supports it
-<typesub hardhyphen `*' `-'>
-<typesub tab `*' `\t'>
-
-#Generate table of contents with Chapter and H2 in it.
+#Generate table of contents with Chapter and H2 in it.  If you only want
+#chapter headings in the TOC, but not H2 headings, use chap1.rc
 <include `chap2.rc'>
+<include `part.rc'>
 
-<typesub pgfnumstring MiftranH3 `%s '>
-<typesub startpgf MiftranH3 `<h3>'>
-<typesub endpgf MiftranH3 `</h3>\n'>
-
-<typesub startpgf MiftranH4 `<h4>'>
-<typesub endpgf MiftranH4 `</h4>\n'>
-
-<typesub startpgf MiftranH5 `<h5>'>
-<typesub endpgf MiftranH5 `</h5>\n'>
-
-<typesub startpgf MiftranH6 `<h6>'>
-<typesub endpgf MiftranH6 `</h6>\n'>
-
-<typesub startpgf MiftranBody `<p>\n'>
-<typesub endpgf MiftranBody `<p>\n'>
-
-<typesub startpgf MiftranCode `<pre>'>
-<typesub endpgf MiftranCode `</pre>\n'>
-<typesub string MiftranCode `%s'>
-
-<typesub switchpgf `*.MiftranBullet' `<ul>'>
-<typesub switchpgf `MiftranBullet.*' `</ul>'>
-<typesub startpgf MiftranBullet `<li>'>
-<typesub startpgf MiftranContbullet `<p>'>
-
-<typesub switchpgf `*.MiftranStep1' `<ol>'>
-<typesub switchpgf `MiftranStep.*' `</ol>\n'>
-<typesub switchpgf `MiftranStep.MiftranContstep' `'>
-<typesub switchpgf `MiftranContstep.MiftranBody' `</ol>\n'>
-<typesub startpgf MiftranStep `<li>'>
-<typesub startpgf `MiftranStep1' `<li>'>
-
-<typesub switchpgf `MiftranStep.MiftranSubstep1' `<ol>'>
-<typesub switchpgf `MiftranStep.MiftranContbullet' `<p>'>
-<typesub switchpgf `MiftranStep.MiftranCode' `'>
-<typesub switchpgf `MiftranCode.MiftranBody' `</ol></ul>'>
-	#A hack: we want to terminate lists that have code,
-	#but we don't know when they should terminate.
-	#We presume that the extra /ul will be ignore by html parser.
-<typesub switchpgf `MiftranSubstep.*' `</ol>\n'>
-<typesub startpgf MiftranSubstep `<li>'>
-<typesub startpgf MiftranSubstep1 `<li>'>
-
-<typesub startfont MiftranItalic `<I>'>
-<typesub startfontangle MiftranItalic `<I>'>
-<typesub endfont MiftranItalic `</I>'>
-<typesub startfont MiftranBold `<B>'>
-<typesub startfontweight MiftranBold `<B>'>
-<typesub endfont MiftranBold `</B>'>
-<typesub startfont MiftranFixed `<TT>'>
-<typesub endfont MiftranFixed `</TT>'>
-<typesub startfont MiftranCode `<code>'>
-<typesub endfont MiftranCode `</code>'>
-
-<typesub emdash `*' ` - '>
-<typesub emdash `MiftranIgnore' `'>
+<include `stdpgf.rc'>
+<include `stdfont.rc'>
+<include `preface.rc'>
+<include `deflist.rc'>
+<include `specials.rc'>
 
 <include `strsub.rc'>	#standard string substitutions
 <include `german.rc'>
 <include `french.rc'>
+<include `spanish.rc'>
 
 #end

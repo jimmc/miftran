@@ -1,0 +1,44 @@
+<typesub pgfnumstring MiftranH3 `%s '>
+<typesub startpgf MiftranH3 `<h3>'>
+<typesub endpgf MiftranH3 `</h3>\n'>
+
+<typesub startpgf MiftranH4 `<h4>'>
+<typesub endpgf MiftranH4 `</h4>\n'>
+
+<typesub startpgf MiftranH5 `<h5>'>
+<typesub endpgf MiftranH5 `</h5>\n'>
+
+<typesub startpgf MiftranH6 `<h6>'>
+<typesub endpgf MiftranH6 `</h6>\n'>
+
+<typesub startpgf MiftranBody `<p>\n'>
+<typesub endpgf MiftranBody `<p>\n'>
+<typesub startpgf MiftranBodyLined `<p><hr>\n'>
+<typesub endpgf MiftranBodyLined `<hr><p>\n'>
+
+<typesub startpgf MiftranCode `<pre>'>
+<typesub endpgf MiftranCode `</pre>\n'>
+<typesub string MiftranCode `%s'>
+
+<typesub switchpgf `*.MiftranBullet' `<ul>'>
+<typesub switchpgf `MiftranBullet.*' `</ul>'>
+<typesub startpgf MiftranBullet `<li>'>
+<typesub startpgf MiftranContbullet `<p>'>
+
+<typesub switchpgf `*.MiftranStep1' `<ol>'>
+<typesub switchpgf `MiftranStep.*' `</ol>\n'>
+<typesub switchpgf `MiftranStep.MiftranContstep' `'>
+<typesub switchpgf `MiftranContstep.MiftranBody' `</ol>\n'>
+<typesub startpgf MiftranStep `<li>'>
+<typesub startpgf `MiftranStep1' `<li>'>
+
+<typesub switchpgf `MiftranStep.MiftranSubstep1' `<ol>'>
+<typesub switchpgf `MiftranStep.MiftranContbullet' `<p>'>
+<typesub switchpgf `MiftranStep.MiftranCode' `'>
+<typesub switchpgf `MiftranCode.MiftranBody' `</ol></ul>'>
+	#A hack: we want to terminate lists that have code,
+	#but we don't know when they should terminate.
+	#We presume that the extra /ul will be ignore by html parser.
+<typesub switchpgf `MiftranSubstep.*' `</ol>\n'>
+<typesub startpgf MiftranSubstep `<li>'>
+<typesub startpgf MiftranSubstep1 `<li>'>

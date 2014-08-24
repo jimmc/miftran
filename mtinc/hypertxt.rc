@@ -1,0 +1,6 @@
+#Hypertext stuff: gotolink is like cross-ref text, newlink is like marker9.
+#%H tells miftran to call back to our "hypertext endanchor" when font changes.
+<typesub hypertext gotolink `<a href="#%s">%H'>
+<typesub hypertext openlink `<a href="#%s">%H'>
+<typesub hypertext newlink `%2.2A%f:%s\n%F<a name="%s"></a>%H'>
+<typesub hypertext endanchor `</a>'>

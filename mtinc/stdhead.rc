@@ -1,0 +1,18 @@
+#Specify output files
+<outfilename `chap%d.html'>
+<altoutfilename `d%d.txt'>
+
+#Basic translations for either outputting (default) or ignoring text.
+<typesub string `*' `%s%n'>
+<typesub string MiftranIgnore `'>
+
+#Ignore hidden conditional text
+<typesub textflowtag `HIDDEN' `%"skip"X'>
+
+<typesub startfile `*' `%+1.1L\
+%3.1A%2.1A%1.1A\
+<title>%1r</title>\n\
+<h1>%1r</h1>\n\<ul>\n\
+%0.1F'>	#Open output files for write, put in title
+
+<typesub endfile `*' `%1.2A</ul>\n<a href="IX.html">Index</a>\n'>

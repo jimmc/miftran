@@ -1,4 +1,7 @@
-TODO for miftran					19.Jun.95
+TODO for miftran					25.Sep.95
+
+- Hrefs can't have spaces in them. (950811)
+- Look into NeedToDo miftran bug (char format stops at ParaLine) (950803)
 
 - Support spot cross-references (and add doc).
 - Recognize <$xxx> in variables (e.g. date), do those substitutions.

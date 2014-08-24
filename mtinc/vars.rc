@@ -1,0 +1,8 @@
+#Handle simple variables
+<typesub varname `*' `%14R'>	#store var name in S14
+#When we get a definition, create symbol Var#%s where %s is name of var.
+#set value of that symbol to the definition of the variable.
+<typesub vardef `*' `%15R%16"Var#"L%16.14"cat"O%15.16"set"O'>
+#When we get variable ref, get symbol from symbol table and insert into output
+<typesub varref `*' `%14R%16"Var#"L%16.14"cat"O%15.16"get"O%15r'>
+<typesub varref MiftranIgnore `'>

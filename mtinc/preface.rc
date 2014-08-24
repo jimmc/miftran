@@ -1,0 +1,6 @@
+#Preface is like chapter, but we don't switch output files;
+#output to xref file, and output preface stuff to chapter file.
+<typesub startpgf MiftranPreface `\
+%1.2A<li><a href="%f">Preface</a>\n%F\
+<title>Preface</title>\n'>
+<typesub string MiftranPreface `<h1>%s</h1>\n'>

@@ -1,0 +1,51 @@
+#Spanish characters
+<stringsub `\\x87 ' `&aacute;'>  # small a, acute accent 
+<stringsub `\\x8a ' `&auml;'>    # small a, uml accent 
+<stringsub `\\x88 ' `&agrave;'>  # small a, grave accent 
+<stringsub `\\x89 ' `&acirc;'>   # small a, circumflex accent 
+<stringsub `\\xe7 ' `&Aacute;'>  # capital a, acute accent 
+<stringsub `\\x80 ' `&Auml;'>    # capital a, uml accent 
+<stringsub `\\xcb ' `&Agrave;'>  # capital a, grave accent 
+<stringsub `\\xe5 ' `&Acirc;'>   # capital a, circumflex accent 
+<stringsub `\\x8e ' `&eacute;'>  # small e, acute accent 
+<stringsub `\\x91 ' `&euml;'>    # small e, uml accent 
+<stringsub `\\x8f ' `&egrave;'>  # small e, grave accent 
+<stringsub `\\x90 ' `&ecirc;'>   # small e, circumflex accent 
+<stringsub `\\x83 ' `&Eacute;'>  # capital e, acute accent 
+<stringsub `\\xe8 ' `&Euml;'>    # capital e, uml accent
+<stringsub `\\xe9 ' `&Egrave;'>  # capital e, grave accent
+<stringsub `\\xe6 ' `&Ecirc;'>   # capital e, circumflex accent 
+<stringsub `\\x92 ' `&iacute;'>  # small i, acute accent 
+<stringsub `\\x95 ' `&iuml;'>    # small i, uml accent 
+<stringsub `\\x93 ' `&igrave;'>  # small i, grave accent 
+<stringsub `\\x94 ' `&icirc;'>   # small i, circumflex accent 
+<stringsub `\\xea ' `&Iacute;'>  # capital i, acute accent 
+<stringsub `\\xec ' `&Iuml;'>    # capital i, uml accent 
+<stringsub `\\xed ' `&Igrave;'>  # capital i, grave accent 
+<stringsub `\\xeb ' `&Icirc;'>   # capital i, circumflex accent 
+<stringsub `\\x97 ' `&oacute;'>  # small o, acute accent 
+<stringsub `\\x9a ' `&ouml;'>    # small o, uml accent 
+<stringsub `\\x98 ' `&ograve;'>  # small o, grave accent 
+<stringsub `\\x99 ' `&ocirc;'>   # small o, circumflex accent 
+#<stringsub `\\x97 ' `&Oacute;'>  # capital o, acute accent 
+#<stringsub `\\x9a ' `&Ouml;'>    # capital o, uml accent 
+#<stringsub `\\x98 ' `&Ograve;'>  # capital o, grave accent 
+#<stringsub `\\x99 ' `&Ocirc;'>   # capital o, circumflex accent 
+<stringsub `\\x9c ' `&uacute;'>  # small u, acute accent 
+<stringsub `\\x9f ' `&uuml;'>    # small u, uml accent 
+<stringsub `\\x9d ' `&ugrave;'>  # small u, grave accent 
+<stringsub `\\x9e ' `&ucirc;'>   # small u, circumflex accent 
+<stringsub `\\xf2 ' `&Uacute;'>  # capital u, acute accent 
+<stringsub `\\x86 ' `&Uuml;'>    # capital u, uml accent 
+<stringsub `\\xf4 ' `&Ugrave;'>  # capital u, grave accent 
+<stringsub `\\xf3 ' `&Ucirc;'>   # capital u, circumflex accent 
+<stringsub `\\x8d ' `&ccedil;'>  # small c, cedilla
+<stringsub `\\x82 ' `&Ccedil;'>  # big c, cedilla
+<stringsub `\\x96 ' `&ntilde;'>  # small n, tilde
+<stringsub `\\x84 ' `&Ntilde;'>  # big n, tilde
+###<stringsub `\\x??? ' `&#186;'>  # ordmasculine 
+<stringsub `\\xbb ' `&#170;'>  # ordfeminine
+<stringsub `\\xc0 ' `&#191;'>  # questiondown
+<stringsub `\\xc1 ' `&#161;'>  # exclamdown
+<stringsub `\\xe1 ' `&#183;'>  # 
+<stringsub `\\xb7 ' `&#183;'>  # 

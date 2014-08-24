@@ -1,0 +1,5 @@
+#Special character commands
+<typesub hardreturn `*' `\n'>
+<typesub hardspace `*' ` '>	#or &nbsp; if your browser supports it
+<typesub hardhyphen `*' `-'>
+<typesub tab `*' `\t'>
