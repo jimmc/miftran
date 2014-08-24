@@ -1,5 +1,5 @@
 
-    Miftran v0.4						18.Aug.94
+    Miftran v0.4p1						31.Oct.94
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -17,7 +17,7 @@
 	  which can be customized for each MIF file to be translated.
 	  ALL output text is controlled by contents of RC file.
 
-	- Based on paragraph and font tags (plus FWeight and FAngle)..
+	- Based on paragraph and font tags (plus FWeight and FAngle).
 
 	- Generates Table of Contents (based on chapters, etc.) and Index
 	  (based on Index markers), controlled by configuration file.
@@ -87,7 +87,7 @@
     1. Create a working directory for your html files.
     2. Copy html/Makefile and html/miftran.rc file to your directory.
     3. Edit your Makefile, set MIF_SOURCE and MIFTRAN_DIR.
-    4. Edit your miftran.rc, set infilename to point to your mif file.
+    4. Edit your miftran.rc, set the document title.
     5. Do a "make font.list pgf.list" in your directory; this will make a
        list of font and paragraph tags used in your document.
     6. Edit your miftran.rc to change the <tagalias> lines to refer to
@@ -99,9 +99,10 @@
     Miftran has been compiled and run on the following machines:
 	Dec Alpha OSF1
 	Decstation Ultrix 4.2a
-	HP7000 HPUX 9.01
+	HP700 HPUX 9.01
+	HP700 NextStep 3.3
 	Linux 1.0.8 with gcc 2.5.8 (Intel x86)
-	NeXT NextStep3.2
+	NeXT NextStep 3.2
 	RS6000 AIX 3.2.5
 	SCO ODT 3.0 (Intel x86)
 	SGI IRIX 5.1
@@ -115,6 +116,12 @@
     please let me know, especially if there were any changes required
     to get it to work.
 
+    For information about other MIF to HTML converters see:
+    - The Frame FAQ, posted to the frame newsgroup and available at
+	ftp://rtfm.mit.edu/pub/usenet-by-group/news.answers/frame
+    - CERN's html converter page
+	http://info.cern.ch/hypertext/WWW/Tools/Word_proc_filters.html
+
     Author: Jim McBeath
     jimmc@globes.com  jimmc@eskimo.com  jimmc@alumni.caltech.edu
-    http://eskinews.eskimo.com/~jimmc
+    http://alumni.caltech.edu/~jimmc

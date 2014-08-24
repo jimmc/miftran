@@ -15,6 +15,7 @@ add_chap_anchors() {
 }
 
 n=0
+[ -f chap0.html ] || n=1
 thischap=chap$n.html
 while [ -f $thischap ]; do
 	prevn=`expr $n - 1`

@@ -1,3 +1,27 @@
+miftran v0.4p1 31.Oct.1994
+
+	Enhancements
+	------------
+	- Added <tagalias Normal MiftranBody>.
+
+	- Modified miftran.rc to take out default input filename; the makefile
+	  now specifies the input filename.  This makes it simpler to use
+	  the same miftran.rc file for multiple mif files, as long as they
+	  use the same set of paragraph and font tags.
+	
+	- Modified html/Makefile to allow overriding mif source file and
+	  miftran.rc file on command line, to make it possible to use
+	  the same makefile for multiple mif files and directories.
+
+	- Modified html/Makefile to remove chap0.html if it is empty.
+
+	Bug Fixes
+	---------
+	- Fixed unrevealed bug in MtXCmd, would have caused problem if
+	  command table had had more than one command in it.
+
+	- Fixed bug in Skip command that caused it to skip too much.
+
 miftran v0.4 18.Aug.1994
 
 	NOTE: this release includes a change to the semantics of a

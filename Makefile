@@ -11,7 +11,10 @@ CDEFINES =
 
 CCOPTS = -g
 
-CFLAGS = $(INCLUDES) $(CDEFINES) $(CCOPTS)
+CFLAGS = $(INCLUDES) $(CDEFINES) $(CCOPTS) $(ARCH)
+#For NextStep, which has multi-architecture binary files, you can uncomment
+#the following line to compile for multiple architectures.
+#ARCH = -arch m68k -arch i386 -arch hppa
 
 LINKER = $(CC)
 LINKFLAGS = $(CFLAGS)
@@ -85,6 +88,9 @@ lookcheck:;	ls -l $(CIFILES) | grep -e '-rw' | cat
 
 clean:;	rm -f $(PROGRAM) $(OBJS) core $(DIR).tar $(DIR).tar.gz $(DIR).tgz
 
+#If you have makedepend (part of the X11 distribution), you can run it
+#to fix up the dependencies below.  Otherwise, if they are wrong, you
+#can either fix them by hand or just delete them.
 ###
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 

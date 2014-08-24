@@ -61,9 +61,10 @@ char *cmd;
 	int i;
 
 	for (i=0; MtXCmdTab[i].name; i++) {
-		if (strcmp(MtXCmdTab[i].name,cmd)==0)
+		if (strcmp(MtXCmdTab[i].name,cmd)==0) {
 			(MtXCmdTab[i].func)(mti);
 			return;
+		}
 	}
 	return;
 }

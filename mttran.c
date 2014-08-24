@@ -64,7 +64,8 @@ MtSidTran *trantab;
 			return 1;	/* Should never get here */
 		}
 		if (mti->skip) {
-			MtSkipCmd(mti);	/* skip this command */
+			if (mti->cmd==MT_CMD_BEGIN)
+				MtSkipCmd(mti);	/* skip this command */
 			continue;	/* skip until end of this level */
 		}
 		sid = mti->ss[mti->sscount-1];

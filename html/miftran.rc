@@ -9,7 +9,8 @@
 <init `%1"Miftran Users Guide"L'>
 
 #Specify default input file
-<infilename `../miftran.mif'>
+#<infilename `../miftran.mif'>
+#If not specified (as here, commented out) use filename from command line
 
 #Specify output files
 <outfilename `chap%d.html'>
@@ -19,10 +20,11 @@
 #Left side is what appears in your document, right side is what
 #appears later in this rc file.
 <tagalias Chapter MiftranChapter>
-<tagalias Section MiftranSection>
-<tagalias Subsection MiftranSubsection>
-<tagalias Subsubsection MiftranSubsubsection>
+<tagalias Section MiftranH2>
+<tagalias Subsection MiftranH3>
+<tagalias Subsubsection MiftranH4>
 
+<tagalias Normal MiftranBody>
 <tagalias Body MiftranBody>
 <tagalias Note MiftranBody>
 <tagalias Title MiftranBody>
@@ -126,7 +128,7 @@
 
 #Special character commands
 <typesub hardreturn `*' `\n'>
-<typesub hardspace `*' ` '>	#or &nbsp; if your browser supports it
+<typesub hardspace `*' ` '>	#or `&nbsp;' if your browser supports it
 <typesub hardhyphen `*' `-'>
 <typesub tab `*' `\t'>
 
@@ -143,16 +145,22 @@
 <title>%1r: %2r %3r</title>\n\
 <h1>%2r %3r</h1>\n'>
 
-<typesub pgfnumstring MiftranSection `%s '>
-<typesub startpgf MiftranSection `<h2>'>
-<typesub endpgf MiftranSection `</h2>\n'>
+<typesub pgfnumstring MiftranH2 `%s '>
+<typesub startpgf MiftranH2 `<h2>'>
+<typesub endpgf MiftranH2 `</h2>\n'>
 
-<typesub pgfnumstring MiftranSubsection `%s '>
-<typesub startpgf MiftranSubsection `<h3>'>
-<typesub endpgf MiftranSubsection `</h3>\n'>
+<typesub pgfnumstring MiftranH3 `%s '>
+<typesub startpgf MiftranH3 `<h3>'>
+<typesub endpgf MiftranH3 `</h3>\n'>
 
-<typesub startpgf MiftranSubsubsection `<h4>'>
-<typesub endpgf MiftranSubsubsection `</h4>\n'>
+<typesub startpgf MiftranH4 `<h4>'>
+<typesub endpgf MiftranH4 `</h4>\n'>
+
+<typesub startpgf MiftranH5 `<h5>'>
+<typesub endpgf MiftranH5 `</h5>\n'>
+
+<typesub startpgf MiftranH6 `<h6>'>
+<typesub endpgf MiftranH6 `</h6>\n'>
 
 <typesub startpgf MiftranBody `<p>\n'>
 <typesub endpgf MiftranBody `<p>\n'>
@@ -209,6 +217,11 @@
 <stringsub `\\xd5 ' `\''>	#apostrophe
 <stringsub `\\xd7 ' `-'>	#bullet
 <stringsub `\\Q'    `\`'>	#backquote
+
+#Random commercial symbols
+<stringsub `\\xa9 ' `(c)'>    #copyright
+<stringsub `\\xaa ' `[TM]'>   #trademark
+<stringsub `\\xa8 ' `[R]'>    #registered
 
 #German Umlauts
 <stringsub `\\x8a ' `&auml;'>

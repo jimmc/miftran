@@ -158,6 +158,8 @@ MtInfo *mti;
 	MtGetCmd(mti);
 	while (mti->sscount>level) {
 		MtGetCmd(mti);
+		if (mti->cmd==MT_CMD_END && mti->sscount<=level)
+			break;
 	}
 }
 

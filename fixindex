@@ -6,7 +6,7 @@ tmp_sort=sort.tmp
 tmp_head=head.tmp
 tmp_tail=tail.tmp
 
-sort -bt'>' +2 | \
+sort -bft'>' +2 | \
     sed -e 's|&lt;Emphasis&gt;|<i>|g' \
 	-e 's|&lt;Default Para Font&gt;|</i>|g' > $tmp_sort
 cat <<EOF > $tmp_head
