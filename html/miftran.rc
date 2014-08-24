@@ -1,0 +1,129 @@
+#Sample miftran rc file
+#Uses MIF syntax (well, why not?)
+
+#<print `This string is in the RC file\n'>	#print to stdout
+#<eprint `Here we go\n'>		#print to stderr
+
+#Specify default input file
+<infilename `../miftran.mif'>
+
+#Specify output files
+<outfilename `chap%d.html'>
+<altoutfilename `d%d.txt'>
+
+<typesub startfile `*' `%+1.1L\
+%3.1A%2.1A%1.1A\
+<title>Miftran Users Guide</title>\n\
+<h1>Miftran Users Guide</h1>\n\<ul>\n\
+%0.1F'>	#Open output files for write
+
+<typesub endfile `*' `%1.2A</ul>\n<a href="IX.html">Index</a>\n'>
+
+#We use the string registers as follows:
+#1 document title
+#2 current chapter numstring
+#3 current chapter name
+
+#We use the int registers as follows:
+#1 contains the number 1
+#2 counter for index markers
+
+#We use the following alternate output files:
+#d1.txt - Table of Contents
+#d2.txt - list of cross reference targets for use by fixref
+#d3.txt - list of index markers
+
+#Generic translations, probably usable as-is for any document
+<typesub string `*' `%s\n'>
+#For markers, output file and marker name to index file to allow external
+#script to do a pass2 on files to update xrefs to point to proper files.
+#Frame marker types:
+#2 index
+#9 target of a cross reference
+<typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F<a name="_IX_%+2r">'>
+<typesub markertext `9' `%2.2A%f:%s\n%F<a name="%s">'>
+<typesub xreftext `*' `<a href="#%s">'>
+<typesub xrefend `*' `</a>'>
+<typesub hardreturn `*' `\n'>
+<typesub tab `*' `\t'>
+
+#Specify paragraph translations for this document
+<typesub startpgf Title `<title>'>
+<typesub string Title `%s%1R'>
+<typesub endpgf Title `</title>\n'>
+
+<typesub switchpgf `*.Chapter' `<p><a href="%+1f">Next Chapter</a>\n%+1.1F'>
+<typesub startpgf Chapter `\
+<a href="TOC.html">Table of Contents</a><p>\n\
+<a href="%-1f">Previous Chapter</a>\n<h1>'>
+<typesub pgfnumstring Chapter `%2R%s '>
+<typesub string Chapter `\
+\%1.2A<li><a href="%f">%2r %s</a>\n%F\
+%s%3R'>
+<typesub endpgf Chapter `</h1>\n<title>%1r: %2r %3r</title>\n'>
+<typesub tab Chapter `'>
+
+<typesub pgfnumstring Section `%s '>
+<typesub startpgf Section `<h2>'>
+<typesub endpgf Section `</h2>\n'>
+
+<typesub pgfnumstring Subsection `%s '>
+<typesub startpgf Subsection `<h3>'>
+<typesub endpgf Subsection `</h3>\n'>
+
+<typesub startpgf Subsubsection `<h4>'>
+<typesub endpgf Subsubsection `</h4>\n'>
+
+<typesub endpgf Body `<p>\n'>
+<typesub endpgf Note `<p>\n'>
+
+<typesub startpgf Code `<pre>'>
+<typesub endpgf Code `</pre>\n'>
+<typesub string Code `%s'>
+
+<typesub switchpgf `*.Bullet' `<ul>'>
+<typesub switchpgf `Bullet.*' `</ul>'>
+<typesub startpgf Bullet `<li>'>
+<typesub startpgf Contbullet `<p>'>
+
+<typesub switchpgf `*.Step1' `<ol>'>
+<typesub switchpgf `Step.*' `</ol>\n'>
+<typesub switchpgf `Step.Contstep' `'>
+<typesub switchpgf `Contstep.Body' `</ol>\n'>
+<typesub startpgf Step `<li>'>
+<typesub startpgf `Step1' `<li>'>
+
+<typesub switchpgf `Step.Substep1' `<ol>'>
+<typesub switchpgf `Step.Contbullet' `<p>'>
+<typesub switchpgf `Step.Code' `'>
+<typesub switchpgf `Code.Body' `</ol></ul>'>
+	#A hack: we want to terminate lists that have code,
+	#but we don't know when they should terminate.
+	#We presume that the extra /ul will be ignore by html parser.
+<typesub switchpgf `Substep.*' `</ol>\n'>
+<typesub startpgf Substep `<li>'>
+<typesub startpgf Substep1 `<li>'>
+
+<typesub startfont Emphasis `<I>'>
+<typesub endfont Emphasis `</I>'>
+<typesub startfont Bold `<B>'>
+<typesub endfont Bold `</B>'>
+
+#Specify string substitutions
+<stringsub `\\t' `\t'>	#replace \t with space
+<stringsub `\\\\' `\\'>	#replace \\ with \
+
+#Standard MIF escape strings, we map them to normal ascii chars
+<stringsub `\\xd2 ' `\`'>	#left quote
+<stringsub `\\xd3 ' `\''>	#right quote
+<stringsub `\\xd4 ' `\''>	#single quote
+<stringsub `\\xd5 ' `\''>	#apostrophe
+<stringsub `\\Q' `\`'>	#backquote
+
+#HTML required escape strings
+<stringsub `<' `&lt;'>		#html escapes
+<stringsub `\\>' `&gt;'>	#html escapes
+<stringsub `>' `&gt;'>		#html escapes
+<stringsub `&' `&amp;'>		#html escapes
+
+#end

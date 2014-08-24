@@ -1,0 +1,20 @@
+#!/bin/sh -
+#Script to sort the index file
+#Reads stdin, writes stdout
+
+tmp_sort=sort.tmp
+tmp_head=head.tmp
+tmp_tail=tail.tmp
+
+sort -bt'>' +2 > $tmp_sort
+cat <<EOF > $tmp_head
+<title>Index</title>
+<h1>Index</h1>
+<a href="TOC.html">Table Of Contents</a>
+<ul>
+EOF
+cat <<EOF > $tmp_tail
+</ul>
+EOF
+cat $tmp_head $tmp_sort $tmp_tail
+rm $tmp_head $tmp_tail $tmp_sort

@@ -1,0 +1,10 @@
+TODO for miftran					15.Dec.93
+
+- Handle inline images.
+- Recognize variables (e.g. date), do those substitutions.
+- Handle SoftHyphen correctly (i.e. put the word back together).
+- Figure out how to handle tables.
+- Improve translation tables to allow specifying "a.b" as a translation,
+  rather than having to have a separate table for b.
+- Figure out how to know where page breaks are in printed document,
+  put horizontal lines and page numbers, headers, and footers there.

@@ -1,0 +1,21 @@
+#!/bin/sh -
+#Script to fix up hyperlinks in split output files
+
+indexfile=d2.txt
+sedfile=href.sed
+datafiles=chap*.html
+tmpfile=tmp.html
+
+#Munge the index file into a sed script to use to munge the data files
+sed -e 's/\([^:]*\):\(.*\)/s|href="#\2"|href="\1#\2"|g/' \
+	< $indexfile > $sedfile
+
+for file in $datafiles; do
+	echo File $file
+	sed -f $sedfile $file > $tmpfile
+	if [ $? -eq 0 ]; then
+		mv $tmpfile $file
+	else
+		echo "Error in sed on file $file"
+	fi
+done
