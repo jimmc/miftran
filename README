@@ -1,5 +1,5 @@
 
-    Miftran v0.3						1.Jun.94
+    Miftran v0.3p1						10.Jun.94
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -35,6 +35,8 @@
 	- Handles anchored frames for inline images (but does not do
 	  image format conversion).
 
+	- Handles simple variables (without <$xxx> stuff).
+
 	- For advanced users, the C source can be relatively easily
 	  customized to recognize additional MIF constructs.
 
@@ -50,7 +52,11 @@
 
 	- Does not do format conversions of images in anchored frames.
 
+	- Does not handle embedded image files.
+
 	- Does not handle conditional text.
+
+	- Does not handle <$xxx> stuff in variables.
 
 	- No special handling of tables.
 
@@ -65,10 +71,24 @@
        files against the htmlref/*.html files.  They should be identical.
     4. Run your favorite HTML browser starting at TOC.html.
 
+    To use miftran on your own document:
+    1. Create a working directory for your html files.
+    2. Copy html/Makefile and html/miftran.rc file to your directory.
+    3. Edit your Makefile, set MIF_SOURCE and MIFTRAN_DIR.
+    4. Edit your miftran.rc, set infilename to point to your mif file.
+    5. Do a "make font.list pgf.list" in your directory; this will make a
+       list of font and paragraph tags used in your document.
+    6. Edit your miftran.rc to change the <tagalias> lines to refer to
+       your font and paragraph tags as desired.
+    7. Do a "make" in your directory.
+    8. Run your favorite HTML browser starting at your TOC.html.
+    9. Customize your miftran.rc as desired and redo step 5-7 as needed.
+
     Miftran has been compiled and run on the following machines:
 	Dec Alpha OSF1
 	Decstation Ultrix 4.2a
 	HP7000 HPUX 9.01
+	Linux 1.0.8 with gcc 2.5.8
 	NeXT NextStep3.2
 	SCO ODT 3.0
 	SGI IRIX 5.1

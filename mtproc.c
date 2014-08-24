@@ -76,6 +76,12 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_AFRAMEFILE, "aframefile" },	/* during definition */
 #define MT_O_AFRAME 402
 	{ MT_O_AFRAME, "aframe" },	/* reference to an aframe */
+#define MT_O_VARNAME 500
+	{ MT_O_VARNAME, "varname" },
+#define MT_O_VARDEF 501
+	{ MT_O_VARDEF, "vardef" },
+#define MT_O_VARREF 502
+	{ MT_O_VARREF, "varref" },
 	{ 0 }
 	
 };
@@ -334,6 +340,37 @@ MtInfo *mti;
 	MtSubSid(mti,MT_O_AFRAME,(MtSid)0,buf);
 }
 
+void
+MtProcVariableName(mti)
+MtInfo *mti;
+{
+	char *s;
+
+	s = mti->args[0].s;
+	MtSubSid(mti,MT_O_VARNAME,(MtSid)0,s);
+}
+
+void
+MtProcVariableDef(mti)
+MtInfo *mti;
+{
+	char *s;
+
+	s = mti->args[0].s;
+	MtSubSid(mti,MT_O_VARDEF,(MtSid)0,s);
+}
+
+void
+MtProcVariableRef(mti)
+MtInfo *mti;
+{
+	char *s;
+
+	CheckPgfStart(mti);
+	s = mti->args[0].s;
+	MtSubSid(mti,MT_O_VARREF,mti->pgftag,s);
+}
+
 /* Translation tables to drive calling the action functions above */
 
 MtSidTran MarkerTranTab[] = {
@@ -353,6 +390,11 @@ MtSidTran FontTranTab[] = {
 	{ 0 }
 };
 
+MtSidTran VarRefTranTab[] = {
+	{ "VariableName", 0, MtProcVariableRef, 0, 0 },
+	{ 0 }
+};
+
 MtSidTran ParaLineTranTab[] = {
 	{ "String", 0, MtProcString, 0, 0 },
 	{ "Char", 0, MtProcChar, 0, 0 },
@@ -361,6 +403,7 @@ MtSidTran ParaLineTranTab[] = {
 	{ "XRefEnd", 0, MtProcXrefEnd, 0, 0 },
 	{ "Font", 0, 0, 0, FontTranTab },
 	{ "AFrame", 0, 0, MtProcAframe, 0 },
+	{ "Variable", 0, 0, 0, VarRefTranTab },
 	{ 0 }
 };
 
@@ -398,9 +441,21 @@ MtSidTran AFramesTranTab[] = {
 	{ 0 }
 };
 
+MtSidTran VariableFormatTranTab[] = {
+	{ "VariableName", 0, MtProcVariableName, 0, 0 },
+	{ "VariableDef", 0, MtProcVariableDef, 0, 0 },
+	{ 0 }
+};
+
+MtSidTran VariableFormatsTranTab[] = {
+	{ "VariableFormat", 0, 0, 0, VariableFormatTranTab },
+	{ 0 }
+};
+
 MtSidTran TopTranTab[] = {
 	{ "TextFlow", 0, 0, 0, TextFlowTranTab },
 	{ "AFrames", 0, 0, 0, AFramesTranTab },
+	{ "VariableFormats", 0, 0, 0, VariableFormatsTranTab },
 	{ 0 }
 };
 

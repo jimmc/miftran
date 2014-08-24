@@ -1,25 +1,27 @@
-#Makefile to create HTML files from miftran.mif
+#Makefile to create HTML files using miftran
 
-MIFTRAN = ../miftran
-FIXCHL = ../fixchl
-FIXREF = ../fixref
-FIXINDEX = ../fixindex
+MIF_SOURCE      = ../miftran.mif
+MIFTRAN_DIR     = ..
 
-BODY = ../miftran.mif
+MIFTRAN         = $(MIFTRAN_DIR)/miftran
+FIXCHL          = $(MIFTRAN_DIR)/fixchl
+FIXREF          = $(MIFTRAN_DIR)/fixref
+FIXINDEX        = $(MIFTRAN_DIR)/fixindex
+
 
 default:	chap1.html
 
-chap1.html:	miftran.rc $(BODY)
+chap1.html:	miftran.rc $(MIF_SOURCE)
 	$(MIFTRAN)
 	$(FIXREF)
 	$(FIXCHL)
 	mv d1.txt TOC.html
 	$(FIXINDEX) <d3.txt >IX.html
 
-pgf.list:	$(BODY)
+pgf.list:	$(MIF_SOURCE)
 	$(MIFTRAN) -tran | grep "^startpgf" | sort | uniq > pgf.list
 
-font.list:	$(BODY)
+font.list:	$(MIF_SOURCE)
 	$(MIFTRAN) -tran | grep "^startfont" | sort | uniq > font.list
 
 diff:;	for i in *.html; do echo $$i; diff $$i ../htmlref/$$i; done

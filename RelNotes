@@ -1,3 +1,16 @@
+miftran v0.3p1 10.Jun.1994
+
+	Enhancements
+	------------
+	- Added support for simple variables.  Does not attempt to
+	  translate <$xxx> stuff within variables, that text will appear
+	  as is in the output.  The variables definition is handled with
+	  <typesub varname ...> and <typesub vardef ...> commands, and the
+	  reference is handled with <typesub varref ...>.
+
+	- Added notes to the README file, simple directions for setting up
+	  your own document.
+
 miftran v0.3 1.Jun.1994
 
 	Enhancements

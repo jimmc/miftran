@@ -1,7 +1,8 @@
-TODO for miftran					24.May.94
+TODO for miftran					9.Jun.94
 
+- Implement <include ...> in rc, -I to miftran; make "library" of rc pieces.
 - Support spot cross-references (and add doc).
-- Recognize variables (e.g. date), do those substitutions.
+- Recognize <$xxx> in variables (e.g. date), do those substitutions.
 - Handle SoftHyphen correctly (i.e. put the word back together).
 - Figure out how to handle tables.
 - Improve translation tables to allow specifying "a.b" as a translation,
@@ -15,6 +16,8 @@ TODO for miftran					24.May.94
 
 Documentation:
 - Upgrade for current version
+- Point out that users should use Makefile and miftran.rc from html dir as
+  templates for their own docs.
 - Add "style guide" section discussing what things will cause problems
   during translation (e.g. inconsistent use of paragraph tags).
 - Document the paragraph types in the template, in case user wants to change

@@ -69,6 +69,8 @@
 #S4 temp used during building of chapter name
 #S11 AFrame ID
 #S12, S13 temps used when working with AFrames
+#S14 Variable name
+#S15, S16 temps used when working with Variables
 
 #We use the int registers as follows:
 #I1 contains the number 1
@@ -81,12 +83,20 @@
 
 #Handle anchored frame stuff
 <typesub aframeid `*' `%11R'>		#store AFrame ID in S11
-#When we get a filename, create symbol AFrame#%d where %d is ID of frame,
+#When we get a filename, create symbol AFrame#%s where %s is ID of frame,
 #set value of that symbol to the filename for the AFrame.
 <typesub aframefile `*' `%12R%13"AFrame#"L%13.11"cat"O%12.13"set"O'>
 #When we get aframe ref, get symbol from symbol table and insert into output
 <typesub aframe `*' `%11R%13"AFrame#"L%13.11"cat"O%12.13"get"O\
 <img src="%12r">'>
+
+#Handle simple variables
+<typesub varname `*' `%14R'>	#store var name in S14
+#When we get a definition, create symbol Var#%s where %s is name of var.
+#set value of that symbol to the definition of the variable.
+<typesub vardef `*' `%15R%16"Var#"L%16.14"cat"O%15.16"set"O'>
+#When we get variable ref, get symbol from symbol table and insert into output
+<typesub varref `*' `%14R%16"Var#"L%16.14"cat"O%15.16"get"O%15r'>
 
 #For markers, output file and marker name to index file to allow external
 #script to do a pass2 on files to update xrefs to point to proper files.
