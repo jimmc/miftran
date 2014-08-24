@@ -162,6 +162,7 @@ char *argv[];
 	char *cmd;
 	int gotfile=0;
 
+	MtDoFmt = 1;	/* so that 'init' statements work */
 	for (i=1; i<argc; i++) {
 		cmd = argv[i];
 		if (strcmp(cmd,"-cmd")==0)

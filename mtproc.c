@@ -44,6 +44,8 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_TAB, "tab" },
 #define MT_O_HARDRETURN 32
 	{ MT_O_HARDRETURN, "hardreturn" },
+#define MT_O_EMDASH 33
+	{ MT_O_EMDASH, "emdash" },
 #define MT_O_STARTPGF 100
 	{ MT_O_STARTPGF, "startpgf" },
 #define MT_O_ENDPGF 101
@@ -54,10 +56,18 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_STARTFONT, "startfont" },
 #define MT_O_ENDFONT 201
 	{ MT_O_ENDFONT, "endfont" },
+#define MT_O_STARTPSFONT 202
+	{ MT_O_STARTPSFONT, "startpsfont" },
 #define MT_O_STARTFILE 300
 	{ MT_O_STARTFILE, "startfile" },
 #define MT_O_ENDFILE 301
 	{ MT_O_ENDFILE, "endfile" },
+#define MT_O_AFRAMEID 400
+	{ MT_O_AFRAMEID, "aframeid" },	/* during definition */
+#define MT_O_AFRAMEFILE 401
+	{ MT_O_AFRAMEFILE, "aframefile" },	/* during definition */
+#define MT_O_AFRAME 402
+	{ MT_O_AFRAME, "aframe" },	/* reference to an aframe */
 	{ 0 }
 	
 };
@@ -71,7 +81,7 @@ CheckPgfStart(mti)
 MtInfo *mti;
 {
 	if (mti->needpgfstart && mti->pgftag) {
-		MtSub(mti,MT_O_STARTPGF,mti->pgftag,"");
+		MtSubSid(mti,MT_O_STARTPGF,mti->pgftag,"");
 		mti->needpgfstart = 0;
 		mti->needpgfend = 1;
 	}
@@ -83,7 +93,7 @@ CheckEndFont(mti)
 MtInfo *mti;
 {
 	if (mti->fonttag) {
-		MtSub(mti,MT_O_ENDFONT,mti->fonttag,"");
+		MtSubSid(mti,MT_O_ENDFONT,mti->fonttag,"");
 		mti->fonttag = 0;
 	}
 }
@@ -96,7 +106,7 @@ MtInfo *mti;
 
 	CheckPgfStart(mti);
 	s = mti->args[0].s;
-	MtSub(mti,MT_O_STRING,mti->pgftag,s);
+	MtSubSid(mti,MT_O_STRING,mti->pgftag,s);
 }
 
 void
@@ -107,7 +117,7 @@ MtInfo *mti;
 
 	CheckPgfStart(mti);
 	s = mti->args[0].s;
-	MtSub(mti,MT_O_PGFNUMSTRING,mti->pgftag,s);
+	MtSubSid(mti,MT_O_PGFNUMSTRING,mti->pgftag,s);
 }
 
 void
@@ -126,7 +136,7 @@ MtInfo *mti;
 
 	s = mti->args[0].s;
 	sprintf(mnumstr,"%d",mti->markertype);
-	MtSub(mti,MT_O_MARKERTEXT,MtStringToSid(mnumstr),s);
+	MtSubStr(mti,MT_O_MARKERTEXT,mnumstr,s);
 }
 
 void
@@ -136,14 +146,14 @@ MtInfo *mti;
 	char *s;
 
 	s = mti->args[0].s;
-	MtSub(mti,MT_O_XREFTEXT,(MtSid)0,s);
+	MtSubSid(mti,MT_O_XREFTEXT,(MtSid)0,s);
 }
 
 void
 MtProcXrefEnd(mti)
 MtInfo *mti;
 {
-	MtSub(mti,MT_O_XREFEND,(MtSid)0,"");
+	MtSubSid(mti,MT_O_XREFEND,(MtSid)0,"");
 }
 
 void
@@ -157,7 +167,22 @@ MtInfo *mti;
 	if (s && *s) {
 		CheckPgfStart(mti);
 		mti->fonttag = MtStringToSid(s);
-		MtSub(mti,MT_O_STARTFONT,mti->fonttag,"");
+		MtSubSid(mti,MT_O_STARTFONT,mti->fonttag,"");
+	}
+}
+
+void
+MtProcFPostScriptName(mti)
+MtInfo *mti;
+{
+	char *s;
+
+	CheckEndFont(mti);
+	s = mti->args[0].s;
+	if (s && *s) {
+		CheckPgfStart(mti);
+		mti->fonttag = MtStringToSid(s);
+		MtSubSid(mti,MT_O_STARTPSFONT,mti->fonttag,"");
 	}
 }
 
@@ -170,11 +195,13 @@ MtInfo *mti;
 	s = mti->args[0].s;
 	MtMakeLower(s);
 	if (strcmp(s,"tab")==0)
-		MtSub(mti,MT_O_TAB,mti->pgftag,"");
+		MtSubSid(mti,MT_O_TAB,mti->pgftag,"");
 	else if (strcmp(s,"hardreturn")==0)
-		MtSub(mti,MT_O_HARDRETURN,mti->pgftag,"");
+		MtSubSid(mti,MT_O_HARDRETURN,mti->pgftag,"");
+	else if (strcmp(s,"emdash")==0)
+		MtSubSid(mti,MT_O_EMDASH,mti->pgftag,"");
 	else
-		MtSub(mti,MT_O_CHAR,mti->pgftag,MtStringToSid(s));
+		MtSubSid(mti,MT_O_CHAR,mti->pgftag,s);
 }
 
 void
@@ -197,12 +224,12 @@ MtSid from, to;
 	fromstr = MtSidToString(from);
 	tostr = MtSidToString(to);
 	sprintf(pbuf,"%s.%s",fromstr,tostr);
-	t = MtSub(mti,MT_O_SWITCHPGF,MtStringToSid(pbuf),"");
+	t = MtSubStr(mti,MT_O_SWITCHPGF,pbuf,"");
 	if (!t) {
 		sprintf(pbuf,"%s.*",fromstr);
-		MtSub(mti,MT_O_SWITCHPGF,MtStringToSid(pbuf),"");
+		MtSubStr(mti,MT_O_SWITCHPGF,pbuf,"");
 		sprintf(pbuf,"*.%s",tostr);
-		MtSub(mti,MT_O_SWITCHPGF,MtStringToSid(pbuf),"");
+		MtSubStr(mti,MT_O_SWITCHPGF,pbuf,"");
 	}
 }
 
@@ -235,9 +262,39 @@ MtProcParaPost(mti)
 MtInfo *mti;
 {
 	if (mti->needpgfend) {
-		MtSub(mti,MT_O_ENDPGF,mti->pgftag,"");
+		MtSubSid(mti,MT_O_ENDPGF,mti->pgftag,"");
 		mti->needpgfend = 0;
 	}
+}
+
+void
+MtProcAframeId(mti)
+MtInfo *mti;
+{
+	char buf[30];
+
+	sprintf(buf,"%d",mti->args[0].i);
+	MtSubSid(mti,MT_O_AFRAMEID,(MtSid)0,buf);
+}
+
+void
+MtProcImportObFile(mti)
+MtInfo *mti;
+{
+	char *s;
+
+	s = mti->args[0].s;
+	MtSubSid(mti,MT_O_AFRAMEFILE,(MtSid)0,s);
+}
+
+void
+MtProcAframe(mti)
+MtInfo *mti;
+{
+	char buf[30];
+
+	sprintf(buf,"%d",mti->args[0].i);
+	MtSubSid(mti,MT_O_AFRAME,(MtSid)0,buf);
 }
 
 /* Translation tables to drive calling the action functions above */
@@ -255,6 +312,7 @@ MtSidTran XrefTranTab[] = {
 
 MtSidTran FontTranTab[] = {
 	{ "FTag", 0, MtProcFTag, 0, 0 },
+	{ "FPostScriptName", 0, MtProcFPostScriptName, 0, 0 },
 	{ 0 }
 };
 
@@ -265,6 +323,7 @@ MtSidTran ParaLineTranTab[] = {
 	{ "XRef", 0, 0, 0, XrefTranTab },
 	{ "XRefEnd", 0, MtProcXrefEnd, 0, 0 },
 	{ "Font", 0, 0, 0, FontTranTab },
+	{ "AFrame", 0, 0, MtProcAframe, 0 },
 	{ 0 }
 };
 
@@ -286,8 +345,22 @@ MtSidTran TextFlowTranTab[] = {
 	{ 0 }
 };
 
+MtSidTran ImportObjectTranTab[] = {
+	{ "ImportObFile", 0, 0, MtProcImportObFile, 0 },
+};
+
+MtSidTran FrameTranTab[] = {
+	{ "ID", 0, 0, MtProcAframeId, 0 },
+	{ "ImportObject", 0, 0, 0, ImportObjectTranTab },
+};
+
+MtSidTran AFramesTranTab[] = {
+	{ "Frame", 0, 0, 0, FrameTranTab },
+};
+
 MtSidTran TopTranTab[] = {
 	{ "TextFlow", 0, 0, 0, TextFlowTranTab },
+	{ "AFrames", 0, 0, 0, AFramesTranTab },
 	{ 0 }
 };
 
@@ -298,14 +371,14 @@ MtInfo *mti;
 	int t;
 
 	MtPrepareTranTab(TopTranTab);
-	MtSub(mti,MT_O_STARTFILE,0,mti->ifilename);
+	MtSubSid(mti,MT_O_STARTFILE,(MtSid)0,mti->ifilename);
 	t =  MtTran(mti,TopTranTab);
 	if (t) return t;
 	if (mti->pgftag) {
 		SwitchPgf(mti,mti->pgftag,0);
 		mti->pgftag = 0;
 	}
-	MtSub(mti,MT_O_ENDFILE,0,mti->ifilename);
+	MtSubSid(mti,MT_O_ENDFILE,(MtSid)0,mti->ifilename);
 	return 0;
 }
 

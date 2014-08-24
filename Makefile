@@ -15,8 +15,12 @@ CFLAGS = $(INCLUDES) $(CDEFINES) $(CCOPTS)
 
 LIBS =
 
-KITFILES = README Makefile $(SRCS) *.h TODO miftran.mif fixindex fixref \
-	html/Makefile html/miftran.rc htmlref/*.html
+KITFILES = README RelNotes Makefile TODO $(SRCS) *.h miftran.mif $(SCRIPTS) \
+	html/Makefile html/html.makefile html/miftran.rc htmlref/*.html
+
+SCRIPTS  = fixchl fixindex fixref
+
+CIFILES = $(KITFILES)
 
 SRCS =	main.c \
 	mtcmd.c \
@@ -49,7 +53,7 @@ all:	prog
 prog: $(PROGRAM)
 
 $(PROGRAM): $(OBJS)
-	$(CC) -o $(PROGRAM) $(OBJS) $(LIBS)
+	$(CC) $(CFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
 
 depend:;	makedepend $(SRCS)
 
@@ -61,14 +65,18 @@ htmlref/chap1.html:	miftran.mif
 
 kit:	$(DIR).tgz
 
-$(DIR).tgz:	$(KITFILES) refhtml
+$(DIR).tar:	$(KITFILES) refhtml
 	rm -f kit.list
 	for f in $(KITFILES); do echo $(DIR)/$$f >> kit.list; done
 	cd ..; tar cvf $(DIR)/$(DIR).tar `cat $(DIR)/kit.list`
 	ls -l $(DIR).tar
+
+$(DIR).tgz:	$(DIR).tar
 	gzip -9 $(DIR).tar
 	mv $(DIR).tar.gz $(DIR).tgz
 	ls -l $(DIR).tgz
+
+lookcheck:;	ls -l $(CIFILES) | grep -e '-rw' | cat
 
 clean:;	rm -f $(PROGRAM) $(OBJS) core $(DIR).tar $(DIR).tar.gz $(DIR).tgz
 

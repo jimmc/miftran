@@ -3,19 +3,49 @@
 
 indexfile=d2.txt
 sedfile=href.sed
+sedsplit=hrefspl.sed
+sedsplitsize=50
 datafiles=chap*.html
 tmpfile=tmp.html
+tmp1=tmp1.html
+needsplit=0
+err=0
+
+munge_one_file(){
+	if [ $needsplit = 1 ]; then
+		cat $file > $tmpfile
+		for sedf in $sedsplit* ; do
+			sed -f $sedf $tmpfile > $tmp1
+			if [ $? -ne 0 ]; then
+				echo "Error in sed on file $file"
+				err=1
+				return
+			fi
+			mv $tmp1 $tmpfile
+		done
+	else
+		sed -f $sedfile $file > $tmpfile
+		if [ $? -ne 0 ]; then
+			echo "Error in sed on file $file"
+			err=1
+			return
+		fi
+	fi
+	mv $tmpfile $file
+}
 
 #Munge the index file into a sed script to use to munge the data files
-sed -e 's/\([^:]*\):\(.*\)/s|href="#\2"|href="\1#\2"|g/' \
+sed -e 's/\([^:]*\):\(.*\)/s|href="#\\(\2\\)"|href="\1#\\1"|g/' \
 	< $indexfile > $sedfile
+numlines=`wc -l $sedfile | awk '{print $1;}'`
+if [ $numlines -gt $sedsplitsize ]; then
+	needsplit=1
+	rm -f $sedsplit*
+	split -$sedsplitsize $sedfile $sedsplit
+fi
 
 for file in $datafiles; do
 	echo File $file
-	sed -f $sedfile $file > $tmpfile
-	if [ $? -eq 0 ]; then
-		mv $tmpfile $file
-	else
-		echo "Error in sed on file $file"
-	fi
+	munge_one_file
 done
+exit $err

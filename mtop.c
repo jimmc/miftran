@@ -60,6 +60,25 @@ int n1, n2;
 }
 
 char *
+MtOpStrGet(s1,s2)
+char *s1, *s2;
+{
+	char *s;
+
+	s = MtSymGet(s2);
+	if (!s) s="";
+	return s;
+}
+
+char *
+MtOpStrSet(s1,s2)
+char *s1, *s2;
+{
+	MtSymSet(s2,s1);
+	return s1;
+}
+
+char *
 MtOpStrCat(s1,s2)
 char *s1, *s2;
 {
@@ -94,6 +113,8 @@ OpIntInfo MtOpIntTab[] = {
 OpStrInfo MtOpStrTab[] = {
 	{ "cat", MtOpStrCat },
 	{ "copy", MtOpStrCopy },
+	{ "get", MtOpStrGet },
+	{ "set", MtOpStrSet },
 	{ 0 },
 };
 

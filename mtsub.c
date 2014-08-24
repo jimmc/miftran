@@ -27,8 +27,17 @@
 #include "mtutil.h"
 
 extern char *strstr ARGS((char *s1, char *s2));
+extern char *strchr ARGS((char *s, char c));
 
 extern MtTypeSubNameTran MtTypeSubNameTranTab[];
+
+typedef struct _mttagalias {
+	struct _mttagalias *next;
+	char *alias;	/* translate from this name */
+	char *actual;	/* translate to this name */
+	MtSid aliassid;
+	MtSid actualsid;
+} MtTagAlias;
 
 typedef struct _mttypesubinfo {
 	int what;	/* MT_O_* */
@@ -49,6 +58,88 @@ typedef struct _mtstringsubinfo {
 int MtDoSub;
 MtTypeSubInfo *MtTypeSubInfoList;
 MtStringSubInfo *MtStringSubInfoList;
+MtTagAlias *MtTagAliasList;
+
+void
+MtAddTagAlias(alias,actual)
+char *alias;
+char *actual;
+{
+	MtTagAlias *ta;
+
+	ta = MtMalloc(sizeof(ta[0]));
+	ta->next = MtTagAliasList;
+	ta->alias = MtStrSave(alias);
+	ta->actual = MtStrSave(actual);
+	ta->aliassid = MtStringToSid(alias);
+	ta->actualsid = MtStringToSid(actual);
+	MtTagAliasList = ta;
+}
+
+char *
+MtFindTagAlias(alias)
+char *alias;
+{
+	MtTagAlias *ta;
+
+	for (ta=MtTagAliasList; ta; ta=ta->next) {
+		if (strcmp(ta->alias,alias)==0)
+			return (ta->actual);
+	}
+	return (char *)0;
+}
+
+MtSid
+MtFindSidTagAlias(aliassid)
+MtSid aliassid;
+{
+	MtTagAlias *ta;
+
+	for (ta=MtTagAliasList; ta; ta=ta->next) {
+		if (ta->aliassid==aliassid)
+			return (ta->actualsid);
+	}
+	return (MtSid)0;
+}
+
+char *
+MtFindMTagAlias(from)
+char *from;	/* can be from.to format */
+{
+	static char *buf=0;
+	static int bufalloc=0;
+	int altlen;
+	char *dot, *altfrom, *altfromleft, *altfromright;
+
+	dot = strchr(from,'.');
+	if (dot) {
+		*dot = 0;	/* split into left and right parts */
+		if (!from[0])
+			altfromleft = "";
+		else if (strcmp(from,"*")==0)
+			altfromleft = "*";
+		else
+			altfromleft = MtFindTagAlias(from);
+		if (!dot[1])
+			altfromright = "";
+		else if (strcmp(dot+1,"*")==0)
+			altfromright = "*";
+		else
+			altfromright = MtFindTagAlias(dot+1);
+		if (!altfromleft || !altfromright)
+			return 0;
+		altlen = strlen(altfromleft)+strlen(altfromright)+2;
+		if (altlen>bufalloc) {
+			buf = MtRealloc(buf,altlen);
+			bufalloc = altlen;
+		}
+		sprintf(buf,"%s.%s",altfromleft,altfromright);
+		altfrom = buf;
+	} else {
+		altfrom = MtFindTagAlias(from);
+	}
+	return altfrom;
+}
 
 int
 MtTypeSubStringToInt(whatstr)
@@ -123,16 +214,12 @@ int what;	/* MT_O_* */
 MtSid from;	/* e.g. pgf tag */
 {
 	MtTypeSubInfo *si;
-	static MtSid starsid=0;
 
 	if (!from) from=MtStringToSid("");
 	for (si=MtTypeSubInfoList; si; si=si->next) {
 		if (si->what==what && si->from==from)
 			return si;
 	}
-	if (!starsid) starsid=MtStringToSid("*");
-	if (from!=starsid)
-		return MtFindTypeSub(what,starsid);	/* try wildcard */
 	return (MtTypeSubInfo *)0;
 }
 
@@ -244,6 +331,66 @@ char *data;	/* string data for search or output */
 		data = MtStringSub(mti,data);
 	MtSubFmt(mti,si->to,data);
 	return 1;
+}
+
+/* when we didn't find a substitution, we look for the wildcard sub */
+int	/* 1 if we did the translation, 0 if not */
+MtSubStar(mti,what,data)
+MtInfo *mti;
+int what;	/* MT_O_* */
+char *data;	/* string data for search or output */
+{
+	static MtSid MtStarSid=0;
+	int t;
+
+	if (!MtStarSid) MtStarSid=MtStringToSid("*");
+	t = MtSub(mti,what,MtStarSid,data);
+	return t;
+}
+
+/* do a substution given a tag sid */
+int	/* 1 if we did the translation, 0 if not */
+MtSubSid(mti,what,from,data)
+MtInfo *mti;
+int what;	/* MT_O_* */
+MtSid from;	/* e.g. paragraph type */
+char *data;	/* string data for search or output */
+{
+	MtSid altfrom;
+	int t;
+
+	t = MtSub(mti,what,from,data);
+	if (t) return t;
+	altfrom = MtFindSidTagAlias(from);
+	t = MtSub(mti,what,altfrom,data);
+	if (t) return t;
+	t = MtSubStar(mti,what,data);
+	return t;
+}
+
+/* do a substution given a tag string */
+int	/* 1 if we did the translation, 0 if not */
+MtSubStr(mti,what,fromstr,data)
+MtInfo *mti;
+int what;	/* MT_O_* */
+char *fromstr;	/* e.g. paragraph type */
+char *data;	/* string data for search or output */
+{
+	MtSid from;
+	int t;
+	char *altfromstr;
+
+	from = MtStringToSid(fromstr);
+	t = MtSub(mti,what,from,data);
+	if (t) return t;
+	altfromstr = MtFindMTagAlias(fromstr);
+	if (altfromstr) {
+		from = MtStringToSid(altfromstr);
+		t = MtSub(mti,what,from,data);
+		if (t) return t;
+	}
+	t = MtSubStar(mti,what,data);
+	return t;
 }
 
 /* end */

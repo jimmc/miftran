@@ -48,4 +48,7 @@ char *MtSidToString ARGS((MtSid sid));
 char *MtStrSave ARGS((char *s));
 void MtMakeLower ARGS((char *s));
 
+char *MtSymGet ARGS((char *name));
+void  MtSymSet ARGS((char *name, char *value));
+
 /* end */

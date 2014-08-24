@@ -31,6 +31,8 @@
 #include "mtutil.h"
 #include "mttran.h"
 
+extern char *MtFindMTagAlias();
+
 MtInfo *RcMti;
 
 int	/* 1 if OK, 0 if not */
@@ -68,6 +70,30 @@ char *commandname;	/* for error message */
 
 /* If a processing function detects an error, it should set
  * mti->tranerror=1 to abort */
+
+void
+MtProcInit(mti)
+MtInfo *mti;
+{
+	int t;
+
+	if (!MtOkArgTypes(mti,"S","init")) {
+		return;		/* ignore it and continue */
+	}
+	MtSubFmt(mti,mti->args[0].s,"");
+}
+
+void
+MtProcTagAlias(mti)
+MtInfo *mti;
+{
+	int t;
+
+	if (!MtOkArgTypes(mti,"SS","tagalias")) {
+		return;		/* ignore it and continue */
+	}
+	MtAddTagAlias(mti->args[0].s,mti->args[1].s);
+}
 
 void
 MtProcPrint(mti)
@@ -148,6 +174,8 @@ MtInfo *mti;
 }
 
 MtSidTran RcTranTab[] = {
+	{ "init", 0, MtProcInit, 0, 0 },
+	{ "tagalias", 0, MtProcTagAlias, 0, 0 },
 	{ "print", 0, MtProcPrint, 0, 0 },
 	{ "eprint", 0, MtProcEPrint, 0, 0 },
 	{ "typesub", 0, MtProcTypeSub, 0, 0 },

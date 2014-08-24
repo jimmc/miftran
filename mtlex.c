@@ -87,11 +87,14 @@ MtInfo *mti;
 		}
 		d += ((double)n/(double)div);
 	}
-	/* A number may be followed by a double quote to mean inches,
-	 * or by a space and pt to mean points.  We ignore these details
-	 * for now: we eat the double quote, and let the pt through
+	/* A number may be followed by a suffix:
+	 * a double quote to mean inches,
+	 * a percent to mean percentage,
+	 * a space and pt to mean points.
+	 * We ignore these details for now;
+	 * we eat the double quote or %, and let the pt through
 	 * as a separate word */
-	if (c!='"') {
+	if (c!='"' && c!='%') {
 		mti->pushedchar = c;
 	}
 	if (negflag) {

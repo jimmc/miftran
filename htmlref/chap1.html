@@ -1,7 +1,10 @@
-<a href="TOC.html">Table of Contents</a><p>
-<a href="chap0.html">Previous Chapter</a>
-<h1>1	 Overview</h1>
+<p><a href="TOC.html>Table of Contents</a>
+ * <a href="chap0.html>Previous Chapter</a>
+ * <a href="chap2.html>Next Chapter</a>
+<p>
 <title>Miftran Users Guide: 1	 Overview</title>
+<h1>Overview</h1>
+<p>
 Miftran is a configurable translation program designed to translate Framemaker MIF 
 (Maker Interchange Format) files into other text formats. By providing a customized ini
 tialization (or `rc') file, you can convert any MIF file into another useful text format. In 
@@ -10,6 +13,7 @@ Markup Language) text files. In the rest of this document, the output is assumed
 HTML. If you plan on producing a format other than HTML, replace the word `HTML' 
 in the remainder of this document with the name of the output format you are producing.
 <p>
+<p>
 <B>Note
 </B>:
 	This document is used as a sample MIF file to be run through miftran, as well as 
@@ -17,10 +21,12 @@ being a real manual that describes how to use the program. Thus there may be gra
 tuitous use of formatting controls and cross-references. This is intended to better 
 demonstrate the capabilities and use of miftran.
 <p>
+<p>
 The translation process is based upon the paragraph and font tags used in your MIF docu
 ment. Your rc file specifies how those tags are to be translated into HTML. The configura
 tion information in the rc file also includes input and output filenames and various other 
 control information.
+<p>
 <p>
 For each document that you want to process, you will have to create an rc file which 
 defines how the paragraph and font tags in that document are to be translated into HTML 
@@ -37,6 +43,7 @@ your environment in which to do the translation, see
 <p>
 <h2>1.1	 <a name="17541: Heading1: 1.1 The Translation Process">The Translation Process
 </h2>
+<p>
 The translation process reads the MIF file and transforms it through the following steps:
 <p>
 <ul><li>lex - 
@@ -60,8 +67,12 @@ matter which looks for special % escapes, replacing them with specified data. So
 escapes have side effects, such as switching the output file, allowing you to do some 
 crude programming by using the format strings. (For more sophisticated stuff, you can 
 hack up the C code.)
-</ul>By default, miftran will process the input file through all of these stages. For debugging 
+</ul><p>
+By default, miftran will process the input file through all of these stages. For debugging 
 purposes, you can give it a command line option (such as -tran) which will cause it to out
 put the text after that stage of processing, allowing you to see better what's going on.
 <p>
-<p><a href="chap2.html">Next Chapter</a>
+<p><a href="TOC.html>Table of Contents</a>
+ * <a href="chap0.html>Previous Chapter</a>
+ * <a href="chap2.html>Next Chapter</a>
+<p>

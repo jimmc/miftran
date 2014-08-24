@@ -231,4 +231,58 @@ char *s;
 			*p = tolower(*p);
 }
 
+/* Dumb symbol table stuff.  Useful for storing a few symbols. */
+typedef struct _mtsym {
+	struct _mtsym *next;
+	char *name;
+	char *value;
+} MtSym;
+
+static MtSym *MtSymBase;
+
+MtSym *
+MtSymGetI(name)
+char *name;
+{
+	MtSym *mts;
+	
+	for (mts=MtSymBase; mts; mts=mts->next) {
+		if (strcmp(mts->name,name)==0)
+			return mts;
+	}
+	return (MtSym *)0;
+}
+
+char *
+MtSymGet(name)
+char *name;
+{
+	MtSym *mts;
+	
+	mts = MtSymGetI(name);
+	if (mts)
+		return mts->value;
+	return (char *)0;
+}
+
+void
+MtSymSet(name,value)
+char *name;
+char *value;
+{
+	MtSym *mts;
+
+	mts = MtSymGetI(name);
+	if (mts) {
+		MtFree(mts->value);
+		mts->value = MtStrSave(value);
+		return;
+	}
+	mts = MtMalloc(sizeof(*mts));
+	mts->name = MtStrSave(name);
+	mts->value = MtStrSave(value);
+	mts->next = MtSymBase;
+	MtSymBase = mts;
+}
+
 /* end */

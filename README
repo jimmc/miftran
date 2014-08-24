@@ -1,5 +1,5 @@
 
-    Miftran v0.1						14.Feb.94
+    Miftran v0.2						25.Apr.94
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
@@ -7,11 +7,11 @@
     translations.
 
     The latest version of miftran is most likely to be found in
-       ftp://ftp.alumni.caltech.edu/pub/mcbeath/web/miftran
+       ftp://ftp.alumni.caltech.edu/pub/mcbeath/web/miftran/
 
     Miftran has the following features:
 
-	- Written in C (plus a few very small sh scripts).
+	- Written in C (plus a few small sh scripts), easy to compile.
 
 	- Externally configurable with a single configuration (RC) file,
 	  which can be customized for each MIF file to be translated.
@@ -31,12 +31,15 @@
 
 	- String substitution allows converting special characters.
 
+	- Handles anchored frames for inline images (but does not do
+	  image format conversion).
+
 	- For advanced users, the C source can be relatively easily
 	  customized to recognize additional MIF constructs.
 
 	- Freely redistributable with an MIT/X11 style copyright.
-	  You can even put it into a commercial product and sell it
-	  if you want, as long as you preserve and acknowlege our copyright.
+	  You can even put it into a commercial product and sell it if
+	  you want, as long as you preserve and acknowledge our copyright.
 
     Miftran has the following limitations:
 
@@ -44,7 +47,7 @@
 	  you will have to process them one at a time.  You can probably
 	  make this work by munging the html/Makefile and the sh scripts.
 
-	- Does not handle anchored frames and inline images.
+	- Does not do format conversions of images in anchored frames.
 
 	- Does not handle conditional text.
 
@@ -61,11 +64,13 @@
        files against the htmlref/*.html files.  They should be identical.
     4. Run your favorite HTML browser starting at TOC.html.
 
-    This early version has been tried on a very limited sample of MIF files.
-
     Miftran has been compiled and run on the following machines:
-	Sparc SunOS 4.1.3
+	Dec Alpha OSF1
+	Decstation Ultrix 4.2a
+	HP7000 HPUX 9.01
 	Sparc Solaris 2.2 with gcc
+	Sparc Solaris 2.3
+	Sparc SunOS 4.1.3
 
     If you use miftran, please send me email and let me know about it.
     If you are using a machine or OS that is not in the above list,
@@ -74,3 +79,4 @@
 
     Author: Jim McBeath
     jimmc@globes.com  jimmc@eskimo.com  jimmc@alumni.caltech.edu
+    http://eskinews.eskimo.com/~jimmc

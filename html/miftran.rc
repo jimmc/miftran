@@ -1,8 +1,12 @@
-#Sample miftran rc file
+#Miftran rc file
 #Uses MIF syntax (well, why not?)
 
-#<print `This string is in the RC file\n'>	#print to stdout
-#<eprint `Here we go\n'>		#print to stderr
+##########################################
+#Set up data for use by the rest of the rc file.
+#This stuff normally gets customized for a new document.
+
+#Set up default document title
+<init `%1"Miftran Users Guide"L'>
 
 #Specify default input file
 <infilename `../miftran.mif'>
@@ -11,27 +15,70 @@
 <outfilename `chap%d.html'>
 <altoutfilename `d%d.txt'>
 
+#Set up aliases for the actual paragraph tags used in our document
+#Left side is what appears in your document, right side is what
+#appears later in this rc file.
+<tagalias Chapter MiftranChapter>
+<tagalias Section MiftranSection>
+<tagalias Subsection MiftranSubsection>
+<tagalias Subsubsection MiftranSubsubsection>
+
+<tagalias Body MiftranBody>
+<tagalias Note MiftranBody>
+<tagalias Title MiftranBody>
+<tagalias Subtitle MiftranBody>
+
+<tagalias Code MiftranCode>
+<tagalias Bullet MiftranBullet>
+<tagalias Contbullet MiftranContbullet>
+<tagalias Step MiftranStep>
+<tagalias Step1 MiftranStep1>
+<tagalias Contstep MiftranContstep>
+<tagalias Substep MiftranSubstep>
+<tagalias Substep1 MiftranSubstep1>
+
+#Set up aliases for the actual font tags used in our document
+<tagalias Bold MiftranBold>
+<tagalias Emphasis MiftranItalic>
+
+# End of normally customized area.
+##########################################
+
+#The stuff after here is realtively generic
+
 <typesub startfile `*' `%+1.1L\
 %3.1A%2.1A%1.1A\
-<title>Miftran Users Guide</title>\n\
-<h1>Miftran Users Guide</h1>\n\<ul>\n\
-%0.1F'>	#Open output files for write
+<title>%1r</title>\n\
+<h1>%1r</h1>\n\<ul>\n\
+%0.1F'>	#Open output files for write, put in title
 
 <typesub endfile `*' `%1.2A</ul>\n<a href="IX.html">Index</a>\n'>
 
 #We use the string registers as follows:
-#1 document title
-#2 current chapter numstring
-#3 current chapter name
+#S1 document title
+#S2 current chapter numstring
+#S3 current chapter name
+#S4 temp used during building of chapter name
+#S11 AFrame ID
+#S12, S13 temps used when working with AFrames
 
 #We use the int registers as follows:
-#1 contains the number 1
-#2 counter for index markers
+#I1 contains the number 1
+#I2 counter for index markers
 
 #We use the following alternate output files:
 #d1.txt - Table of Contents
 #d2.txt - list of cross reference targets for use by fixref
 #d3.txt - list of index markers
+
+#Handle anchored frame stuff
+<typesub aframeid `*' `%11R'>		#store AFrame ID in S11
+#When we get a filename, create symbol AFrame#%d where %d is ID of frame,
+#set value of that symbol to the filename for the AFrame.
+<typesub aframefile `*' `%12R%13"AFrame#"L%13.11"cat"O%12.13"set"O'>
+#When we get aframe ref, get symbol from symbol table and insert into output
+<typesub aframe `*' `%11R%13"AFrame#"L%13.11"cat"O%12.13"get"O\
+<img src="%12r">'>
 
 #Generic translations, probably usable as-is for any document
 <typesub string `*' `%s\n'>
@@ -47,67 +94,64 @@
 <typesub hardreturn `*' `\n'>
 <typesub tab `*' `\t'>
 
-#Specify paragraph translations for this document
-<typesub startpgf Title `<title>'>
-<typesub string Title `%s%1R'>
-<typesub endpgf Title `</title>\n'>
+#Switch to next chapter file, clear chapter name (S3)
+<typesub switchpgf `*.MiftranChapter' `%+1.1F%3L'>
+<typesub pgfnumstring MiftranChapter `%2R'>
+#put new part of chapter string into S4, then cat S3+S4 into S3.
+<typesub string MiftranChapter `%4R%3.4"cat"O'>
+<typesub tab MiftranChapter `'>
+#When we have the whole chapter name, output to xref file, and output
+#title and header to chapter file.
+<typesub endpgf MiftranChapter `\
+%1.2A<li><a href="%f">%2r %3r</a>\n%F\
+<title>%1r: %2r %3r</title>\n\
+<h1>%3r</h1>\n'>
 
-<typesub switchpgf `*.Chapter' `<p><a href="%+1f">Next Chapter</a>\n%+1.1F'>
-<typesub startpgf Chapter `\
-<a href="TOC.html">Table of Contents</a><p>\n\
-<a href="%-1f">Previous Chapter</a>\n<h1>'>
-<typesub pgfnumstring Chapter `%2R%s '>
-<typesub string Chapter `\
-\%1.2A<li><a href="%f">%2r %s</a>\n%F\
-%s%3R'>
-<typesub endpgf Chapter `</h1>\n<title>%1r: %2r %3r</title>\n'>
-<typesub tab Chapter `'>
+<typesub pgfnumstring MiftranSection `%s '>
+<typesub startpgf MiftranSection `<h2>'>
+<typesub endpgf MiftranSection `</h2>\n'>
 
-<typesub pgfnumstring Section `%s '>
-<typesub startpgf Section `<h2>'>
-<typesub endpgf Section `</h2>\n'>
+<typesub pgfnumstring MiftranSubsection `%s '>
+<typesub startpgf MiftranSubsection `<h3>'>
+<typesub endpgf MiftranSubsection `</h3>\n'>
 
-<typesub pgfnumstring Subsection `%s '>
-<typesub startpgf Subsection `<h3>'>
-<typesub endpgf Subsection `</h3>\n'>
+<typesub startpgf MiftranSubsubsection `<h4>'>
+<typesub endpgf MiftranSubsubsection `</h4>\n'>
 
-<typesub startpgf Subsubsection `<h4>'>
-<typesub endpgf Subsubsection `</h4>\n'>
+<typesub startpgf MiftranBody `<p>\n'>
+<typesub endpgf MiftranBody `<p>\n'>
 
-<typesub endpgf Body `<p>\n'>
-<typesub endpgf Note `<p>\n'>
+<typesub startpgf MiftranCode `<pre>'>
+<typesub endpgf MiftranCode `</pre>\n'>
+<typesub string MiftranCode `%s'>
 
-<typesub startpgf Code `<pre>'>
-<typesub endpgf Code `</pre>\n'>
-<typesub string Code `%s'>
+<typesub switchpgf `*.MiftranBullet' `<ul>'>
+<typesub switchpgf `MiftranBullet.*' `</ul>'>
+<typesub startpgf MiftranBullet `<li>'>
+<typesub startpgf MiftranContbullet `<p>'>
 
-<typesub switchpgf `*.Bullet' `<ul>'>
-<typesub switchpgf `Bullet.*' `</ul>'>
-<typesub startpgf Bullet `<li>'>
-<typesub startpgf Contbullet `<p>'>
+<typesub switchpgf `*.MiftranStep1' `<ol>'>
+<typesub switchpgf `MiftranStep.*' `</ol>\n'>
+<typesub switchpgf `MiftranStep.MiftranContstep' `'>
+<typesub switchpgf `MiftranContstep.MiftranBody' `</ol>\n'>
+<typesub startpgf MiftranStep `<li>'>
+<typesub startpgf `MiftranStep1' `<li>'>
 
-<typesub switchpgf `*.Step1' `<ol>'>
-<typesub switchpgf `Step.*' `</ol>\n'>
-<typesub switchpgf `Step.Contstep' `'>
-<typesub switchpgf `Contstep.Body' `</ol>\n'>
-<typesub startpgf Step `<li>'>
-<typesub startpgf `Step1' `<li>'>
-
-<typesub switchpgf `Step.Substep1' `<ol>'>
-<typesub switchpgf `Step.Contbullet' `<p>'>
-<typesub switchpgf `Step.Code' `'>
-<typesub switchpgf `Code.Body' `</ol></ul>'>
+<typesub switchpgf `MiftranStep.MiftranSubstep1' `<ol>'>
+<typesub switchpgf `MiftranStep.MiftranContbullet' `<p>'>
+<typesub switchpgf `MiftranStep.MiftranCode' `'>
+<typesub switchpgf `MiftranCode.MiftranBody' `</ol></ul>'>
 	#A hack: we want to terminate lists that have code,
 	#but we don't know when they should terminate.
 	#We presume that the extra /ul will be ignore by html parser.
-<typesub switchpgf `Substep.*' `</ol>\n'>
-<typesub startpgf Substep `<li>'>
-<typesub startpgf Substep1 `<li>'>
+<typesub switchpgf `MiftranSubstep.*' `</ol>\n'>
+<typesub startpgf MiftranSubstep `<li>'>
+<typesub startpgf MiftranSubstep1 `<li>'>
 
-<typesub startfont Emphasis `<I>'>
-<typesub endfont Emphasis `</I>'>
-<typesub startfont Bold `<B>'>
-<typesub endfont Bold `</B>'>
+<typesub startfont MiftranItalic `<I>'>
+<typesub endfont MiftranItalic `</I>'>
+<typesub startfont MiftranBold `<B>'>
+<typesub endfont MiftranBold `</B>'>
 
 #Specify string substitutions
 <stringsub `\\t' `\t'>	#replace \t with space

@@ -6,7 +6,9 @@ tmp_sort=sort.tmp
 tmp_head=head.tmp
 tmp_tail=tail.tmp
 
-sort -bt'>' +2 > $tmp_sort
+sort -bt'>' +2 | \
+    sed -e 's|&lt;Emphasis&gt;|<i>|g' \
+	-e 's|&lt;Default Para Font&gt;|</i>|g' > $tmp_sort
 cat <<EOF > $tmp_head
 <title>Index</title>
 <h1>Index</h1>
@@ -18,3 +20,4 @@ cat <<EOF > $tmp_tail
 EOF
 cat $tmp_head $tmp_sort $tmp_tail
 rm $tmp_head $tmp_tail $tmp_sort
+exit 0

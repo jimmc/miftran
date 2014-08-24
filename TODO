@@ -1,6 +1,5 @@
-TODO for miftran					15.Dec.93
+TODO for miftran					25.Apr.94
 
-- Handle inline images.
 - Recognize variables (e.g. date), do those substitutions.
 - Handle SoftHyphen correctly (i.e. put the word back together).
 - Figure out how to handle tables.

@@ -1,0 +1,59 @@
+miftran v0.2  25.Apr.1994
+
+	Enhancements
+	------------
+	- The new <tagalias> rc command provides a mechanism for easily
+	  specifying that one tag should be treated the same as another.
+	  This also makes it simpler to customize the standard RC file
+	  for your document tags, since the tagalias commands all appear
+	  grouped together near the start of the RC file.
+
+	- The new <init> rc command provides a mechanism for specifying
+	  special translations to be executed immediately when reading
+	  the RC file.  This is useful for such things as loading registers
+	  with constant values (such as the document title).
+
+	- The new commands <aframeid>, <aframefile> and <aframe> provide
+	  for handling of anchored frames.  New lines in the default
+	  miftran.rc file generate <img> lines in the output which
+	  reference the input filename.  You'll still have to handle
+	  the image format conversion outside of miftran.
+
+	- The new %O operators "get" and "set" implement a simple symbol
+	  table.  The format %1.2"get"O will use the name in string
+	  register 2, retrieve that value, and store it into string
+	  register 1.  The format %1.2"set"O will store the value from
+	  string register 1 into the name specified by string register 2.
+	  This feature is used for the default anchored frame conversion.
+
+	- Modified fixindex script to handle Emphasis in index lines.
+
+	- Added fixchl script to better deal with adding "Next Chapter" and
+	  "Previous Chapter" links (rather than trying to do it in the
+	  rc file).  Links are now placed at both the start and end of
+	  each chapter file (if the corresponding next/previous chapter
+	  file exists).
+
+	- Emdash characters are now understood (in the same manner as
+	  tab and hardreturn). (Courtesy of Graham Williams)
+
+	- Added translation of <FPostScriptName> tag to "startpsfont" (in
+	  the same manner as FTag currently gets translated to "startfont".
+	  (Suggested by Lori Wong)
+
+	Bug Fixes
+	---------
+	- The % character in MIF input (for numbers) is now ignored, so
+	  no longer produces an error message about an unknown character
+	  in the input.
+
+	- Modified fixref script to overcome limitations in sed by using
+	  split and multiple sed runs when there are lots of cross-refs.
+
+	Notes
+	-----
+	- The manual for v0.2 has not been updated from v0.1.
+
+miftran v0.1 24.Jan.94
+
+	First release of miftran.
