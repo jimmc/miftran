@@ -29,14 +29,16 @@
 #d3.txt - list of index markers
 
 <include `anchfram.rc'>
+<include `tables.rc'>
 <include `vars.rc'>
 <include `markers.rc'>
 <include `hypertxt.rc'>
 <include `chars.rc'>
 
 #Generate table of contents with Chapter and H2 in it.  If you only want
-#chapter headings in the TOC, but not H2 headings, use chap1.rc
-<include `chap2.rc'>
+#chapter headings in the TOC, but not H2 headings, use paragraph type
+#MiftranH2nt instead of MiftranH2.
+<include `chap.rc'>
 <include `part.rc'>
 
 <include `stdpgf.rc'>

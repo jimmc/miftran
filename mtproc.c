@@ -90,12 +90,52 @@ MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 	{ MT_O_VARDEF, "vardef" },
 #define MT_O_VARREF 502
 	{ MT_O_VARREF, "varref" },
+#define MT_O_TBLID 600
+	{ MT_O_TBLID, "tableid" },	/* during definition */
+#define MT_O_TBLBEGIN 601
+	{ MT_O_TBLBEGIN, "tablebegin" },/* during definition */
+#define MT_O_TBLROW 602
+	{ MT_O_TBLROW, "tablerow" },	/* during definition */
+#define MT_O_TBLCELL 603
+	{ MT_O_TBLCELL, "tablecell" },	/* during definition */
+#define MT_O_TBLEND 604
+	{ MT_O_TBLEND, "tableend" },	/* during definition */
+#define MT_O_ATBL 605
+	{ MT_O_ATBL, "atable" },	/* reference to an atbl */
+
 	{ 0 }
 	
 };
 
 /* Processing functions called from the translation tables below */
 /* On error, the function shouls set mti->tranerror=1 and return */
+
+int
+MtProcSubStrPgf(mti,what,fromstr,data)
+MtInfo *mti;
+int what;       /* MT_O_* */
+char *fromstr;  /* e.g. paragraph type */
+char *data;     /* string data for search or output */
+{
+	int t;
+	char *pgfstr;
+	char buf[300];
+
+	/* first see if there is a paragraph-specific version */
+	pgfstr = MtSidToString(mti->pgftag);
+	sprintf(buf,"%s.%s",pgfstr,fromstr);
+	t = MtSubStr(mti,what,buf,data);
+	if (!t) {
+		/* Couldn't find "pgfname.fromstr", look for just "fromstr" */
+		t = MtSubStr(mti,what,fromstr,data);
+	}
+	if (!t) {
+		/* Couldn't find that either, look for "*.fromstr" */
+		sprintf(buf,"*.%s",pgfstr,fromstr);
+		t = MtSubStr(mti,what,buf,data);
+	}
+	return t;
+}
 
 static
 void
@@ -115,7 +155,7 @@ CheckEndFont(mti)
 MtInfo *mti;
 {
 	if (mti->infontanchor) {
-		MtSubStr(mti,MT_O_HYPERTEXT,"endanchor","");
+		MtProcSubStrPgf(mti,MT_O_HYPERTEXT,"endanchor","");
 		mti->infontanchor = 0;
 	}
 	if (mti->fonttag) {
@@ -160,7 +200,7 @@ MtInfo *mti;
 		sp = "";	/* no data word */
 	/* s is command word, such as "newlink",
 	 * sp is data word (the rest of the string) */
-	MtSubStr(mti,MT_O_HYPERTEXT,s,sp);
+	MtProcSubStrPgf(mti,MT_O_HYPERTEXT,s,sp);
 }
 
 void
@@ -183,7 +223,7 @@ MtInfo *mti;
 	}
 	s = mti->args[0].s;
 	sprintf(mnumstr,"%d",mti->markertype);
-	MtSubStr(mti,MT_O_MARKERTEXT,mnumstr,s);
+	MtProcSubStrPgf(mti,MT_O_MARKERTEXT,mnumstr,s);
 }
 
 void
@@ -277,13 +317,6 @@ MtInfo *mti;
 		MtSubSid(mti,MT_O_CHAR,mti->pgftag,s);
 }
 
-void
-MtProcParaLinePost(mti)
-MtInfo *mti;
-{
-	CheckEndFont(mti);
-}
-
 static
 void
 SwitchPgf(mti,from,to)
@@ -325,7 +358,6 @@ MtProcTFTag(mti)	/* Text Flow tag */
 MtInfo *mti;
 {
 	char *type;
-	MtSid newpgftag;
 
 	type = mti->args[0].s;	/* the text flow tag */
 	MtSubStr(mti,MT_O_TFTAG,type,"");
@@ -343,6 +375,7 @@ void
 MtProcParaPost(mti)
 MtInfo *mti;
 {
+	CheckEndFont(mti);
 	if (mti->needpgfend) {
 		MtSubSid(mti,MT_O_ENDPGF,mti->pgftag,"");
 		mti->needpgfend = 0;
@@ -410,6 +443,55 @@ MtInfo *mti;
 	MtSubSid(mti,MT_O_VARREF,mti->pgftag,s);
 }
 
+void
+MtProcTblCell(mti)
+MtInfo *mti;
+{
+	MtSubSid(mti,MT_O_TBLCELL,(MtSid)0,"");
+}
+
+void
+MtProcTblRow(mti)
+MtInfo *mti;
+{
+	MtSubSid(mti,MT_O_TBLROW,(MtSid)0,"");
+}
+
+void
+MtProcTblBegin(mti)
+MtInfo *mti;
+{
+	MtSubSid(mti,MT_O_TBLBEGIN,(MtSid)0,"");
+}
+
+void
+MtProcTblEnd(mti)
+MtInfo *mti;
+{
+	MtSubSid(mti,MT_O_TBLEND,(MtSid)0,"");
+}
+
+void
+MtProcTblId(mti)
+MtInfo *mti;
+{
+	char buf[30];
+
+	sprintf(buf,"%d",mti->args[0].i);
+	MtSubSid(mti,MT_O_TBLID,(MtSid)0,buf);
+}
+
+void
+MtProcAtbl(mti)
+MtInfo *mti;
+{
+	char buf[30];
+
+	sprintf(buf,"%d",mti->args[0].i);
+	MtSubSid(mti,MT_O_ATBL,(MtSid)0,buf);
+
+}
+
 /* Translation tables to drive calling the action functions above */
 
 MtSidTran MarkerTranTab[] = {
@@ -445,6 +527,7 @@ MtSidTran ParaLineTranTab[] = {
 	{ "Font", 0, 0, 0, FontTranTab },
 	{ "AFrame", 0, 0, MtProcAframe, 0 },
 	{ "Variable", 0, 0, 0, VarRefTranTab },
+	{ "ATbl", 0, 0, MtProcAtbl, 0 },
 	{ 0 }
 };
 
@@ -457,7 +540,7 @@ MtSidTran ParaTranTab[] = {
 	{ "Pgf", 0, 0, 0, ParaPgfTranTab },
 	{ "PgfTag", 0, MtProcPgfTag, 0, 0 },
 	{ "PgfNumString", 0, MtProcPgfNumString, 0, 0 },
-	{ "ParaLine", 0, 0, MtProcParaLinePost, ParaLineTranTab },
+	{ "ParaLine", 0, 0, 0, ParaLineTranTab },
 	{ 0 }
 };
 
@@ -483,6 +566,37 @@ MtSidTran AFramesTranTab[] = {
 	{ 0 }
 };
 
+MtSidTran TblCellContTab[] = {
+	{ "Para", 0, MtProcParaPre, MtProcParaPost, ParaTranTab },
+	{ 0 }
+};
+
+MtSidTran TblCellTab[] = {
+	{ "CellContent", 0, 0, 0, TblCellContTab },
+	{ 0 }
+};
+
+MtSidTran TblRowTab[] = {
+	{ "Cell", 0, MtProcTblCell, 0, TblCellTab },
+	{ 0 }
+};
+
+MtSidTran TblBodyTab[] = {
+	{ "Row", 0, MtProcTblRow, 0, TblRowTab },
+	{ 0 }
+};
+
+MtSidTran TblTranTab[] = {
+	{ "TblID", 0, 0, MtProcTblId, 0 },
+	{ "TblBody", 0, MtProcTblBegin, MtProcTblEnd, TblBodyTab },
+	{ 0 }
+};
+
+MtSidTran TblsTranTab[] = {
+	{ "Tbl", 0, 0, 0, TblTranTab },
+	{ 0 }
+};
+
 MtSidTran VariableFormatTranTab[] = {
 	{ "VariableName", 0, MtProcVariableName, 0, 0 },
 	{ "VariableDef", 0, MtProcVariableDef, 0, 0 },
@@ -498,6 +612,7 @@ MtSidTran TopTranTab[] = {
 	{ "TextFlow", 0, 0, 0, TextFlowTranTab },
 	{ "AFrames", 0, 0, 0, AFramesTranTab },
 	{ "VariableFormats", 0, 0, 0, VariableFormatsTranTab },
+	{ "Tbls", 0, 0, 0, TblsTranTab },
 	{ 0 }
 };
 

@@ -5,14 +5,21 @@ indexfile=d2.txt
 sedfile=href.sed
 sedsplit=hrefspl.sed
 sedsplitsize=50
-datafiles=chap*.html
-tmpfile=tmp.html
-tmp1=tmp1.html
+datafiles=chap*.htm
+tmpfile=tmp.htm
+tmp1=tmp1.htm
 needsplit=0
 err=0
 
 #If no cross-references in index file, no work to do here
 [ ! -s $indexfile ] && echo "No cross-references" && exit 0
+
+add_final_newline_if_missing(){
+	n=`tail -1c $file | wc -l`
+	if [ $n = 0 ]; then
+		echo "" >> $file
+	fi
+}
 
 munge_one_file(){
 	if [ $needsplit = 1 ]; then
@@ -49,6 +56,7 @@ fi
 
 for file in $datafiles; do
 	echo File $file
+	add_final_newline_if_missing
 	munge_one_file
 done
 exit $err

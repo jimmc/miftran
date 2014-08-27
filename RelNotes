@@ -1,3 +1,60 @@
+miftran v0.7 29.May.1996
+
+	Enhancements
+	------------
+	- The -sub command line option (for debugging) now includes the
+	  translation information as output by -tran, plus the final
+	  formatted output along with the formatting string which
+	  is the output of the substitution stage.  The formatting string
+	  is output in square brackets to distinguish it from the text.
+	  Output redirection is disabled so that all output comes to stdout
+	  in this mode.  These additions make debugging easier.
+
+	Bug Fixes
+	---------
+
+	Other Changes
+	-------------
+	- The standard configuration now produces .htm files instead of
+	  .html files, to make like easier for those poor souls who are
+	  forced to use systems limited to 3 character extentions.
+	  (Changes from html to htm were in fixchl, fixindex, fixref
+	  html/miftran.rc, html/Makefile, mtinc/stdhead.rc)
+
+miftran v0.6 27.Dec.1995
+
+	Enhancements
+	------------
+	- Add support for flat tables (courtesy of Mogaki Masato).
+
+	- You can now specify paragraph-specific translations for markers and
+	  hypertext.  Previously, you could only specify somethis like this:
+	    <typesub markertext `2' `.....'>
+	  To specify that this translation only applies in paragraph type xyz:
+	    <typesub markertext `xyz.2' `.....'>
+	  You could also specify `*.2' to do the same thing as `2'.
+
+	- Add elipsis (c9) to strsub.rc.
+
+	Bug Fixes
+	---------
+	- Change anchfram.rc so that anchored frames without external
+	  filenames do not appear in the output.
+
+	- Font changes across soft line breaks now work properly (thanks
+	  to Robert Sechrest).
+
+	- Fix minor memory leak in MtPutRegStr.
+
+	- Fix bug in fixref that ate final lines without newline.
+
+	Other Changes
+	-------------
+	- The files mtinc/chap[12].rc have been combined into chap.rc.
+	  To select whether or not second-level headers go into the generated
+	  TOC, select either the paragraph type MiftranH2 or MiftranH2nt
+	  (no table-of-contents) as your paragraph type alias.
+
 miftran v0.5p1 21.Sep.1995
 
 	Enhancements
@@ -42,7 +99,7 @@ miftran v0.5 19.Jun.1995
 
 	Bug Fixes
 	---------
-	- Fxied bug in %+m.nR. (Thanks to Steve Tynor.)
+	- Fixed bug in %+m.nR. (Thanks to Steve Tynor.)
 
 	- Added <typesub varref MiftranIgnore `'> to prevent varref junk
 	  in headers and footers from appearing in output. (Steve Tynor)

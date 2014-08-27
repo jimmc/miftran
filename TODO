@@ -1,12 +1,10 @@
-TODO for miftran					25.Sep.95
+TODO for miftran					27.Dec.95
 
 - Hrefs can't have spaces in them. (950811)
-- Look into NeedToDo miftran bug (char format stops at ParaLine) (950803)
 
 - Support spot cross-references (and add doc).
 - Recognize <$xxx> in variables (e.g. date), do those substitutions.
 - Handle SoftHyphen correctly (i.e. put the word back together).
-- Figure out how to handle tables.
 - Improve translation tables to allow specifying "a.b" as a translation,
   rather than having to have a separate table for b.
 - Figure out how to know where page breaks are in printed document,

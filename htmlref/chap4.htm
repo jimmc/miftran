@@ -1,8 +1,8 @@
-<p><a href="TOC.html">Table of Contents</a>
- * <a href="chap3.html">Previous Chapter</a>
+<p><a href="TOC.htm">Table of Contents</a>
+ * <a href="chap3.htm">Previous Chapter</a>
 <p>
-<a name="40965: Chapter: 4 Advanced Customization"><title>Miftran Users Guide: 4	 Advanced Customization</title>
-<h1>4	 Advanced Customization</h1>
+<a name="40965: Chapter: 4 Advanced Customization"></a><title>Miftran Users Guide: 4  Advanced Customization</title>
+<h1>4  Advanced Customization</h1>
 <p>
 For most use, configuration through the rc file will be sufficient. But you may decide that 
 you need to recognize additional information in the MIF file, or need new formatting 
@@ -13,7 +13,7 @@ Note that since the rc file is parsed by the same routines as the data file, the
 recognizing additional MIF constructs apply also to adding a new rc file command.<p>
 <p>
 You can easily customize the C source for any of the following:<p>
-<ul><li>Recognize additional MIF constructs<li>Add an rc file command<li>Add another format control character (with or without side effects)<li>Change the number of registers available for % formatting commands.</ul><a name="4.1	"><h2>4.1	 Recognizing an Additional MIF Construct</h2>
+<ul><li>Recognize additional MIF constructs<li>Add an rc file command<li>Add another format control character (with or without side effects)<li>Change the number of registers available for % formatting commands.</ul><a name="4.1 "></a><h2>4.1  Recognizing an Additional MIF Construct</h2>
 <p>
 Miftran uses a table-driver parse to recognize specific constructs in its input stream. The 
 tables describe a tree structure which represents the nesting of the commands in the 
@@ -70,7 +70,7 @@ at that function (in mtproc.c) and the others for examples of how to process the
 most cases, your action routine should not have to be more than a few lines long. You 
 may have to add an additional MT_O_* definition, which goes at the beginning of 
 <TT>mtproc.c</TT>.<p>
-<a name="4.2	"><h2>4.2	 Adding an RC File Command</h2>
+<a name="4.2 "></a><h2>4.2  Adding an RC File Command</h2>
 <p>
 The RC commands are described in the file 
 <TT>mtrc.c</TT>. The 
@@ -82,7 +82,7 @@ table and write the associated action routine. Look at the existing action routi
 Note that, since RC files are parsed with the same parser as MIF files, adding an RC 
 command is just a special case of recognizing an additional MIF construct, as described 
 in the previous section. This means that, if you really wanted to, you could add a hierarchical RC command using the same techniques as described for MIF files.<p>
-<a name="4.3	"><h2>4.3	 Adding Another Format Control Character</h2>
+<a name="4.3 "></a><h2>4.3  Adding Another Format Control Character</h2>
 <p>
 The format control characters are defined in the function 
 <TT>MtSubFmt</TT> in the file 
@@ -101,7 +101,7 @@ the integer operations, and the table
 <TT>MtOpStrTab</TT> lists all of the string operations. To 
 add a new operations, edit the appropriate table and add a new line with the operation 
 name and function. See the existing functions in that file for examples of how to implement new operation functions.<p>
-<a name="4.4	"><h2>4.4	 Changing the Number of Registers</h2>
+<a name="4.4 "></a><h2>4.4  Changing the Number of Registers</h2>
 <p>
 You can increase the number of registers available for use in % formatting commands. 
 The number of registers is controlled by the constant 
@@ -109,6 +109,6 @@ The number of registers is controlled by the constant
 <TT>mtfmt.c</TT>. You can edit that file and change that definition, or define that number in the 
 makefile for miftran to be higher. You must recompile miftran with the higher value in 
 order to change the number of registers.<p>
-<p><a href="TOC.html">Table of Contents</a>
- * <a href="chap3.html">Previous Chapter</a>
+<p><a href="TOC.htm">Table of Contents</a>
+ * <a href="chap3.htm">Previous Chapter</a>
 <p>

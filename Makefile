@@ -22,7 +22,7 @@ LINKFLAGS = $(CFLAGS)
 LIBS =
 
 KITFILES = README RelNotes Makefile TODO $(SRCS) *.h miftran.mif $(SCRIPTS) \
-	html/Makefile html/html.makefile html/miftran.rc htmlref/*.html \
+	html/Makefile html/html.makefile html/miftran.rc htmlref/*.htm \
 	mtinc/*.rc
 
 SCRIPTS  = fixchl fixindex fixref
@@ -66,11 +66,11 @@ purify:;	make prog LINKER='purify $(LINKER)'
 
 depend:;	makedepend $(SRCS)
 
-refhtml:	htmlref/chap1.html
+refhtml:	htmlref/chap1.htm
 
-htmlref/chap1.html:	miftran.mif
+htmlref/chap1.htm:	miftran.mif
 	cd html; make
-	cp -p html/*.html htmlref/
+	cp -p html/*.htm htmlref/
 
 kit:	$(DIR).tgz
 

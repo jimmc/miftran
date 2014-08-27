@@ -1,10 +1,10 @@
-<p><a href="TOC.html">Table of Contents</a>
- * <a href="chap2.html">Previous Chapter</a>
- * <a href="chap4.html">Next Chapter</a>
+<p><a href="TOC.htm">Table of Contents</a>
+ * <a href="chap2.htm">Previous Chapter</a>
+ * <a href="chap4.htm">Next Chapter</a>
 <p>
-<a name="32917: Chapter: 3 The RC File"><title>Miftran Users Guide: 3	 The RC File</title>
-<h1>3	 The RC File</h1>
-<a name="_IX_7"><p>
+<a name="32917: Chapter: 3 The RC File"></a><title>Miftran Users Guide: 3  The RC File</title>
+<h1>3  The RC File</h1>
+<a name="_IX_7"></a><p>
 The rc file controls the translation of your MIF file. The syntax of the rc file is identical 
 to the syntax of a MIF file (the same parser is used internally), but the command keywords are different.<p>
 <p>
@@ -18,7 +18,7 @@ rc file looks like this:<p>
 </ol></ul><p>
 Commands in a real MIF file are similar, except that they may contain nested arguments. 
 Commands in an rc fie do not contain nested arguments.<p>
-<a name="3.1	"><h2>3.1	 Comments</h2>
+<a name="3.1 "></a><h2>3.1  Comments</h2>
 <p>
 You can include comments in your rc file by starting a line with the # character.<p>
 <p>
@@ -27,7 +27,7 @@ A comment, starting with the # character, can also be placed on the same line as
 In a MIF file, lines starting with &amp; or = (only at the beginning of a line) are treated as 
 comment lines. These lines are used to indicate an Inset in MIF (such as an embedded 
 postscript file), which miftran does not handle.<p>
-<a name="3.2	"><h2>3.2	 Commands</h2>
+<a name="3.2 "></a><h2>3.2  Commands</h2>
 <p>
 This section describes the commands that you can put into your rc file.<p>
 <h3>3.2.1	 altoutfilename</h3>
@@ -90,7 +90,7 @@ output. For example, the &lt; character must be escaped in HTML files. This is a
 <pre>&lt;stringsub `&lt;' `&amp;lt;'&gt;</pre>
 </ol></ul><p>
 String substitution is part of the substitution stage of the translation process (see 
-<a href="chap1.html#17541: Heading1: 1.1 The Translation Process">Section 
+<a href="chap1.htm#17541: Heading1: 1.1 The Translation Process">Section 
 1.1, `The Translation Process' on page 2</a>). It occurs after type substitution and before 
 formatting. String substitution is applied to the data string from the MI files before they 
 are used in the formatting step.<p>
@@ -111,7 +111,7 @@ Specifies a string substitution, to be executed only when in a paragraph of the 
 type. This command allows you to translate special character or strings only when they 
 appear in a specified paragraph type. For example, you could use the following command to turn tabs into spaces only in the `chapter' paragraph type:<p>
 <pre>&lt;typestringsub chapter `\\x11 ' ` '&gt;</pre>
-<h3>3.2.12	 <a name="40489: Subsection: 3.1.7 typesub">typesub</h3>
+<h3>3.2.12	 <a name="40489: Subsection: 3.1.7 typesub"></a>typesub</h3>
 <p>
 Specifies a type substitution. This command allows you to specify what gets output for 
 specific paragraph and font tags. This is the primary way in which you can customize 
@@ -150,15 +150,15 @@ which would output &lt;ul&gt; whenever a paragraph of type Bullet followed a par
 any other type.<p>
 <p>
 For a list of all of the state names that can be specified in a typesub command, see 
-<a href="chap3.html#41291: Section: 3.2 State Names">Section 3.2, `State Names' on page 8</a>. For more information about the formatting string 
+<a href="chap3.htm#41291: Section: 3.2 State Names">Section 3.2, `State Names' on page 8</a>. For more information about the formatting string 
 (third arg to typesub), see 
-<a href="chap3.html#28642: Section: 3.3 Format Strings">Section 3.3, `Format Strings' on page 10</a>.<p>
-<a name="41291: Section: 3.2 State Names"><a name="3.3	"><h2>3.3	 State Names</h2>
+<a href="chap3.htm#28642: Section: 3.3 Format Strings">Section 3.3, `Format Strings' on page 10</a>.<p>
+<a name="41291: Section: 3.2 State Names"></a><a name="3.3 "></a><h2>3.3  State Names</h2>
 <p>
 The first argument to the typesub command is a state name as output by the tran stage of 
 the translation process. The set of state names is defined in C code. An advanced user 
 can expand the set of state names by editing the C source (see 
-<a href="chap4.html#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced 
+<a href="chap4.htm#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced 
 Customization' on page 13</a>). The currently defined state names are described in this section.<p>
 <p>
 In the following descriptions, MIF commands in the input file are referred to with angle 
@@ -299,10 +299,10 @@ Generated in response to a &lt;XrefEnd&gt; command. The tag and data string are 
 <p>
 Generated in response to a &lt;XRefSrcText&gt; command. The tag is blank. The data string 
 is the string given in the &lt;XRefSrcText&gt; command.<p>
-<a name="28642: Section: 3.3 Format Strings"><a name="3.4	"><h2>3.4	 Format Strings</h2>
+<a name="28642: Section: 3.3 Format Strings"></a><a name="3.4 "></a><h2>3.4  Format Strings</h2>
 <p>
 The third argument to the typesub command (see 
-<a href="chap3.html#40489: Subsection: 3.1.7 typesub">Subsection 3.1.7, `typesub' on page 7</a>) 
+<a href="chap3.htm#40489: Subsection: 3.1.7 typesub">Subsection 3.1.7, `typesub' on page 7</a>) 
 is a formatting string. This string controls what is actually written to the output file, and 
 also controls other aspects, such as when to switch output files.<p>
 <p>
@@ -312,7 +312,7 @@ sent on to the output file, and % formatting is processed, which may or may not 
 additional data being sent to the output file.<p>
 <p>
 The different parts of the format string are discussed in the following sections.<p>
-<a name="3.5	"><h2>3.5	 Backslash Sequences</h2>
+<a name="3.5 "></a><h2>3.5  Backslash Sequences</h2>
 <p>
 A string can be continued on the next line of input by placing a backslash as the last 
 character on the line. The backslash and following newline are not part of the resulting 
@@ -322,7 +322,7 @@ The valid characters which can appear after a backslash (\) are:<p>
 <ul><li><I>newline</I> - line continuation<li>n - output a newline<li>t - output a tab<li>' - output a single quote<li>\ - output a backslash</ul><p>
 The results of putting any other character following a backslash is officially undefined, 
 although the current implementation will output that character.<p>
-<a name="3.6	"><h2>3.6	 Percent Sequences</h2>
+<a name="3.6 "></a><h2>3.6  Percent Sequences</h2>
 <p>
 The % formatting control characters are divided into two classes: those with side-effects, and those without. The formatting controls without side effects only output data 
 to the current output file, whereas the ones with side-effects can do all sorts of things. 
@@ -337,9 +337,9 @@ There are two banks of registers that are accessed by some of the commands, one 
 integer data, and one set for string data. There are 99 registers, numbered from 1 to 99. 
 References to illegal register numbers are quietly ignored. You can change the number 
 of registers by recompiling miftran. See 
-<a href="chap4.html#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced Customization' on page 
+<a href="chap4.htm#40965: Chapter: 4 Advanced Customization">Chapter 4, `Advanced Customization' on page 
 13</a>.<p>
-<a name="3.7	"><h2>3.7	 Format Control Characters</h2>
+<a name="3.7 "></a><h2>3.7  Format Control Characters</h2>
 <p>
 The format control characters are described in the following paragraphs.<p>
 <h3>3.7.1	 %%</h3>
@@ -348,7 +348,7 @@ The % format control characters causes a single % character to be written to the
 <h3>3.7.2	 %A</h3>
 <p>
 The A format control character directs output to one of the 
-<a name="_IX_8">alternate output files. N1 is 
+<a name="_IX_8"></a>alternate output files. N1 is 
 the value to plug into a %d in the output filename, as specified by the altoutfilename 
 command in the rc file. If a + or - is specified, then N1 is added to the current alternate 
 file number, and the result is used as the new current alternate file number. N2 is the 
@@ -370,7 +370,7 @@ undefined.<p>
 <h3>3.7.4	 %F</h3>
 <p>
 The F format control character directs output to one of the 
-<a name="_IX_9">primary output files. N1 is the 
+<a name="_IX_9"></a>primary output files. N1 is the 
 value to plug into a %d in the output filename, as specified by the outfilename command 
 in the rc file. If a + or - is specified, then N1 is added to the current primary file number, 
 and the result is used as the new current primary file number. N2 is the mode: 0 means 
@@ -389,11 +389,11 @@ N1. If no + character is specified, then S is loaded into string register N1.<p>
 <h3>3.7.7	 %O</h3>
 <p>
 The O format control character performs an 
-<a name="_IX_10">operation on two registers. If the + character 
+<a name="_IX_10"></a>operation on two registers. If the + character 
 is specified then the operation is performed on the integer registers, else the operation is 
 performed on the string registers. N1 and N2 specify the two registers to use and S specifies the name of the operation to perform. The results are placed into register N1. The 
 list of operations names is given in 
-<a href="chap3.html#24978: Section: 3.7 Register Operations">Section 3.7, `Register Operations For Integers' on 
+<a href="chap3.htm#24978: Section: 3.7 Register Operations">Section 3.7, `Register Operations For Integers' on 
 page 12</a>.<p>
 <h3>3.7.8	 %R</h3>
 <p>
@@ -415,7 +415,7 @@ example, to implement part headings in the standard include file part.rc.<p>
 <h3>3.7.10	 %X</h3>
 <p>
 The X format control character executes an extended command. The name of the command is given by S. The list of extended commands is given in 
-<a href="chap3.html#60755: Section: 3.9 Extended Commands">Section 3.9, `Extended 
+<a href="chap3.htm#60755: Section: 3.9 Extended Commands">Section 3.9, `Extended 
 Commands' on page 13</a>.<p>
 <h3>3.7.11	 %f</h3>
 <p>
@@ -436,7 +436,7 @@ output. Note that %r is equivalent to %0r, and does nothing.<p>
 <h3>3.7.14	 %s</h3>
 <p>
 The s format control character prints out the entire data string.<p>
-<a name="24978: Section: 3.7 Register Operations"><a name="3.8	"><h2>3.8	 Register Operations For Integers</h2>
+<a name="24978: Section: 3.7 Register Operations"></a><a name="3.8 "></a><h2>3.8  Register Operations For Integers</h2>
 <p>
 This section describes the register operations that can be specified for integer registers in 
 a %O control sequence.<p>
@@ -451,7 +451,7 @@ value in integer register N1 and places the result in integer register N1.<p>
 <h3>3.8.3	 copy</h3>
 <p>
 The integer copy command sets integer register N1 to the value in integer register N2.<p>
-<a name="3.9	"><h2>3.9	 Register Operations For Strings</h2>
+<a name="3.9 "></a><h2>3.9  Register Operations For Strings</h2>
 <p>
 This section describes the register operations that can be specified for string registers in 
 a %O sequence.<p>
@@ -471,14 +471,14 @@ places it into string register N1.<p>
 <p>
 The string set command sets the symbol named by string register N2 to the value in 
 string register N1.<p>
-<a name="60755: Section: 3.9 Extended Commands"><a name="3.10	"><h2>3.10	 Extended Commands</h2>
+<a name="60755: Section: 3.9 Extended Commands"></a><a name="3.10 "></a><h2>3.10  Extended Commands</h2>
 <p>
 This section describes the extended commands available by using a %X sequence.<p>
 <h3>3.10.1	 skip</h3>
 <p>
 The skip command skips through the MIF input file until the end of the current level is 
 reached. This is useful for skipping disabled conditional text.<p>
-<p><a href="TOC.html">Table of Contents</a>
- * <a href="chap2.html">Previous Chapter</a>
- * <a href="chap4.html">Next Chapter</a>
+<p><a href="TOC.htm">Table of Contents</a>
+ * <a href="chap2.htm">Previous Chapter</a>
+ * <a href="chap4.htm">Next Chapter</a>
 <p>

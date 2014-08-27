@@ -57,6 +57,7 @@ typedef struct _mtstringsubinfo {
 } MtStringSubInfo;
 
 int MtDoSub;
+extern int MtDoFmt;
 MtTypeSubInfo *MtTypeSubInfoList;
 MtStringSubInfo *MtStringSubInfoList;
 MtStringSubInfo *MtTypeStringSubInfoList;
@@ -117,19 +118,19 @@ char *from;	/* can be from.to format */
 	if (dot) {
 		*dot = 0;	/* split into left and right parts */
 		if (!from[0])
-			altfromleft = "";
-		else if (strcmp(from,"*")==0)
-			altfromleft = "*";
+			altfromleft = (char *)0;
 		else
 			altfromleft = MtFindTagAlias(from);
 		if (!dot[1])
-			altfromright = "";
-		else if (strcmp(dot+1,"*")==0)
-			altfromright = "*";
+			altfromright = (char *)0;
 		else
 			altfromright = MtFindTagAlias(dot+1);
-		if (!altfromleft || !altfromright)
+		if (!altfromleft && !altfromright)
 			return 0;
+		if (!altfromleft)
+			altfromleft = from;
+		if (!altfromright)
+			altfromright = dot+1;
 		altlen = strlen(altfromleft)+strlen(altfromright)+2;
 		if (altlen>bufalloc) {
 			buf = MtRealloc(buf,altlen);
@@ -349,12 +350,13 @@ char *data;	/* string data for search or output */
 	MtTypeSubInfo *si;
 
 	if (!data) data="";
-	if (!MtDoSub) {
+	if (!MtDoSub || !MtDoFmt) {
 		/* no substitutions */
 		s = MtTypeSubIntToString(what);
 		if (!s) s = "unknown";
-		MtPrintf(mti,"%s %s %s\n",s,MtSidToString(from),data);
-		return 1;
+		MtPrintf(mti,"[S:%s %s %s]\n",s,MtSidToString(from),data);
+		if (!MtDoSub)
+			return 1;
 	}
 	si = MtFindTypeSub(what,from);
 	if (!si)

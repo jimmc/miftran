@@ -10,15 +10,15 @@ FIXREF          = $(MIFTRAN_DIR)/fixref
 FIXINDEX        = $(MIFTRAN_DIR)/fixindex
 SHELL           = /bin/sh
 
-default:	chap1.html
+default:	chap1.htm
 
-chap1.html:	$(MIFTRAN_RC) $(MIF_SOURCE)
+chap1.htm:	$(MIFTRAN_RC) $(MIF_SOURCE)
 	$(MIFTRAN) $(MIFTRAN_ARGS)
 	$(FIXREF)
-	[ -s chap0.html ] || rm -f chap0.html    #rm if zero size
+	[ -s chap0.htm ] || rm -f chap0.htm    #rm if zero size
 	$(FIXCHL)
-	mv d1.txt TOC.html
-	$(FIXINDEX) <d3.txt >IX.html
+	mv d1.txt TOC.htm
+	$(FIXINDEX) <d3.txt >IX.htm
 
 pgf.list:	$(MIF_SOURCE)
 	$(MIFTRAN) -tran $(MIFTRAN_ARGS) \
@@ -28,6 +28,6 @@ font.list:	$(MIF_SOURCE)
 	$(MIFTRAN) -tran $(MIFTRAN_ARGS) \
 		| grep "^startfont" | sort | uniq > font.list
 
-diff:;	for i in *.html; do echo $$i; diff $$i ../htmlref/$$i; done
+diff:;	for i in *.htm; do echo $$i; diff $$i ../htmlref/$$i; done
 
-clean:;	rm -f chap?.html TOC.html IX.html d?.txt href.sed pgf.list font.list
+clean:;	rm -f chap?.htm TOC.htm IX.htm d?.txt href.sed pgf.list font.list

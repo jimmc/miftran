@@ -1,8 +1,37 @@
 #Handle anchored frame stuff
-<typesub aframeid `*' `%11R'>		#store AFrame ID in S11
+#S11 is used to store the AFrame ID
+#S12 stores the filename
+#S13 is a temp reg
+
+<typesub aframeid `*' `\
+%11R\
+%12""L\
+%13"AFrame#"L%13.11"cat"O\
+%12.13"set"O'>
+	#store AFrame ID in S11
+	#clear S12 so we can set symbol to blank
+	#build the AFrame#N symbol name in S13
+	#clear the AFrame#N symbol
+
 #When we get a filename, create symbol AFrame#%s where %s is ID of frame,
-#set value of that symbol to the filename for the AFrame.
-<typesub aframefile `*' `%12R%13"AFrame#"L%13.11"cat"O%12.13"set"O'>
-#When we get aframe ref, get symbol from symbol table and insert into output
-<typesub aframe `*' `%11R%13"AFrame#"L%13.11"cat"O%12.13"get"O\
-<img src="%12r">'>
+#set value of that symbol to the <img> stuff (with filename) for the AFrame.
+<typesub aframefile `*' `\
+%12R\
+%13"AFrame#"L%13.11"cat"O\
+%10"<img src=\\""L%10.12"cat"O\
+%12"\\">"L%10.12"cat"O\
+%10.13"set"O'>
+	#store aframe filename in S12
+	#build AFrame#N name in S13 (id still in S11 from aframeid line)
+	#prepend  <img src="  to filename
+	#append  ">  to result of prepend
+	#store that string in AFrame#N symbol
+
+#When we get aframe ref, get <img> str from symbol table and insert into output
+<typesub aframe `*' `\
+%11R\
+%13"AFrame#"L%13.11"cat"O\
+%12.13"get"O%12r'>
+	#store ID into S11
+	#build AFrame#N name in S13
+	#get symbol value into S12 and then print in output

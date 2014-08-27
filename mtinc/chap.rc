@@ -14,7 +14,7 @@
 <h1>%2r %3r</h1>\n\
 %6L%5"<ul>\n"L'>
 
-#Include section headers in TOC, but don't switch output file
+#Include section headers in TOC for H2, but don't switch output file
 <typesub switchpgf `*.MiftranH2' `%3L%3S'>
 <typesub pgfnumstring MiftranH2 `%2R'>
 #While in MiftranH2, text is going into S3
@@ -27,3 +27,8 @@
 <a name="%2r"></a>\
 <h2>%2r %3r</h2>\n\
 %5L%6"</ul>\n"L'>
+
+#H2nt is not in TOC, just in chapter files.
+<typesub pgfnumstring MiftranH2nt `%s '>
+<typesub startpgf MiftranH2nt `<h2>'>
+<typesub endpgf MiftranH2nt `</h2>\n'>

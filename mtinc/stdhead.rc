@@ -1,5 +1,5 @@
 #Specify output files
-<outfilename `chap%d.html'>
+<outfilename `chap%d.htm'>
 <altoutfilename `d%d.txt'>
 
 #Basic translations for either outputting (default) or ignoring text.
@@ -15,4 +15,4 @@
 <h1>%1r</h1>\n\<ul>\n\
 %0.1F'>	#Open output files for write, put in title
 
-<typesub endfile `*' `%1.2A</ul>\n<a href="IX.html">Index</a>\n'>
+<typesub endfile `*' `%1.2A</ul>\n<a href="IX.htm">Index</a>\n'>

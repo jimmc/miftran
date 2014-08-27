@@ -88,9 +88,8 @@ char *data;	/* data string */
 #define INIT_STR_SIZE 1000
 
 	if (!MtDoFmt) {
-		/* no formatting */
-		MtPrintf(mti,"%s",fmt);
-		return;
+		/* show formatting before actually doing it */
+		MtPrintf(mti,"\n[F:%s]\n",fmt);
 	}
 	if (stralloc==0) {
 		stralloc = INIT_STR_SIZE;
@@ -170,7 +169,11 @@ char *data;	/* data string */
 		case 'A':	/* set alternate output file */
 			if (p[-1]=='%') relflag=1;
 				/* make %A same as %+0A */
-			MtSetOutputFile(mti,num,num2,relflag,1);
+			if (MtDoFmt)
+				MtSetOutputFile(mti,num,num2,relflag,1);
+			else
+				MtPrintf(mti,"[SetOutput:%d,%d,%d,1]\n",
+					num,num2,relflag);
 			break;
 		case 'E':	/* store env val into register */
 			if (num<=0 || num>=NUMREGISTERS)
@@ -183,25 +186,37 @@ char *data;	/* data string */
 				else
 					n = 0;
 				MtIntRegisters[num] = n;
+				if (!MtDoFmt)
+					MtPrintf(mti,"[IntReg(%d)=%d]",num,n);
 			} else {
 				if (MtStringRegisters[num])
 					MtFree(MtStringRegisters[num]);
 				MtStringRegisters[num] = MtStrSave(str);
+				if (!MtDoFmt)
+					MtPrintf("[StrReg(%d)=%s]",num,str);
 			}
 			break;
 		case 'F':	/* set main output file */
 			if (p[-1]=='%') {
 				int altflag = (mti->prevodest<0);
 				/* %F means switch back to previous file */
-				if (mti->prevodest>0) {
+				if (mti->prevodest>0 && MtDoFmt) {
 					mti->odest = mti->prevodest;
 					break;
 				}
-				MtSetOutputFile(mti,0,0,1,altflag);
-					/* like %+0F or %+0A */
+				if (MtDoFmt)
+					MtSetOutputFile(mti,0,0,1,altflag);
+						/* like %+0F or %+0A */
+				else
+					MtPrintf(mti,"[SetOutput:0,0,1,%d]",
+						altflag);
 				break;
 			}
-			MtSetOutputFile(mti,num,num2,relflag,0);
+			if (MtDoFmt)
+				MtSetOutputFile(mti,num,num2,relflag,0);
+			else
+				MtPrintf(mti,"[SetOutput:%d,%d,%d,0]",
+					num,num2,relflag);
 			break;
 		case 'H':
 			mti->infontanchor = 1;
@@ -211,10 +226,14 @@ char *data;	/* data string */
 				break;	/* ignore if out of range */
 			if (posflag) {
 				MtIntRegisters[num] = num2;
+				if (!MtDoFmt)
+				    MtPrintf(mti,"[IntReg(%d)=%d]",num,num2);
 			} else {
 				if (MtStringRegisters[num])
 					MtFree(MtStringRegisters[num]);
 				MtStringRegisters[num] = MtStrSave(str);
+				if (!MtDoFmt)
+				    MtPrintf(mti,"[StrReg(%d)=%d]",num,str);
 			}
 			break;
 		case 'O':	/* dual-register operation */
@@ -226,6 +245,8 @@ char *data;	/* data string */
 				n = MtOpInt(str,MtIntRegisters[num],
 					MtIntRegisters[num2]);
 				MtIntRegisters[num] = n;
+				if (!MtDoFmt)
+				    MtPrintf(mti,"[IntReg(%d)=%d]",num,n);
 			} else {
 				extern char *MtOpStr();
 				s = MtOpStr(str,MtStringRegisters[num],
@@ -234,6 +255,9 @@ char *data;	/* data string */
 					if (MtStringRegisters[num])
 						MtFree(MtStringRegisters[num]);
 					MtStringRegisters[num] = s;
+					if (!MtDoFmt)
+					    MtPrintf(mti,"[StrReg(%d)=%s]",
+							num,s);
 				}
 			}
 			break;
@@ -255,6 +279,10 @@ char *data;	/* data string */
 					}
 					if (num2==0) {
 						MtIntRegisters[num] = i;
+						if (!MtDoFmt)
+						    MtPrintf(mti,
+							"[IntReg(%d)=%d]",
+							num,i);
 					}
 					if (--num2<0)
 						break;
@@ -264,13 +292,19 @@ char *data;	/* data string */
 				if (MtStringRegisters[num])
 					MtFree(MtStringRegisters[num]);
 				MtStringRegisters[num] = MtStrSave(data);
+				if (!MtDoFmt)
+				    MtPrintf(mti,"[StrReg(%d)=%s]",num,data);
 			}
 			break;
 		case 'S':	/* set output stream to point to string reg N */
 			if (num<=0 || num>=NUMREGISTERS)
 				break;	/* ignore if out of range */
-			mti->prevodest = mti->odest;
-			mti->odest = num;
+			if (MtDoFmt) {
+				mti->prevodest = mti->odest;
+				mti->odest = num;
+			} else {
+				MtPrintf(mti,"[SetOutput:StrReg(%d)]",num);
+			}
 			break;
 		case 'X':	/* extended command */
 			MtXCmd(mti,str);	/* do the extended command */

@@ -1,9 +1,9 @@
 #!/bin/sh -
 #Script to add chapter/TOC links at the beginning and end of each chapter.
-#TOC name is TOC.html, chapter files are chap$n.html
+#TOC name is TOC.htm, chapter files are chap$n.htm
 
-toc=TOC.html
-tmpfile=tmp.html
+toc=TOC.htm
+tmpfile=tmp.htm
 
 add_chap_anchors() {
 	echo '<p><a href="'$toc'">Table of Contents</a>'
@@ -15,18 +15,18 @@ add_chap_anchors() {
 }
 
 n=0
-[ -f chap0.html ] || n=1
-thischap=chap$n.html
+[ -f chap0.htm ] || n=1
+thischap=chap$n.htm
 while [ -f $thischap ]; do
 	prevn=`expr $n - 1`
-	prevchap=chap$prevn.html
+	prevchap=chap$prevn.htm
 	nextn=`expr $n + 1`
-	nextchap=chap$nextn.html
+	nextchap=chap$nextn.htm
 	add_chap_anchors > $tmpfile
 	cat $thischap >> $tmpfile
 	add_chap_anchors >> $tmpfile
 	mv $tmpfile $thischap
 	n=$nextn
-	thischap=chap$n.html
+	thischap=chap$n.htm
 done
 exit 0

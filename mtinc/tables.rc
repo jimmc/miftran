@@ -1,0 +1,38 @@
+#Handle tables
+#S20 is used to store the table ID
+#S21 holds the symbol name
+#S22 holds the contents of the table as it is being built
+
+#The first thing we see in the table definition is the ID, at which point
+#we set things up so that we can save the definition into a string symbol.
+<typesub tableid `*' `\
+%20R\
+%22""L\
+%21"Table#"L%21.20"cat"O\
+%22.21"set"O'>
+	#store Table ID in S20
+	#clear S22 so we can redirect a fresh output stream to it
+	#build the Table#N symbol name in S21
+	#clear the Table#N symbol
+
+#When we see a table begin, we redirect output into the string symbol
+<typesub tablebegin `*' `%22S\n<table border>\n'>
+
+#During table definition, all this stuff goes into S22
+<typesub tablerow   `*' `\n<tr>'>
+<typesub tablecell  `*' `<td align=left>'>
+
+#When we see the table end, we write the final text and then
+#put it all into the Table#N symbol
+<typesub tableend   `*' `\n</table>\n\
+%22.21"set"O'>
+
+#When we get a reference to a table, we generate the Table#N name and
+#dump the contents of that symbol into the output.
+<typesub atable `*' `\
+%20R\
+%21"Table#"L%21.20"cat"O\
+%22.21"get"O%22r'>
+	#store ID into S20
+	#build Table#N name in S21
+	#get symbol value into S22 and then print in output

@@ -61,6 +61,7 @@ char *s;
 	olds = MtStringRegisters[r];
 	if (olds) {
 		MtStringRegisters[r] = MtOpStrCat(olds,s);
+		MtFree(olds);
 	} else {
 		MtStringRegisters[r] = MtStrSave(s);
 	}

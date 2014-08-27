@@ -4,11 +4,27 @@
 #2 index
 #8 is hypertext (handled separately below)
 #9 target of a cross reference
-#Markers can appear in chapter text, so we use %+0F/%F to ensure that the
-#<a> text goes to the file, not to the chapter register.
+
+#Normal markers
 <typesub markertext `2' `%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F\
-%+0F<a name="_IX_%+2r"></a>%F'>
+<a name="_IX_%+2r"></a>'>
 <typesub markertext `9' `%2.2A%f:%s\n%F\
+<a name="%s"></a>'>
+
+#Markers can appear in chapter text, so there we use %+0F/%F to ensure that the
+#<a> text goes to the file, not to the chapter register.
+#Likewise for H2.
+<typesub markertext `MiftranChapter.2' `\
+%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F\
+%+0F<a name="_IX_%+2r"></a>%F'>
+<typesub markertext `MiftranChapter.9' `%2.2A%f:%s\n%F\
 %+0F<a name="%s"></a>%F'>
+<typesub markertext `MiftranH2.2' `\
+%3.2A%+2.1"+"O<li><a href="%f#_IX_%+2r">%s</a>\n%F\
+%+0F<a name="_IX_%+2r"></a>%F'>
+<typesub markertext `MiftranH2.9' `%2.2A%f:%s\n%F\
+%+0F<a name="%s"></a>%F'>
+
 <typesub xreftext `*' `<a href="#%s">'>
 <typesub xrefend `*' `</a>'>
+

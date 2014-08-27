@@ -4,7 +4,7 @@
 <init `%1"Miftran Users Guide"L'>
 
 #Specify output files
-<outfilename `chap%d.html'>
+<outfilename `chap%d.htm'>
 <altoutfilename `d%d.txt'>
 
 #Set up aliases for the actual paragraph tags used in our document.
@@ -39,6 +39,14 @@
 <tagalias Emphasis MiftranItalic>
 <tagalias Italic MiftranItalic>
 <tagalias Computer MiftranFixed>
+
+#Get rid of tabs in headers
+<typestringsub MiftranH2 `\t' ` '>
+<typestringsub MiftranH2 `\\t' ` '>
+<typestringsub MiftranH2 `\\x11 ' ` '>
+<typestringsub MiftranChapter `\t' ` '>
+<typestringsub MiftranChapter `\\t' ` '>
+<typestringsub MiftranChapter `\\x11 ' ` '>
 
 <include `std.rc'>	#pick up standard stuff from library of include files
 

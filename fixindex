@@ -12,7 +12,7 @@ sort -bft'>' +2 | \
 cat <<EOF > $tmp_head
 <title>Index</title>
 <h1>Index</h1>
-<a href="TOC.html">Table Of Contents</a>
+<a href="TOC.htm">Table Of Contents</a>
 <ul>
 EOF
 cat <<EOF > $tmp_tail

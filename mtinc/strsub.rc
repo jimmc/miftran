@@ -18,7 +18,8 @@
 <stringsub `\\q'    `\''>	#apostrophe or quote
 <stringsub `\\Q'    `\`'>	#backquote
 
-#Random commercial symbols
+#Random commercial symbols and special stuff
 <stringsub `\\xa9 ' `(c)'>    #copyright
 <stringsub `\\xaa ' `[TM]'>   #trademark
 <stringsub `\\xa8 ' `[R]'>    #registered
+<stringsub `\\xc9 ' `...'>    #ellipsis
