@@ -28,8 +28,6 @@
 #include "mtcmd.h"
 #include "version.h"
 
-extern char *getenv ARGS((const char *name));
-
 extern int MtDoSub;
 extern int MtDoFmt;
 

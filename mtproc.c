@@ -26,8 +26,6 @@
 #include "mtutil.h"
 #include "mttran.h"
 
-extern char *strchr();
-
 /* Output substitution keys */
 MtTypeSubNameTran MtTypeSubNameTranTab[] = {
 #define MT_O_STRING 1

@@ -28,7 +28,6 @@
  * same as the syntax of MIF files.
  */
 
-#include <unistd.h>	/* to get R_OK */
 #include "mtutil.h"
 #include "mttran.h"
 

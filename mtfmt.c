@@ -26,9 +26,6 @@
 #include <ctype.h>
 #include "mtutil.h"
 
-extern char *getenv ARGS((const char *s1));
-extern char *strrchr ARGS((const char *s1, const char c));
-
 extern char *MtOutFileName;
 extern int MtOutFileNum;
 

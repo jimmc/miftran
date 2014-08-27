@@ -26,9 +26,6 @@
 #include <ctype.h>
 #include "mtutil.h"
 
-extern char *strstr ARGS((char *s1, char *s2));
-extern char *strchr ARGS((char *s, char c));
-
 extern MtTypeSubNameTran MtTypeSubNameTranTab[];
 
 typedef struct _mttagalias {

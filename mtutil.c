@@ -23,8 +23,7 @@
  */
 /* mtutil.c - utility functions for Mif parser */
 
-#include <stdio.h>
-#include <varargs.h>
+#include <stdarg.h>
 #include <ctype.h>
 #include "mtinfo.h"
 #include "mtutil.h"
@@ -36,14 +35,11 @@ static MtInFile zapInFile = {0};
 extern void *malloc(), *realloc();
 
 void
-MtWarning(mti,fmt,va_alist)
-MtInfo *mti;
-char *fmt;
-va_dcl
+MtWarning(MtInfo *mti, char *fmt, ...)
 {
 	va_list pvar;
 
-	va_start(pvar);
+	va_start(pvar, fmt);
 	fprintf(stderr,"Warning: ");
 	vfprintf(stderr,fmt,pvar);
 	fputs("\n",stderr);
@@ -51,14 +47,11 @@ va_dcl
 }
 
 void
-MtFileWarning(mti,fmt,va_alist)
-MtInfo *mti;
-char *fmt;
-va_dcl
+MtFileWarning(MtInfo *mti, char *fmt, ...)
 {
 	va_list pvar;
 
-	va_start(pvar);
+	va_start(pvar, fmt);
 	fprintf(stderr,"Warning: line %d, file %s: ",
 			mti->ifi->lineno,mti->ifi->ifilename);
 	vfprintf(stderr,fmt,pvar);

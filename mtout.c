@@ -23,7 +23,7 @@
  */
 /* mtout.c - output routines for miftran */
 
-#include <varargs.h>
+#include <stdarg.h>
 #include "mtutil.h"
 
 char *MtOutFileName;
@@ -110,15 +110,12 @@ char *s;
 }
 
 void
-MtPrintf(mti,fmt,va_alist)
-MtInfo *mti;
-char *fmt;
-va_dcl
+MtPrintf(MtInfo *mti, char *fmt, ...)
 {
 	va_list pvar;
 	FILE *fp;
 
-	va_start(pvar);
+	va_start(pvar, fmt);
 	if (mti->odest>0) {
 		char buf[2000];
 		vsprintf(buf,fmt,pvar);

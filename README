@@ -1,13 +1,13 @@
 
-    Miftran v0.7p1						3.Oct.96
+    Miftran v0.7p3				        2014-07-31
 
     Miftran is a general purpose MIF (Framemaker's Maker Interchange
     Format) translation program.  It was designed primarily to translate
     to HTML, but is flexible enough that it could be used for other
     translations.
 
-    The latest version of miftran is most likely to be found in
-       <URL:ftp://ftp.alumni.caltech.edu/pub/mcbeath/web/miftran/>
+    The latest version of miftran is most likely to be found at
+       http://alumnus.caltech.edu/~jimmc/ftp/miftran/
 
     Miftran has the following features:
 
@@ -101,7 +101,7 @@
     8. Run your favorite HTML browser starting at your TOC.html.
     9. Customize your miftran.rc as desired and redo step 5-7 as needed.
 
-    Miftran has been compiled and run on the following machines:
+    Miftran has been compiled and run on the following machines (through 1997):
 	Dec Alpha OSF1
 	Decstation Ultrix 4.2a
 	HP700 HPUX 9.01, 9.03, 9.07
@@ -116,6 +116,8 @@
 	Sparc SunOS 4.1.3, 4.1.4
 	Unixware 1.1.1 (Intel x86)
 
+    Miftran 0.7p3 has been compiled on Fedora 19 (July 2014).
+
     It has been used with Framemaker versions 3, 4, and 5.
 
     If you use miftran, please send me email and let me know about it.
@@ -129,18 +131,6 @@
     - CERN's html converter page
 	<URL:http://info.cern.ch/hypertext/WWW/Tools/Word_proc_filters.html>
 
-    ADVERTISEMENT: Now that you've converted all of your documents to
-    HTML and are ready to send them out to your customers, do you need
-    an HTML browser that you can send along with the files?
-    GLOBEtrotter Software sells GLOBEhelp, a commercial X/Motif HTML file
-    browser.  For one low price which is less than other companies
-    charge for single-platform binary redistribution rights, you get source
-    and multi-platform royalty-free redistribution rights.
-    For more information:
-	<URL:http://www.globetrotter.com/>
-	info@globes.com
-	(408)370-2800  FAX:(408)370-2884
-
-    Author: Jim McBeath (also author of GLOBEhelp HTML browser and urlopen)
-    jimmc@globes.com  jimmc@eskimo.com  jimmc@alumni.caltech.edu
-    <URL:http://alumni.caltech.edu/~jimmc/>
+    Author: Jim McBeath
+    <miftran@j.jimmc.org>
+    <http://alumnus.caltech.edu/~jimmc/>
