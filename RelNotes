@@ -1,3 +1,22 @@
+miftran v0.7p2 7.Feb.1997
+
+	Enhancements
+	------------
+	- Added 'install' and 'remote_install' tags to the Makefile.
+
+	Bug Fixes
+	---------
+	- Put "#ifdef __GNUC__" around some prototypes with "..." that
+	  were preventing the compile from completing with gcc.
+
+miftran v0.7p1 3.Oct.1996
+
+	Bug Fixes
+	---------
+	- Made "pgf.list" and "font.list" make tags in the html directory
+	  work once more by changing 'grep "^startpgf"' to 'grep "S:startpgf"'
+	  (likewise for font) to account for change to -sub command in v0.7.
+
 miftran v0.7 29.May.1996
 
 	Enhancements
@@ -28,7 +47,7 @@ miftran v0.6 27.Dec.1995
 	- Add support for flat tables (courtesy of Mogaki Masato).
 
 	- You can now specify paragraph-specific translations for markers and
-	  hypertext.  Previously, you could only specify somethis like this:
+	  hypertext.  Previously, you could only specify something like this:
 	    <typesub markertext `2' `.....'>
 	  To specify that this translation only applies in paragraph type xyz:
 	    <typesub markertext `xyz.2' `.....'>

@@ -31,8 +31,11 @@
 
 #include "mtinfo.h"
 
+#ifndef __GNUC__
+/* gcc gives bogus errors about argument count mismatches on these two. */
 void MtWarning ARGS((MtInfo *mti, char *fmt, ...));
 void MtFileWarning ARGS((MtInfo *mti, char *fmt, ...));
+#endif
 
 char *MtTokenTypeToString ARGS((int tokentype));
 

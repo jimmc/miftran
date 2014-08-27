@@ -22,11 +22,11 @@ chap1.htm:	$(MIFTRAN_RC) $(MIF_SOURCE)
 
 pgf.list:	$(MIF_SOURCE)
 	$(MIFTRAN) -tran $(MIFTRAN_ARGS) \
-		| grep "^startpgf" | sort | uniq > pgf.list
+		| grep "S:startpgf" | sort | uniq > pgf.list
 
 font.list:	$(MIF_SOURCE)
 	$(MIFTRAN) -tran $(MIFTRAN_ARGS) \
-		| grep "^startfont" | sort | uniq > font.list
+		| grep "S:startfont" | sort | uniq > font.list
 
 diff:;	for i in *.htm; do echo $$i; diff $$i ../htmlref/$$i; done
 

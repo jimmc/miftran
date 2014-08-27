@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-1996 Globetrotter Software, Inc.
+ * Copyright 1993-1997 Globetrotter Software, Inc.
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -25,9 +25,9 @@
 
 #define VERSION 0
 #define REVISION 7
-#define PATCHLEVEL 0
+#define PATCHLEVEL 2
 
-static char vdate[] = "29.May.96";
-static char copyright[] = "Copyright 1993-1996 Globetrotter Software";
+static char vdate[] = "7.Feb.97";
+static char copyright[] = "Copyright 1993-1997 Globetrotter Software";
 
 /* end */
